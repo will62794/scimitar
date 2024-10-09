@@ -1,0 +1,135 @@
+body{
+    /* font-family: monospace; */
+    font-size:14px;
+}
+
+h1{
+    font-family: sans-serif;
+}
+table{
+    border-spacing: 3px;
+
+}
+table td {
+    padding-right:10px;
+    font-size:14px;
+    min-width: 110px;
+}
+
+table td.ctis-remaining-count {
+    padding-right:10px;
+    font-size:14px;
+    min-width: 230px;
+}
+
+table td:hover {
+    cursor: pointer;
+}
+
+.proof-parent-cti-info {
+    min-width:10px;
+}
+
+.gen-ctis-button{
+    border:solid 1px gray;
+    background-color: lightgray;
+    text-align: center;
+    font-size:14px;
+    border-radius:4px;
+    min-width:10px;
+    padding-left:10px;
+    padding-right:10px;
+}
+
+.proof-cti-grid-row {
+    font-size:12px;
+}
+
+.proof-node-expr:hover {
+    opacity: 0.5;
+}
+
+.cti-box {
+    border:solid 1px gray;
+    padding:8px;
+    margin-top:10px;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+#stategraph{
+    width:56%;
+    height: 98%;
+    border-right:solid 1px black;
+    float:left;
+}
+
+#ctiPane{
+    width:42%;
+    float:left;
+    height:90%;
+    padding-left:1%;
+    font-family: monospace;
+}
+
+#cti-loading-icon{
+    color:blue;
+}
+
+#proof-node-name{
+    font-size: 16px;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.monofont{
+    font-family: monospace;
+}
+
+button {
+    background-color: steelblue;
+    border: none;
+    color: white;
+    padding: 6px 14px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+/* button:hover{
+    cursor: pointer;
+} */
+
+#delete-support-edge-btn{
+    background-color: #f44336;
+    color:white;
+}
+.proven-color{
+    color:green;
+}
+.ctis-left-color{
+    color:orange;
+}
+#graph-legend{
+    font-family: sans-serif;
+    position: absolute;
+    left: 6px;
+    bottom: 6px;
+    /* width:250px; */
+    /* height:200px; */
+    background-color: #eee;
+    padding:10px;
+    font-size:10px;
+}
+
+#legend-list{
+    list-style-type:none;
+}

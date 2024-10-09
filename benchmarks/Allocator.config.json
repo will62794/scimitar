@@ -1,0 +1,56 @@
+{
+    "preds"  :  [
+        "unsat[VARCI] = {}",
+        "unsat[VARCJ] = {}",
+        "unsat[VARCI] # {}",
+        "VARRI \\in unsat[VARCI]",
+        "VARRI \\in unsat[VARCJ]",
+        "sched = <<>>",
+        "requests[VARCI] = {}",
+        "holding[VARCI] = {}",
+        "holding[VARCJ] = {}",
+        "VARRQM.type = \"request\" => VARRQM.clt = VARCI",
+        "VARRQM.type = \"request\" => VARRQM.clt = VARCJ",
+        "VARALLOCM.clt = VARCI",
+        "VARALLOCM.clt = VARCJ",
+        "VARRI \\in VARALLOCM.rsrc",
+        "VARALLOCM.rsrc \\subseteq holding[VARCI]",
+        "VARALLOCM.rsrc \\subseteq holding[VARCJ]",
+        "VARALLOCM.type = \"allocate\" /\\ holding = [holding EXCEPT ![VARALLOCM.clt] = @ \\cup VARALLOCM.rsrc]"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "H_ResourceMutex",
+    "constants"  : {
+        "Clients": ["{c1,c2,c3}"],
+        "Resources": ["{r1,r2}"],
+        "c1" : "c1",
+        "c2" : "c2",
+        "c3" : "c3",
+        "r1" : "r1",
+        "r2" : "r2"
+    },
+    "actions": [
+    ],
+    "simulation_inv_check": false,
+    "simulation_inv_check_num_states": 3000000,
+    "simulation_inv_check_depth": 60,
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARCI \\in Clients : \\A VARCJ \\in Clients : \\A VARRI \\in Resources : \\A VARRQM \\in requestMsgs : \\A VARALLOCM \\in allocMsgs : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": ["VARCI"],
+    "model_consts"  :  "CONSTANT c1,c2,c3,r1,r2",
+    "symmetry" : false,
+    "typeok"  :  "TypeOKRandom",
+    "tlc_specific_spec": false,
+    "try_final_minimize": false,
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "lemma_def_expands": {
+            "Safety": ["H_MutualExclusion"]
+        },
+        "action_def_expands":{
+        }
+    }
+}

@@ -1,0 +1,51 @@
+{
+    "preds"  :  [
+        "tmState = \"init\"",
+        "tmState = \"committed\"",
+        "tmState = \"aborted\"",
+        "[type |-> \"Prepared\", rm |-> VARRMI] \\in msgsPrepared",
+        "[type |-> \"Prepared\", rm |-> VARRMJ] \\in msgsPrepared",
+        "tmPrepared = RM",
+        "tmPrepared = tmPrepared \\cup {VARRMI}",
+        "tmPrepared = tmPrepared \\cup {VARRMJ}",
+        "rmState[VARRMI] = \"working\"",
+        "rmState[VARRMJ] = \"working\"",
+        "[type |-> \"Commit\"] \\in msgsCommit",
+        "[type |-> \"Abort\"] \\in msgsAbort",
+        "rmState[VARRMI] = \"prepared\"",
+        "rmState[VARRMI] = \"aborted\"",
+        "rmState[VARRMI] = \"committed\"",
+        "rmState[VARRMJ] = \"prepared\"",
+        "rmState[VARRMJ] = \"aborted\"",
+        "rmState[VARRMJ] = \"committed\""
+    ],
+    "preds_alt" : [],
+    "safety"  :  "H_TCConsistent",
+    "constants"  :  {
+        "RM" : ["{rm1,rm2,rm3}"],
+        "rm1" : "rm1",
+        "rm2" : "rm2",
+        "rm3" : "rm3"
+    },
+    "constraint"  :  "",
+    "simulation_inv_check": false,
+    "simulation_inv_check_num_states": 70000,
+    "simulation_inv_check_depth": 20,
+    "quant_inv"  :  "\\A VARRMI \\in RM : \\A VARRMJ \\in RM : ",
+    "quant_vars"  :  ["VARRMI", "VARRMJ"],
+    "quant_inv_alt"  :  null,
+    "model_consts"  :  "CONSTANT rm1,rm2,rm3",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "lemma_def_expands": {
+            "Safety": ["H_TCConsistent"]
+
+        },
+        "action_def_expands":{
+        }
+    }    
+}

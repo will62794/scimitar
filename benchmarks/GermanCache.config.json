@@ -1,0 +1,81 @@
+{
+    "preds"  :  [
+        "Cache[VARI].State = \"E\"",
+        "Cache[VARJ].State = \"E\"",
+        "Cache[VARI].State = \"I\"",
+        "Cache[VARJ].State = \"I\"",
+        "Cache[VARI].State = \"S\"",
+        "Cache[VARJ].State = \"S\"",
+        "Chan1[VARI].Cmd = \"Empty\"",
+        "Chan1[VARJ].Cmd = \"Empty\"",
+        "Chan1[VARI].Cmd = \"ReqS\"",
+        "Chan1[VARJ].Cmd = \"ReqS\"",
+        "Chan1[VARI].Cmd = \"ReqE\"",
+        "Chan1[VARJ].Cmd = \"ReqE\"",
+        "Chan2[VARI].Cmd = \"Empty\"",
+        "Chan2[VARJ].Cmd = \"Empty\"",
+        "Chan2[VARI].Cmd = \"Inv\"",
+        "Chan2[VARJ].Cmd = \"Inv\"",
+        "Chan2[VARI].Cmd = \"GntE\"",
+        "Chan2[VARJ].Cmd = \"GntE\"",
+        "Chan2[VARI].Cmd = \"GntS\"",
+        "Chan2[VARJ].Cmd = \"GntS\"",
+        "CurCmd = \"ReqE\"",
+        "CurCmd = \"ReqS\"",
+        "Chan3[VARI].Cmd = \"InvAck\"",
+        "Chan3[VARJ].Cmd = \"InvAck\"",
+        "Chan3[VARI].Cmd = \"Empty\"",
+        "Chan3[VARJ].Cmd = \"Empty\"",
+        "ExGntd",
+        "InvSet[VARI]",
+        "InvSet[VARI] = ShrSet[VARI]",
+        "InvSet[VARI] = ShrSet[VARJ]",
+        "InvSet[VARJ]",
+        "ShrSet[VARI]",
+        "ShrSet[VARJ]",
+        "Chan2[VARI].Data = MemData",
+        "Chan3[VARI].Data = MemData",
+        "CurPtr = VARI",
+        "CurPtr = VARJ",
+        "VARI # VARJ"
+    ],
+    "other_preds":[
+        "InvSet = ShrSet",
+        "\\A vinv \\in NODE : InvSet[vinv]",
+        "\\A vinv \\in NODE : ~InvSet[vinv]",
+        "\\A vshr \\in NODE : ShrSet[vshr]",
+        "\\A vshr \\in NODE : ~ShrSet[vshr]"
+    ],
+    "action_local_preds":{
+    },
+    "preds_alt" : [],
+    "safety"  :  "CtrlProp1",
+    "main_inv_check_index": 1,
+    "constants": {
+        "NODE_NUM": [2,3],
+        "DATA_NUM": [2]
+    },
+    "cti_gen_instance_indexes": [0,1],
+    "quant_inv": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ",
+    "quant_vars": ["VARI", "VARJ"],
+    "model_consts"  :  "",
+    "simulation_inv_check": false,
+    "simulation_inv_check_num_states": 20000000,
+    "simulation_inv_check_depth": 70,
+    "symmetry" : false,
+    "constraint"  :  "",
+    "typeok"  :  "TypeOK",
+    "try_final_minimize": false,
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+            "\\E N \\in Nat : NODE = 1..N /\\ IsFiniteSet(NODE) /\\ NODE # {}",
+            "\\E N \\in Nat : DATA = 1..N /\\ IsFiniteSet(DATA) /\\ DATA # {}"
+        ],
+        "lemma_def_expands": {
+            "Safety": ["CtrlProp1", "MSG", "MSG_CMD", "CACHE", "CACHE_STATE"]
+        },
+        "action_def_expands":{
+        }
+    }
+}

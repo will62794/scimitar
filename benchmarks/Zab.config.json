@@ -1,0 +1,81 @@
+{
+    "preds"  :  [],
+    "preds_alt" : [],
+    "safety"  :  "H_PrefixConsistency",
+    "constants"  :  {
+        "Server": ["{s1,s2}", "{s1,s2,s3}"],
+        "MaxEpoch": ["2"],
+        "Nat": ["{0,1,2}"],
+        "MaxHistLen": ["1"],
+        "LOOKING": "LOOKING",
+        "FOLLOWING": "FOLLOWING",
+        "LEADING": "LEADING",
+        "ELECTION": "ELECTION",
+        "DISCOVERY": "DISCOVERY",
+        "SYNCHRONIZATION": "SYNCHRONIZATION",
+        "BROADCAST": "BROADCAST",
+        "CEPOCH": "CEPOCH",
+        "NEWEPOCH": "NEWEPOCH",
+        "ACKEPOCH": "ACKEPOCH",
+        "NEWLEADER": "NEWLEADER",
+        "ACKLD": "ACKLD",
+        "COMMITLD": "COMMITLD",
+        "PROPOSE": "PROPOSE",
+        "ACK": "ACK",
+        "COMMIT": "COMMIT",
+        "Parameters": "Params1",
+        "NullPoint": "Null",
+        "s1": "s1",
+        "s2": "s2",
+        "s3": "s3"
+    },
+    "tlc_overrides":{
+        "InitAcksid": "InitAcksidTLC",
+        "UpdateAcksid": "UpdateAcksidTLC"
+    },
+    "actions": [
+        "UpdateLeaderAction",
+        "FollowLeaderMyselfAction",
+        "FollowLeaderOtherAction",
+        "TimeoutAction",
+        "RestartAction",
+        "ConnectAndFollowerSendCEPOCHAction",
+        "LeaderProcessCEPOCHAction",
+        "FollowerProcessNEWEPOCHAction",
+        "LeaderProcessACKEPOCHNoNewLeaderHasQuorumAction",
+        "LeaderProcessACKEPOCHNoNewLeaderNoQuorumAction",
+        "FollowerProcessNEWLEADERAction",
+        "FollowerProcessNEWLEADERNewIterationAction",
+        "LeaderProcessACKLDAction",
+        "FollowerProcessCOMMITLDAction",
+        "LeaderProcessRequestAction",
+        "LeaderBroadcastPROPOSEAction",
+        "FollowerProcessPROPOSEAction",
+        "LeaderProcessACKAction",
+        "FollowerProcessCOMMITAction",
+        "FilterNonexistentMessageAction"
+    ],
+    "constraint"  :  "",
+    "quant_inv"  :  "",
+    "quant_inv_alt"  :  null,
+    "model_consts"  :  "CONSTANT s1,s2,s3",
+    "symmetry" : true,
+    "typeok"  :  "TypeOKRandom",
+    "simulate"  :  true,
+    "tlc_specific_spec": true,
+    "local_grammars": {
+        "LeaderProcessACKEPOCHHasntBroadcastAction": {
+            "H_NEWLEADERHistoryExistsOnQuorum": {
+                "quant_inv": "\\A VARI \\in Server : \\A VARJ \\in Server : ",
+                "quant_vars": ["VARI", "VARJ"],
+                "preds":[
+                    "PendingNEWLEADER(i,j)",
+                    "PendingNEWLEADER(j,i)"
+
+                ],
+                "max_depth": 21
+            }
+        } 
+    }
+}
+
