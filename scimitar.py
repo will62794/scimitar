@@ -2541,7 +2541,7 @@ class InductiveInvGen():
                     dot.attr(rankdir="LR", ranksep="1.5", pad="1.6")
                     for n in nodes:
                         # create a green node.
-                        color = "green" if n in sat_invs_inds else "red"
+                        color = "lightgreen" if n in sat_invs_inds else "red"
                         dot.node(str(n), style="filled", fillcolor=color)
                     for e in subsumption_edges_inds:
                         dot.edge(str(e[0]), str(e[1]))
@@ -4360,6 +4360,7 @@ class InductiveInvGen():
                     self.proof_graph["nodes"][n]["discharged"] = False
                     # Delete key.
                     self.proof_graph["nodes"][n]["failed"] = False
+        return
 
         for roundi in range(self.num_rounds):
             logging.info("###### STARTING ROUND %d" % roundi)
@@ -5103,7 +5104,7 @@ class InductiveInvGen():
     def render_proof_graph(self, save_tex=False, include_seed=True):
         dot = graphviz.Digraph(f'{self.specname}-proof-graph', comment='The Round Table', strict=True)  
         #  dot.graph_attr["rankdir"] = "LR"
-        dot.node_attr["fontname"] = "courier"
+        dot.node_attr["fontname"] = "Georgia"
         dot.node_attr["shape"] = "box"
         
         # Store all nodes.
@@ -5126,7 +5127,7 @@ class InductiveInvGen():
                         label = nlabel
                         shape = "box"
                         num_ctis_left = self.proof_graph["nodes"][n]["ctis_remaining"]
-                        fillcolor = lightgreen if num_ctis_left == 0 else "orange"
+                        fillcolor = "lightgray" if num_ctis_left == 0 else "orange"
                         coi = "{" + ",".join(sorted(self.proof_graph["nodes"][n]["coi_vars"])) + "}"
                         if "curr_node" in self.proof_graph and self.proof_graph["curr_node"] == n and self.proof_graph["nodes"][n]["ctis_remaining"] > 0:
                             # Mark node.
@@ -5140,42 +5141,45 @@ class InductiveInvGen():
                             # if len(coi_str) > 20:
                                 # coi_str_break_ind = coi_str.find(",", len(coi)//2 - 1)
                                 # coi_str = coi_str[:coi_str_break_ind] + "<BR/>" + coi_str[coi_str_break_ind:]
-                            label = "< " + nlabel + "<BR/>" + "<FONT POINT-SIZE='10'>" + str(coi) + "<BR/>" + " (" + str(len(coi_vars)) + "/" + str(len(self.state_vars)) + " vars) </FONT>"
-                            if "num_grammar_preds" in self.proof_graph["nodes"][n]:
-                                label += "<FONT POINT-SIZE='10'>|preds|=" + str(self.proof_graph["nodes"][n]["num_grammar_preds"]) + "/" + str(len(self.preds)) + "</FONT>"
-                            if "latest_elimination_iter" in node:
-                                latest_iter = self.proof_graph["nodes"][n]["latest_elimination_iter"]
-                                label += f"<FONT POINT-SIZE='10'> (iters={latest_iter}) </FONT>"
+                            label = "< " + nlabel + "<BR/>" + "<FONT POINT-SIZE='8'>" + str(coi) + "</FONT>"
+                            # "<BR/>" + " (" + str(len(coi_vars)) + "/" + str(len(self.state_vars)) + " vars) " + 
+                            # if "num_grammar_preds" in self.proof_graph["nodes"][n]:
+                                # label += "<FONT POINT-SIZE='10'>|preds|=" + str(self.proof_graph["nodes"][n]["num_grammar_preds"]) + "/" + str(len(self.preds)) + "</FONT>"
+                            # if "latest_elimination_iter" in node:
+                                # latest_iter = self.proof_graph["nodes"][n]["latest_elimination_iter"]
+                                # label += f"<FONT POINT-SIZE='10'> (iters={latest_iter}) </FONT>"
                             label += "<BR/>"
                             if "ctis_remaining" in node:
                                 total_ctis_str = ""
                                 if "total_initial_ctis" in self.proof_graph["nodes"][n]:
                                     total_ctis_str = "/" + str(self.proof_graph["nodes"][n]["total_initial_ctis"])
-                                label += f"<FONT POINT-SIZE='10'> (ctis={num_ctis_left}{total_ctis_str}) </FONT>"
+                                # label += f"<FONT POINT-SIZE='10'> (ctis={num_ctis_left}{total_ctis_str}) </FONT>"
                             if "num_invs_generated_per_iter" in node:
                                 num_invs_generated = node["num_invs_generated_per_iter"]
                                 total = sum([num_invs_generated[i] for i in num_invs_generated])
-                                label += f"<FONT POINT-SIZE='10'>(invs={total})</FONT>"
+                                # label += f"<FONT POINT-SIZE='10'>(invs={total})</FONT>"
                             if "time_spent" in node:
-                                label += "<FONT POINT-SIZE='10'> (" + "{0:.2f}".format(self.proof_graph["nodes"][n]["time_spent"]) + "s) </FONT>"
+                                pass
+                                # label += "<FONT POINT-SIZE='10'> (" + "{0:.2f}".format(self.proof_graph["nodes"][n]["time_spent"]) + "s) </FONT>"
                             label += ">"
                             fontsize="14pt"
                     if "is_lemma" in node:
                         # Split something like 'Inv249_R3_2_I2_0'.
                         name_parts = n.partition("_")
-                        label = "< " + name_parts[0]
+                        label = "< " + "<FONT POINT-SIZE='24'>" + name_parts[0]  + "</FONT>"
                         depth_str = ""
-                        if len(name_parts[2]) > 0:
-                            label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>"
-                        if "depth" in node:
-                            depth_str = ",d=" + str(node["depth"])
+                        # if len(name_parts[2]) > 0:
+                            # label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>"
+                        # if "depth" in node:
+                            # depth_str = ",d=" + str(node["depth"])
                         if "order" in node:
                             # label += "<BR/>"
-                            label += " <BR/> <FONT POINT-SIZE='12'>(" + str(node["order"]) + depth_str + ") </FONT>"
+                            pass
+                            # label += " <BR/> <FONT POINT-SIZE='12'>(" + str(node["order"]) + depth_str + ") </FONT>"
                         label += " >"
                         penwidth="3"
                         if node["discharged"]:
-                            fillcolor = "green"
+                            fillcolor = "lightgreen"
                         else:
                             fillcolor = "orange"
                         if "failed" in node:
@@ -5256,6 +5260,7 @@ class InductiveInvGen():
 
         if not save_tex:
             dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True)
+            dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True, format="png")
 
         if save_tex:
             old_stdout = sys.stdout # backup current stdout
@@ -5485,7 +5490,7 @@ class InductiveInvGen():
         total_dur_precheck = self.total_duration_secs
 
         # If we have found what seems to be a valid proof graph, re-check it just to be sure.
-        if self.proof_tree_mode and len(self.proof_graph_failed_lemma_nodes()) == 0 and not self.recheck_proof_graph:
+        if self.proof_tree_mode and len(self.proof_graph_failed_lemma_nodes()) == 0 and not self.recheck_proof_graph and not self.persistent_proof_tree_mode:
             logging.info("Found what appears to be valid proof graph with 0 failed nodes. Re-checking each node just to make sure.")
             # Re-seed with a different initial seed for some CTI generation diversity.
             random.seed(self.seed + 55555)
