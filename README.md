@@ -24,7 +24,7 @@ As the tool runs, it dynamically synthesizes an *inductive proof graph*, which i
 
 
 <p align="center">
-  <img src="notes/TwoPhase_ind-proof-tree-sd1.png" alt="Inductive Proof Graph Example" width="600">
+  <img src="notes/TwoPhase_ind-proof-tree-sd1.png" alt="Inductive Proof Graph Example" width="700">
 </p>
 
 This provides an intuitive way to understand the structure of the inductive invariant and proof, while also allowing for optimizations during synthesis.
