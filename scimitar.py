@@ -4823,30 +4823,30 @@ class InductiveInvGen():
 
 
             # Create a histogram with buckets of width 25
-            try:
-                plt.figure(figsize=(6, 3))
+            # try:
+                # plt.figure(figsize=(6, 3))
 
-                # Create histogram.
-                state_slice_sizes.remove(max(state_slice_sizes))
-                nbins=12
-                plt.hist(state_slice_sizes, bins=range(0, state_slice_max, state_slice_max//nbins ), edgecolor='black', cumulative=False)
+                # # Create histogram.
+                # state_slice_sizes.remove(max(state_slice_sizes))
+                # nbins=12
+                # plt.hist(state_slice_sizes, bins=range(0, state_slice_max, state_slice_max//nbins ), edgecolor='black', cumulative=False)
 
-                # Labels and title
+                # # Labels and title
 
-                # no labeling of x-ticks.
-                # plt.xticks(range(0, max(state_slice_sizes), 25))
-                plt.tick_params(
-                    axis='x',          # changes apply to the x-axis
-                    which='both',      # both major and minor ticks are affected
-                    bottom=False,      # ticks along the bottom edge are off
-                    top=False,         # ticks along the top edge are off
-                    labelbottom=False) # labels along the bottom edge are off
-                plt.tick_params(
-                    axis='y',          # changes apply to the x-axis
-                    which='both',      # both major and minor ticks are affected
-                    bottom=False,      # ticks along the bottom edge are off
-                    top=False,         # ticks along the top edge are off
-                    labelbottom=False) # labels along the bottom edge are off
+                # # no labeling of x-ticks.
+                # # plt.xticks(range(0, max(state_slice_sizes), 25))
+                # plt.tick_params(
+                #     axis='x',          # changes apply to the x-axis
+                #     which='both',      # both major and minor ticks are affected
+                #     bottom=False,      # ticks along the bottom edge are off
+                #     top=False,         # ticks along the top edge are off
+                #     labelbottom=False) # labels along the bottom edge are off
+                # plt.tick_params(
+                #     axis='y',          # changes apply to the x-axis
+                #     which='both',      # both major and minor ticks are affected
+                #     bottom=False,      # ticks along the bottom edge are off
+                #     top=False,         # ticks along the top edge are off
+                #     labelbottom=False) # labels along the bottom edge are off
 
 
                 # plt.xlabel('State slice counts')
@@ -4855,9 +4855,9 @@ class InductiveInvGen():
                 # Save the plot as an SVG file
                 # svg_binned_histogram_25_path = f'binned_histogram_25_{self.specname}._sd{self.seed}.pdf'
                 # plt.savefig(svg_binned_histogram_25_path, format='pdf')
-            except Exception as e:
-                print(e)
-                pass
+            # except Exception as e:
+                # print(e)
+                # pass
 
 
 #
