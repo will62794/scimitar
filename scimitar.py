@@ -4853,8 +4853,8 @@ class InductiveInvGen():
                 # plt.ylabel('State slice size')
 
                 # Save the plot as an SVG file
-                svg_binned_histogram_25_path = f'binned_histogram_25_{self.specname}._sd{self.seed}.pdf'
-                plt.savefig(svg_binned_histogram_25_path, format='pdf')
+                # svg_binned_histogram_25_path = f'binned_histogram_25_{self.specname}._sd{self.seed}.pdf'
+                # plt.savefig(svg_binned_histogram_25_path, format='pdf')
             except Exception as e:
                 print(e)
                 pass
