@@ -29,6 +29,21 @@ IndGlobal ==
   /\ Inv5_b7fb_R5_1_I0
   /\ Inv6_4a91_R0_2_I0
   /\ Inv2_374f_R6_2_I0
+  
+Inv73 == \A VARRMI \in RM : \A VARRMJ \in RM : ~(rmState[VARRMI] = "committed") \/ (~(rmState[VARRMJ] = "working"))
+  
+
+THEOREM 
+ (/\ Inv1_3ca6_R0_0_I0 
+  /\ Inv8_8a08_R0_0_I0
+  /\ Inv3_6839_R0_0_I0
+  /\ Inv0_3e99_R0_0_I0) => Inv73 
+  BY DEF TypeOK,RMRcvAbortMsgAction,RMRcvAbortMsg,TypeOK,
+  Inv1_3ca6_R0_0_I0,
+   Inv8_8a08_R0_0_I0,
+   Inv3_6839_R0_0_I0,
+   Inv0_3e99_R0_0_I0,
+   Inv73 
 
 
 \* mean in-degree: 1.8
