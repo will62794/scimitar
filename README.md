@@ -2,6 +2,8 @@
 
 *Scimitar* is a tool for verifying the safety of distributed protocols based on the technique of *inductive proof decomposition*, a compositional approach for developing an inductive invariant in a way that aids automated synthesis and interpretability of the inductive proof. It was primarily developed for targeting safety verification of distributed protocols, but works for any TLA+ specifications accepted by TLC. Correctness of discovered invariants is formally verified using the [TLA+ proof system](https://tla.msr-inria.inria.fr/tlaps/content/Home.html) (TLAPS).
 
+More details on the ideas underlying the techniques used here can also be found in [this paper](https://arxiv.org/abs/2404.18048).
+
 ## Setup
 
 In order to run the tool you will need the following prerequisites:
