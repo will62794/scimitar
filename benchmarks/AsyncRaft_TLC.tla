@@ -81,10 +81,26 @@ TypeOKRandom ==
     /\ state       \in [Server -> {Leader, Follower, Candidate}]
     /\ votedFor    \in [Server -> ({Nil} \cup Server)]
     /\ votesGranted \in [Server -> (SUBSET Server)]
-    /\ nextIndex  \in [Server -> [Server -> LogIndices]]
-    /\ matchIndex \in [Server -> [Server -> LogIndicesWithZero]]        
     /\ log             \in [Server -> BoundedSeq(Terms, MaxLogLen)]
     /\ commitIndex     \in [Server -> LogIndicesWithZero]
+    /\ nextIndex  \in [Server -> [Server -> LogIndices]]
+    /\ matchIndex \in [Server -> [Server -> LogIndicesWithZero]]   
+
+TypeOKRandomCompact == 
+    /\ requestVoteRequestMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteRequestTypeBounded) 
+    /\ requestVoteResponseMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteResponseTypeBounded) 
+    /\ appendEntriesRequestMsgs \in AppendEntriesRequestTypeSampled
+    /\ appendEntriesResponseMsgs \in AppendEntriesResponseTypeSampled
+    /\ currentTerm \in [Server -> Terms]
+    /\ state       \in [Server -> {Leader, Follower, Candidate}]
+    /\ votedFor    \in [Server -> ({Nil} \cup Server)]
+    /\ votesGranted \in [Server -> (SUBSET Server)]
+    /\ log             \in [Server -> BoundedSeq(Terms, MaxLogLen)]
+    /\ commitIndex     \in [Server -> LogIndicesWithZero]
+    \* Reduces these two state variables for properties where they are irrelevant.
+    /\ nextIndex  \in [Server -> [Server -> {1}]]
+    /\ matchIndex \in [Server -> [Server -> {1}]] 
+
 
 Symmetry == Permutations(Server)
 
