@@ -5570,6 +5570,7 @@ if __name__ == "__main__":
     parser.add_argument('--nrounds', help='Maximum number of CTI elimination rounds to run.', required=False, type=int, default=3)
     parser.add_argument('--seed', help='Seed for RNG.', required=False, default=0, type=int)
     parser.add_argument('--safety', help='Safety property to verify (will override safety prop in config).', required=False, default=None, type=str)
+    parser.add_argument('--typeok', help='Custom TypeOK invariant to use.', required=False, default=None, type=str)
     parser.add_argument('--ninvs_per_iter_group', help='Number of invariants to sample in one batch during an iteration.', required=False, default=DEFAULT_NUM_INVS_PER_ITER, type=int)
 
     parser.add_argument('--num_simulate_traces', help='The maximum number of traces TLC will generate when searching for counterexamples to inductions (CTIs).', required=False, type=int, default=DEFAULT_NUM_SIMULATE_TRACES)
@@ -5693,6 +5694,11 @@ if __name__ == "__main__":
     if safety_arg is not None:
         logging.info(f"Overriding safety property in config with command line arg: '{safety_arg}'")
         safety = safety_arg
+
+    # Override TypeOK in config with command line arg, if one is given.
+    if args["typeok"] is not None:
+        logging.info(f"Overriding TypeOK invariant in config with command line arg: '{args['typeok']}'")
+        typeok = args["typeok"]
 
     # TODO: Make 'constants' parameter a list of lines.
     constants = spec_config["constants"]
