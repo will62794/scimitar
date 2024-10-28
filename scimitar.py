@@ -5689,6 +5689,7 @@ if __name__ == "__main__":
     preds = spec_config["preds"]
     # preds_alt = spec_config["preds_alt"]    
     safety = spec_config["safety"]
+    typeok = spec_config["typeok"]
 
     # Override safety prop in config with command line arg, if one is given.
     if safety_arg is not None:
@@ -5709,7 +5710,6 @@ if __name__ == "__main__":
     quant_vars = spec_config.get("quant_vars", [])
     model_consts = spec_config["model_consts"]
     symmetry = spec_config["symmetry"]    
-    typeok = spec_config["typeok"]
     tlc_specific_spec = spec_config.get("tlc_specific_spec", False)
     simulate = spec_config["simulate"]
     results_dir = args["results_dir"]
@@ -5725,8 +5725,10 @@ if __name__ == "__main__":
     for k in spec_config:
         if k != "local_grammars":
             logging.info(f"{k}: {spec_config[k]}")
-        if k == "safety":
+        if k == "safety" and safety_arg is not None:
             logging.info(f" 'safety' overriden with command line arg: '{safety_arg}'")
+        if k == "typeok" and args["typeok"] is not None:
+            logging.info(f" 'typeok' overriden with command line arg: '{args['typeok']}'")
 
     # Print out the command line args.
     logging.info("Command line args: " + str(sys.argv[1:]))
