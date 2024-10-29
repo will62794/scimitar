@@ -720,7 +720,18 @@ THEOREM L_13 == TypeOK /\ Inv387_09bb_R9_0_I1 /\ Inv10_928b_R5_1_I1 /\ Next => I
 THEOREM L_14 == TypeOK /\ Inv6_3122_R17_0_I1 /\ Inv387_09bb_R9_0_I1 /\ Next => Inv387_09bb_R9_0_I1'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (Inv387_09bb_R9_0_I1,RequestVoteAction)
-  <1>1. TypeOK /\ Inv387_09bb_R9_0_I1 /\ RequestVoteAction => Inv387_09bb_R9_0_I1' BY DEF TypeOK,RequestVoteAction,RequestVote,Inv387_09bb_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ Inv387_09bb_R9_0_I1 /\ RequestVoteAction => Inv387_09bb_R9_0_I1' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv387_09bb_R9_0_I1,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW VARI \in Server',
+                        NEW VARREQVRES \in requestVoteResponseMsgs'
+                 PROVE  (~(VARREQVRES.mdest = VARI) \/ (~(votesGranted[VARI] = {})))'
+      BY DEF Inv387_09bb_R9_0_I1, RequestVoteAction
+    <2> QED
+      BY DEF TypeOK,RequestVoteAction,RequestVote,Inv387_09bb_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv387_09bb_R9_0_I1,UpdateTermAction)
   <1>2. TypeOK /\ Inv387_09bb_R9_0_I1 /\ UpdateTermAction => Inv387_09bb_R9_0_I1' BY DEF TypeOK,UpdateTermAction,UpdateTerm,Inv387_09bb_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv387_09bb_R9_0_I1,BecomeLeaderAction)
