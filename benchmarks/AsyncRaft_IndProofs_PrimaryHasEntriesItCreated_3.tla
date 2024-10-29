@@ -1503,7 +1503,7 @@ THEOREM L_36 == TypeOK /\ Inv11810_6aa7_R2_1_I2 /\ Inv5_404d_R0_2_I1 /\ Next => 
 THEOREM Init => IndGlobal
     <1> USE A0,A1,A2,A3,A4,A5,A6,A7
     <1>0. Init => TypeOK BY DEF Init, TypeOK, IndGlobal
-    <1>1. Init => Safety BY DEF Init, Safety, IndGlobal
+    <1>1. Init => Safety BY DEF Init, Safety, IndGlobal, H_PrimaryHasEntriesItCreated
     <1>2. Init => Inv32252_9e34_R0_0_I2 BY DEF Init, Inv32252_9e34_R0_0_I2, IndGlobal
     <1>3. Init => Inv44992_e200_R1_1_I2 BY DEF Init, Inv44992_e200_R1_1_I2, IndGlobal
     <1>4. Init => Inv33263_295b_R0_1_I2 BY DEF Init, Inv33263_295b_R0_1_I2, IndGlobal
