@@ -3756,7 +3756,7 @@ class InductiveInvGen():
             proof = pickle.load(f)
 
         root = proof.root
-        proof.save_tex = True
+        proof.save_tex = False
 
         # Add spec definitions.
         if self.load_parse_tree:
@@ -4348,7 +4348,7 @@ class InductiveInvGen():
         # Initial rendering.
         if self.save_dot and len(self.proof_graph["edges"]) > 0:
             self.render_proof_graph()
-            self.render_proof_graph(save_tex=True)
+            # self.render_proof_graph(save_tex=True)
 
         if self.persistent_proof_tree_mode and self.reprove_failed_nodes:
             logging.info("Attempting to re-prove failed nodes after loading proof graph.")
