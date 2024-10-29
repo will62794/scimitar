@@ -1483,7 +1483,19 @@ THEOREM L_30 == TypeOK /\ Inv76_9fea_R16_1_I1 /\ Inv23_bf9f_R16_0_I0 /\ Inv22023
   \* (Inv22023_0125_R7_1_I2,ClientRequestAction)
   <1>4. TypeOK /\ Inv22023_0125_R7_1_I2 /\ ClientRequestAction => Inv22023_0125_R7_1_I2' BY DEF TypeOK,ClientRequestAction,ClientRequest,Inv22023_0125_R7_1_I2
   \* (Inv22023_0125_R7_1_I2,AppendEntriesAction)
-  <1>5. TypeOK /\ Inv23_bf9f_R16_0_I0 /\ Inv22023_0125_R7_1_I2 /\ AppendEntriesAction => Inv22023_0125_R7_1_I2' BY DEF TypeOK,Inv23_bf9f_R16_0_I0,AppendEntriesAction,AppendEntries,Inv22023_0125_R7_1_I2
+  <1>5. TypeOK /\ Inv23_bf9f_R16_0_I0 /\ Inv22023_0125_R7_1_I2 /\ AppendEntriesAction => Inv22023_0125_R7_1_I2' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv23_bf9f_R16_0_I0,
+                        Inv22023_0125_R7_1_I2,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW VARI \in Server',
+                        NEW VARMAEREQ \in appendEntriesRequestMsgs'
+                 PROVE  ((VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] <= VARMAEREQ.mterm) \/ ((VARMAEREQ.mentries = <<>>) \/ ((votesGranted[VARI] \in Quorum))))'
+      BY DEF AppendEntriesAction, Inv22023_0125_R7_1_I2
+    <2> QED
+      BY DEF TypeOK,Inv23_bf9f_R16_0_I0,AppendEntriesAction,AppendEntries,Inv22023_0125_R7_1_I2
   \* (Inv22023_0125_R7_1_I2,HandleRequestVoteRequestAction)
   <1>6. TypeOK /\ Inv22023_0125_R7_1_I2 /\ HandleRequestVoteRequestAction => Inv22023_0125_R7_1_I2' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv22023_0125_R7_1_I2,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv22023_0125_R7_1_I2,HandleRequestVoteResponseAction)
@@ -1672,12 +1684,12 @@ THEOREM Init => IndGlobal
     <1>18. Init => Inv34192_7f3f_R4_1_I2 BY DEF Init, Inv34192_7f3f_R4_1_I2, IndGlobal
     <1>19. Init => Inv572_4aa6_R6_2_I1 BY DEF Init, Inv572_4aa6_R6_2_I1, IndGlobal
     <1>20. Init => Inv15_1f30_R13_0_I1 BY DEF Init, Inv15_1f30_R13_0_I1, IndGlobal
-    <1>21. Init => Inv3_c57a_R6_2_I1 BY DEF Init, Inv3_c57a_R6_2_I1, IndGlobal
-    <1>22. Init => Inv6_2014_R14_0_I0 BY DEF Init, Inv6_2014_R14_0_I0, IndGlobal
+    <1>21. Init => Inv3_c57a_R6_2_I1 BY DEF Init, Inv3_c57a_R6_2_I1, IndGlobal,H_LogEntryInTermImpliesSafeAtTerm
+    <1>22. Init => Inv6_2014_R14_0_I0 BY DEF Init, Inv6_2014_R14_0_I0, IndGlobal,H_LogEntryInTermImpliesSafeAtTermAppendEntries
     <1>23. Init => Inv247_73fd_R25_0_I1 BY DEF Init, Inv247_73fd_R25_0_I1, IndGlobal
     <1>24. Init => Inv12_0a54_R25_0_I1 BY DEF Init, Inv12_0a54_R25_0_I1, IndGlobal
-    <1>25. Init => Inv6_441b_R14_1_I1 BY DEF Init, Inv6_441b_R14_1_I1, IndGlobal
-    <1>26. Init => Inv23_bf9f_R16_0_I0 BY DEF Init, Inv23_bf9f_R16_0_I0, IndGlobal
+    <1>25. Init => Inv6_441b_R14_1_I1 BY DEF Init, Inv6_441b_R14_1_I1, IndGlobal,H_QuorumsSafeAtTerms
+    <1>26. Init => Inv23_bf9f_R16_0_I0 BY DEF Init, Inv23_bf9f_R16_0_I0, IndGlobal,LogIndices
     <1>27. Init => Inv76_9fea_R16_1_I1 BY DEF Init, Inv76_9fea_R16_1_I1, IndGlobal
     <1>28. Init => Inv23_6261_R14_1_I1 BY DEF Init, Inv23_6261_R14_1_I1, IndGlobal
     <1>29. Init => Inv16213_37f1_R14_2_I2 BY DEF Init, Inv16213_37f1_R14_2_I2, IndGlobal
