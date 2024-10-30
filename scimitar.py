@@ -2211,6 +2211,15 @@ class InductiveInvGen():
                 process_local=False
                 quant_inv_fn = self.quant_inv
 
+                # Add these seed lemmas in the first round only to use if they exist.
+                if "seed_lemmas" in self.spec_config:
+                    seed_lemmas = self.spec_config["seed_lemmas"]
+                    preds += seed_lemmas
+                    logging.info(f"Adding {len(seed_lemmas)} seed lemmas to predicate set.")
+                    for p in seed_lemmas:
+                        curr_pred_weights[p] = 1.0
+
+
             # On second iteration, search for non process local invariants.
             if iteration==2:
                 num_conjs = init_conjs + 1
