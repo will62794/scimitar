@@ -31,6 +31,8 @@
         "votesGranted[VARJ] \\in Quorum",
         "GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
         "GrantedVoteSet(VARJ) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
+        "VARI \\in GrantedVoteSet(VARJ) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
+        "VARJ \\in GrantedVoteSet(VARI) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
         "VARI \\in votesGranted[VARI]",
         "VARJ \\in votesGranted[VARI]",
         "VARI \\in votesGranted[VARJ]",
