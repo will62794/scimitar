@@ -36,6 +36,7 @@
         "VARI \\in votesGranted[VARI]",
         "VARJ \\in votesGranted[VARI]",
         "VARI \\in votesGranted[VARJ]",
+        "VARJ \\in votesGranted[VARJ]",
         "votesGranted[VARI] \\cap votesGranted[VARJ] = {}",
         "(\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )",
         "VARREQVRES.mterm = currentTerm[VARI]",
