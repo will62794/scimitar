@@ -2104,4 +2104,20 @@ LInv7_bf9f_R13_0_I0 ==
     \A VARLOGINDI \in LogIndices : ~(VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] > currentTerm[VARI])
 
 
+\* (Safety, BecomeLeader) main support lemma.
+LInv14_ed8d_R0_1_I0 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+        (((state[VARI] = Candidate /\ VARI # VARJ)) /\ (votesGranted[VARI] \in Quorum)) => (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))
+
+\* (Safety, AcceptAppendEntriesRequestAppend) main support lemma.
+LLInv0_33b0_R0_0_I0 == 
+    \A VARI \in Server : 
+    \A VARMAEREQ \in appendEntriesRequestMsgs : 
+    \A VARLOGINDI \in LogIndices : 
+        ((VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \/ (~(VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\ state[VARI] = Leader)) \/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))
+
+
+
+
 ===============================================================================
