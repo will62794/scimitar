@@ -146,6 +146,7 @@
     ],
     "seed_lemmas": [
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
+        "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
         "~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader)))",
         "(VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1))"
     ],
