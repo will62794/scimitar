@@ -110,7 +110,7 @@
         "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > currentTerm[VARMAEREQ.msource]",
         "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] <= currentTerm[VARI]",
         "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] <= VARMAEREQ.mterm",
-        "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] <= VARMAEREQ.mterm",
+        "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm",
         "VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader",
         "VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]",
         "VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] < currentTerm[VARI]",
@@ -148,7 +148,8 @@
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
         "~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader)))",
-        "(VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1))"
+        "(VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1))",
+        "H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
     ],
     "older_preds" : [
         "VARMAEREQ.mcommitIndex > 0",
