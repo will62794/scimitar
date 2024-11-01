@@ -1048,6 +1048,8 @@ H_NoLogDivergence ==
                 /\ log[s1][index] = log[s2][index]
 
 
+CTICost == 0
+
 
 
 \* INV: Used in debugging
