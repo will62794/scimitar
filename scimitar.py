@@ -4194,7 +4194,7 @@ class InductiveInvGen():
             print(" ", ob)    
         return unproved_obls  
 
-    def generate_per_action_ctis(self, obls_to_check_ctis, obl_pred_tup, obl):
+    def generate_per_action_ctis(self, obls_to_check_ctis, obl_pred_tup, obl, pre_props_per_action={}, defs_to_add=[]):
         k_ctis = set()
 
         for (k_cti_lemma, k_cti_action) in obls_to_check_ctis:
@@ -4226,9 +4226,13 @@ class InductiveInvGen():
             print(k_cti_action)
             if (self.action_filter is None) or (self.action_filter is not None and k_cti_action in self.action_filter):
                 for cobj in cobjs:
+                    pre_props = None
+                    if k_cti_action in pre_props_per_action:
+                        pre_props = pre_props_per_action[k_cti_action]
                     k_ctis_action_new, k_cti_traces = self.generate_ctis(props=[obl_pred_tup], 
-                                                                    specname_tag=obl, actions=[k_cti_action], 
-                                                                    ignore_vars=cti_ignore_vars, constants_obj=cobj)
+                                                                    specname_tag=(obl + "_" + k_cti_action), actions=[k_cti_action], 
+                                                                    ignore_vars=cti_ignore_vars, constants_obj=cobj,
+                                                                    pre_props=pre_props, defs_to_add=defs_to_add)
                     for c in k_ctis_action_new:
                         c.constants_obj = cobj
                     print("Number of new action ctis:", len(k_ctis_action_new))
@@ -5357,27 +5361,50 @@ class InductiveInvGen():
         support_nodes = self.proof_graph_get_support_nodes(n)
         defs_to_add = [(nd, self.proof_graph["nodes"][nd]["expr"]) for nd in lemma_nodes if nd != n]
 
+        if len(self.proof_graph["nodes"]) > 0:
+            self.reparse_spec_with_proof_graph_defs()
+
+        unproved_obls = self.tlaps_induction_check(n)
+
+        nname = n
+        if n == "Safety":
+            nname = self.safety
+        obls_to_check_ctis = unproved_obls
+        print(obls_to_check_ctis)
+
+        pre_props_per_action = {}
+
         all_support_nodes = []
         for a in support_nodes:
             if action_filter is not None and a not in action_filter:
                 continue
             else:
                 all_support_nodes += support_nodes[a]
-        pre_props =  [(x, self.proof_graph["nodes"][n]["expr"], "") for x in all_support_nodes]
-        logging.info(f"Checking lemma proof node: {n}")
-        for p in pre_props:
-            logging.info(f" pre: {p}")
-        props = [(n, self.proof_graph["nodes"][n]["expr"], "")]
+                pre_props_per_action[a] =  [(x, self.proof_graph["nodes"][n]["expr"], "") for x in support_nodes[a]]
 
-        # Get constant objects to use for checking CTIs.
-        cobjs = self.get_ctigen_constant_instances()
-        k_ctis = []
-        for cobj in cobjs:
-            print("Checking with constants instantiation: ", cobj)
-            k_ctis_new, k_cti_traces = self.generate_ctis(props=props, pre_props=pre_props, defs_to_add=defs_to_add, specname_tag=n, constants_obj=cobj)
-            for c in k_ctis_new:
-                c.constants_obj = cobj
-            k_ctis += k_ctis_new
+        for a in pre_props_per_action:
+            logging.info(f"Pre-props for action {a}: {pre_props_per_action[a]}")
+
+        k_ctis = self.generate_per_action_ctis(obls_to_check_ctis, (n,self.proof_graph["nodes"][n]["expr"],self.proof_graph["nodes"][n]["expr"]), nname, 
+                                      pre_props_per_action=pre_props_per_action, defs_to_add=defs_to_add)
+
+
+        # print(self.proof_graph["nodes"][n])
+        # pre_props =  [(x, self.proof_graph["nodes"][n]["expr"], "") for x in all_support_nodes]
+        # logging.info(f"Checking lemma proof node: {n}")
+        # for p in pre_props:
+        #     logging.info(f" pre: {p}")
+        # props = [(n, self.proof_graph["nodes"][n]["expr"], "")]
+
+        # # Get constant objects to use for checking CTIs.
+        # cobjs = self.get_ctigen_constant_instances()
+        # k_ctis = []
+        # for cobj in cobjs:
+        #     print("Checking with constants instantiation: ", cobj)
+        #     k_ctis_new, k_cti_traces = self.generate_ctis(props=props, pre_props=pre_props, defs_to_add=defs_to_add, specname_tag=n, constants_obj=cobj)
+        #     for c in k_ctis_new:
+        #         c.constants_obj = cobj
+        #     k_ctis += k_ctis_new
 
 
         if action_filter is not None:
