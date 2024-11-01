@@ -67,14 +67,18 @@ NumSubsets == 15
 
 \* RequestVoteRequestTypeSampled == RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteRequestTypeBounded) 
 \* RequestVoteResponseTypeSampled == RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteResponseTypeBounded)  
-AppendEntriesRequestTypeSampled == RandomSetOfSubsets(2, 2, AppendEntriesRequestTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesRequestTypeBounded)
-AppendEntriesResponseTypeSampled == RandomSetOfSubsets(1, 1, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(2, 2, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseTypeBounded)  
+\* AppendEntriesRequestTypeSampled == RandomSetOfSubsets(10, 1, AppendEntriesRequestTypeBounded) \*\cup RandomSetOfSubsets(3, 3, AppendEntriesRequestTypeBounded)
+\* AppendEntriesResponseTypeSampled == RandomSetOfSubsets(10, 1, AppendEntriesResponseTypeBounded) \*\cup RandomSetOfSubsets(2, 2, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseTypeBounded)  
 
-\* ASSUME PrintT(RandomSetOfSubsets(10, 1, RequestVoteRequestTypeBounded) )
+\* Assume max of 1 message in network is sufficient for CTI sampling.
+RequestVoteRequestTypeSampled == {{m} : m \in RandomSubset(80, RequestVoteRequestTypeBounded)}
+RequestVoteResponseTypeSampled == {{m} : m \in RandomSubset(80, RequestVoteResponseTypeBounded)}
+AppendEntriesRequestTypeSampled == {{m} : m \in RandomSubset(80, AppendEntriesRequestTypeBounded)}
+AppendEntriesResponseTypeSampled == {{m} : m \in RandomSubset(80, AppendEntriesResponseTypeBounded)}
 
 TypeOKRandom == 
-    /\ requestVoteRequestMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteRequestTypeBounded) 
-    /\ requestVoteResponseMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteResponseTypeBounded) 
+    /\ requestVoteRequestMsgs \in RequestVoteRequestTypeSampled
+    /\ requestVoteResponseMsgs \in RequestVoteResponseTypeSampled 
     /\ appendEntriesRequestMsgs \in AppendEntriesRequestTypeSampled
     /\ appendEntriesResponseMsgs \in AppendEntriesResponseTypeSampled
     /\ currentTerm \in [Server -> Terms]
