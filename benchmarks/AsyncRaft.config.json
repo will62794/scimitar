@@ -263,7 +263,7 @@
             "MaxTerm \\in Nat"
         ],
         "lemma_def_expands": {
-            "Safety": ["H_OnePrimaryPerTerm"],
+            "Safety": ["H_OnePrimaryPerTerm", "H_PrimaryHasEntriesItCreated"],
             "H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm": ["ExistsRequestVoteResponseQuorum"]
         },
         "action_def_expands":{
