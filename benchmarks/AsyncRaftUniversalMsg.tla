@@ -34,7 +34,7 @@ Modified further by Will Schultz for safety proof experiments, August 2023.
 Variant in the "universal" message passing style.
 *)
 
-EXTENDS Naturals, FiniteSets, FiniteSetsExt, Sequences, Bags, TLC, Randomization
+EXTENDS Naturals, FiniteSets, Sequences, Bags, TLC, Randomization
 
 \* The set of server IDs
 CONSTANTS Server
@@ -50,9 +50,6 @@ CONSTANTS RequestVoteRequest,
           RequestVoteResponse,
           AppendEntriesRequest, 
           AppendEntriesResponse
-
-\* Used for filtering messages under different circumstance
-CONSTANTS EqualTerm, LessOrEqualTerm
 
 ----
 \* Global variables.
@@ -114,6 +111,9 @@ Symmetry == Permutations(Server)
 
 \* Helpers
 
+Min(s) == CHOOSE x \in s : \A y \in s : x <= y
+Max(s) == CHOOSE x \in s : \A y \in s : x >= y
+
 \* The set of all quorums. This just calculates simple majorities, but the only
 \* important property is that every quorum overlaps with every other.
 Quorum == {i \in SUBSET(Server) : Cardinality(i) * 2 > Cardinality(Server)}
@@ -124,13 +124,13 @@ LastTerm(xlog) == IF Len(xlog) = 0 THEN 0 ELSE xlog[Len(xlog)]
 \* The message is of the type and has a matching term.
 \* Messages with a higher term are handled by the
 \* action UpdateTerm
-ReceivableRequestVoteMessage(m, mtype, term_match) ==
-    \* /\ msgs # {}
-    /\ m.mtype = mtype
-    /\ \/ /\ term_match = EqualTerm
-          /\ m.mterm = currentTerm[m.mdest]
-       \/ /\ term_match = LessOrEqualTerm
-          /\ m.mterm <= currentTerm[m.mdest]
+\* ReceivableRequestVoteMessage(m, mtype, term_match) ==
+\*     \* /\ msgs # {}
+\*     /\ m.mtype = mtype
+\*     /\ \/ /\ term_match = EqualTerm
+\*           /\ m.mterm = currentTerm[m.mdest]
+\*        \/ /\ term_match = LessOrEqualTerm
+\*           /\ m.mterm <= currentTerm[m.mdest]
 
 
 \* Return the minimum value from a set, or undefined if the set is empty.
@@ -241,6 +241,9 @@ ClientRequest(i) ==
 
 \* The set of servers that agree up through index.
 Agree(i, index) == {i} \cup {k \in Server : matchIndex[i][k] >= index }
+
+AgreeIndexes(i) == {index \in DOMAIN log[i] : Agree(i, index) \in Quorum}
+
 
 \* ACTION: AdvanceCommitIndex ---------------------------------
 \* Leader i advances its commitIndex.
@@ -438,7 +441,7 @@ NextUnchanged == UNCHANGED vars
 
 CONSTANT MaxTerm
 CONSTANT MaxLogLen
-CONSTANT MaxNumVoteMsgs
+\* CONSTANT MaxNumVoteMsgs
 
 Terms == 0..MaxTerm
 LogIndices == 1..MaxLogLen
@@ -507,22 +510,20 @@ AppendEntriesResponseType == [
 ]
 
 
-\* Set of all subsets of a set of size <= k.
-kOrSmallerSubset(k, S) == UNION {(kSubset(n, S)) : n \in 0..k}
+\* kOrSmallerSubset(k, S) == UNION {(kSubset(n, S)) : n \in 0..k}
 
-\* 
-\* Work around size limitations of TLC subset computations.
-\* 
 
-RequestVoteResponseTypeSampled == UNION { kOrSmallerSubset(2, RequestVoteResponseTypeOp({t})) : t \in Terms }
-RequestVoteRequestTypeSampled == UNION { kOrSmallerSubset(2, RequestVoteRequestTypeOp({t})) : t \in Terms }
-
-RequestVoteType == RandomSetOfSubsets(3, 3, RequestVoteRequestType) \cup RandomSetOfSubsets(3, 3, RequestVoteResponseType)  
-AppendEntriesType == RandomSetOfSubsets(3, 3, AppendEntriesRequestType) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseType)  
+msgType == [
+    from : Server,
+    currentTerm : [Server -> Terms],
+    state       : [Server -> {Leader, Follower, Candidate}],
+    votedFor    : [Server -> ({Nil} \cup Server)],
+    log             : [Server -> Seq(Terms)],
+    commitIndex     : [Server -> LogIndicesWithZero]
+]
 
 TypeOK == 
-    /\ msgs \in RequestVoteType
-    /\ msgs \in AppendEntriesType
+    /\ msgs \in SUBSET msgType
     /\ currentTerm \in [Server -> Terms]
     /\ state       \in [Server -> {Leader, Follower, Candidate}]
     /\ votedFor    \in [Server -> ({Nil} \cup Server)]
@@ -535,6 +536,32 @@ TypeOK ==
     /\ \A m \in msgs : m.msource # m.mdest
     /\ \A m \in msgs : m.msource # m.mdest
 
+
+AvgSubsetSize == 1
+NumSubsets == 15
+
+msgTypeSampled == [
+    from : Server,
+    currentTerm : RandomSubset(8, [Server -> Terms]),
+    state       : RandomSubset(8, [Server -> {Leader, Follower, Candidate}]),
+    votedFor    : RandomSubset(8, [Server -> ({Nil} \cup Server)]),
+    log             : [Server -> RandomSubset(6, BoundedSeq(Terms, MaxLogLen))],
+    commitIndex     : RandomSubset(8, [Server -> LogIndicesWithZero])
+]
+
+ASSUME PrintT(Cardinality(Terms))
+ASSUME PrintT(Cardinality(msgTypeSampled))
+
+TypeOKRandom == 
+    /\ msgs \in RandomSetOfSubsets(2, 2, msgTypeSampled)
+    /\ currentTerm \in [Server -> Terms]
+    /\ state       \in [Server -> {Leader, Follower, Candidate}]
+    /\ votedFor    \in [Server -> ({Nil} \cup Server)]
+    /\ votesGranted \in [Server -> (SUBSET Server)]
+    /\ log             \in [Server -> BoundedSeq(Terms, MaxLogLen)]
+    /\ commitIndex     \in [Server -> LogIndicesWithZero]
+    /\ nextIndex  \in [Server -> RandomSubset(8, [Server -> LogIndices])]
+    /\ matchIndex \in [Server -> RandomSubset(8, [Server -> LogIndicesWithZero])]  
 
 Spec == Init /\ [][Next]_vars
 
@@ -588,8 +615,8 @@ CommittedEntriesReachMajority ==
 StateConstraint == 
     /\ \A s \in Server : currentTerm[s] <= MaxTerm
     /\ \A s \in Server : Len(log[s]) <= MaxLogLen
-    /\ Cardinality(msgs) <= MaxNumVoteMsgs
-    /\ Cardinality(msgs) <= MaxNumVoteMsgs
+    \* /\ Cardinality(msgs) <= MaxNumVoteMsgs
+    \* /\ Cardinality(msgs) <= MaxNumVoteMsgs
     \* + BagCardinality(messages) <= MaxNumMsgs
 
 
