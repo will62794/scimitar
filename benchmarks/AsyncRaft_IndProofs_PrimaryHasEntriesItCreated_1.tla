@@ -310,7 +310,18 @@ THEOREM L_7 == TypeOK /\ Inv9_f533_R11_1_I0 /\ Inv0_e30e_R11_0_I1 /\ Inv6_42ac_R
   \* (Inv6_42ac_R5_1_I1,HandleRequestVoteRequestAction)
   <1>6. TypeOK /\ Inv0_e30e_R11_0_I1 /\ Inv6_42ac_R5_1_I1 /\ HandleRequestVoteRequestAction => Inv6_42ac_R5_1_I1' BY DEF TypeOK,Inv0_e30e_R11_0_I1,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv6_42ac_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv6_42ac_R5_1_I1,HandleRequestVoteResponseAction)
-  <1>7. TypeOK /\ Inv6_42ac_R5_1_I1 /\ HandleRequestVoteResponseAction => Inv6_42ac_R5_1_I1' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv6_42ac_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ Inv6_42ac_R5_1_I1 /\ HandleRequestVoteResponseAction => Inv6_42ac_R5_1_I1' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv6_42ac_R5_1_I1,
+                        NEW m_1 \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m_1),
+                        NEW s \in Server', NEW t \in Server',
+                        NEW m \in requestVoteResponseMsgs',
+                        (/\ state[s] \in {Candidate,Leader} /\ t \in votesGranted[s])'
+                 PROVE  (~(/\ m.mterm = currentTerm[s] /\ m.msource = t /\ m.mdest # s /\ m.mvoteGranted))'
+      BY DEF HandleRequestVoteResponseAction, Inv6_42ac_R5_1_I1
+    <2> QED
+      BY AddingToQuorumRemainsQuorum DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv6_42ac_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv6_42ac_R5_1_I1,AcceptAppendEntriesRequestAppendAction)
   <1>8. TypeOK /\ Inv6_42ac_R5_1_I1 /\ AcceptAppendEntriesRequestAppendAction => Inv6_42ac_R5_1_I1' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,Inv6_42ac_R5_1_I1
   \* (Inv6_42ac_R5_1_I1,HandleAppendEntriesResponseAction)
@@ -524,7 +535,16 @@ THEOREM L_15 == TypeOK /\ Inv42_3acc_R5_1_I1 /\ Next => Inv42_3acc_R5_1_I1'
   \* (Inv42_3acc_R5_1_I1,HandleRequestVoteRequestAction)
   <1>6. TypeOK /\ Inv42_3acc_R5_1_I1 /\ HandleRequestVoteRequestAction => Inv42_3acc_R5_1_I1' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv42_3acc_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv42_3acc_R5_1_I1,HandleRequestVoteResponseAction)
-  <1>7. TypeOK /\ Inv42_3acc_R5_1_I1 /\ HandleRequestVoteResponseAction => Inv42_3acc_R5_1_I1' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv42_3acc_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ Inv42_3acc_R5_1_I1 /\ HandleRequestVoteResponseAction => Inv42_3acc_R5_1_I1' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv42_3acc_R5_1_I1,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW VARI \in Server'
+                 PROVE  ((votesGranted[VARI] \in Quorum) \/ (~((state[VARI] = Leader))))'
+      BY DEF HandleRequestVoteResponseAction, Inv42_3acc_R5_1_I1
+    <2> QED
+      BY FS_Singleton, FS_Union, AddingToQuorumRemainsQuorum DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv42_3acc_R5_1_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv42_3acc_R5_1_I1,AcceptAppendEntriesRequestAppendAction)
   <1>8. TypeOK /\ Inv42_3acc_R5_1_I1 /\ AcceptAppendEntriesRequestAppendAction => Inv42_3acc_R5_1_I1' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,Inv42_3acc_R5_1_I1
   \* (Inv42_3acc_R5_1_I1,HandleAppendEntriesResponseAction)
