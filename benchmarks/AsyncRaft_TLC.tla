@@ -71,10 +71,10 @@ NumSubsets == 15
 \* AppendEntriesResponseTypeSampled == RandomSetOfSubsets(10, 1, AppendEntriesResponseTypeBounded) \*\cup RandomSetOfSubsets(2, 2, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseTypeBounded)  
 
 \* Assume max of 1 message in network is sufficient for CTI sampling.
-RequestVoteRequestTypeSampled == {{m} : m \in RandomSubset(80, RequestVoteRequestTypeBounded)}
-RequestVoteResponseTypeSampled == {{m} : m \in RandomSubset(80, RequestVoteResponseTypeBounded)}
-AppendEntriesRequestTypeSampled == {{m} : m \in RandomSubset(80, AppendEntriesRequestTypeBounded)}
-AppendEntriesResponseTypeSampled == {{m} : m \in RandomSubset(80, AppendEntriesResponseTypeBounded)}
+RequestVoteRequestTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, RequestVoteRequestTypeBounded)}
+RequestVoteResponseTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, RequestVoteResponseTypeBounded)}
+AppendEntriesRequestTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, AppendEntriesRequestTypeBounded)}
+AppendEntriesResponseTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, AppendEntriesResponseTypeBounded)}
 
 TypeOKRandom == 
     /\ requestVoteRequestMsgs \in RequestVoteRequestTypeSampled
