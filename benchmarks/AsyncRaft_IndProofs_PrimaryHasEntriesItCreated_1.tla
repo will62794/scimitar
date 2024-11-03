@@ -250,11 +250,34 @@ THEOREM L_4 == TypeOK /\ Inv15883_404d_R2_1_I2 /\ Inv28_5a2e_R2_2_I0 /\ Inv21336
 THEOREM L_5 == TypeOK /\ Inv4_8e53_R5_0_I0 /\ Inv10_928b_R5_1_I1 /\ Inv42_3acc_R5_1_I1 /\ Inv6_42ac_R5_1_I1 /\ Inv4_8e53_R5_0_I0 /\ Inv15883_404d_R2_1_I2 /\ Next => Inv15883_404d_R2_1_I2'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (Inv15883_404d_R2_1_I2,RequestVoteAction)
-  <1>1. TypeOK /\ Inv15883_404d_R2_1_I2 /\ RequestVoteAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,RequestVoteAction,RequestVote,Inv15883_404d_R2_1_I2,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ Inv15883_404d_R2_1_I2 /\ RequestVoteAction => Inv15883_404d_R2_1_I2' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv15883_404d_R2_1_I2,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW VARI \in Server',
+                        NEW VARJ \in Server'
+                 PROVE  (~((state[VARI] = Candidate /\ VARI # VARJ /\ currentTerm[VARI] = currentTerm[VARJ])) \/ (~((state[VARJ] = Leader))) \/ (~(votesGranted[VARI] \in Quorum)))'
+      BY DEF Inv15883_404d_R2_1_I2, RequestVoteAction
+    <2> QED
+      BY DEF TypeOK,RequestVoteAction,RequestVote,Inv15883_404d_R2_1_I2,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv15883_404d_R2_1_I2,UpdateTermAction)
   <1>2. TypeOK /\ Inv15883_404d_R2_1_I2 /\ UpdateTermAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,UpdateTermAction,UpdateTerm,Inv15883_404d_R2_1_I2,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv15883_404d_R2_1_I2,BecomeLeaderAction)
-  <1>3. TypeOK /\ Inv4_8e53_R5_0_I0 /\ Inv15883_404d_R2_1_I2 /\ BecomeLeaderAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,Inv4_8e53_R5_0_I0,BecomeLeaderAction,BecomeLeader,Inv15883_404d_R2_1_I2
+  <1>3. TypeOK /\ Inv4_8e53_R5_0_I0 /\ Inv15883_404d_R2_1_I2 /\ BecomeLeaderAction => Inv15883_404d_R2_1_I2' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv4_8e53_R5_0_I0,
+                        Inv15883_404d_R2_1_I2,
+                        TRUE,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW VARI \in Server',
+                        NEW VARJ \in Server'
+                 PROVE  (~((state[VARI] = Candidate /\ VARI # VARJ /\ currentTerm[VARI] = currentTerm[VARJ])) \/ (~((state[VARJ] = Leader))) \/ (~(votesGranted[VARI] \in Quorum)))'
+      BY DEF BecomeLeaderAction, Inv15883_404d_R2_1_I2
+    <2> QED
+      BY EmptyIntersectionImpliesNotBothQuorums, StaticQuorumsOverlap, FS_Intersection DEF TypeOK,Inv4_8e53_R5_0_I0,BecomeLeaderAction,BecomeLeader,Inv15883_404d_R2_1_I2
   \* (Inv15883_404d_R2_1_I2,ClientRequestAction)
   <1>4. TypeOK /\ Inv15883_404d_R2_1_I2 /\ ClientRequestAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,ClientRequestAction,ClientRequest,Inv15883_404d_R2_1_I2
   \* (Inv15883_404d_R2_1_I2,AppendEntriesAction)
@@ -262,7 +285,21 @@ THEOREM L_5 == TypeOK /\ Inv4_8e53_R5_0_I0 /\ Inv10_928b_R5_1_I1 /\ Inv42_3acc_R
   \* (Inv15883_404d_R2_1_I2,HandleRequestVoteRequestAction)
   <1>6. TypeOK /\ Inv15883_404d_R2_1_I2 /\ HandleRequestVoteRequestAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv15883_404d_R2_1_I2,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv15883_404d_R2_1_I2,HandleRequestVoteResponseAction)
-  <1>7. TypeOK /\ Inv10_928b_R5_1_I1 /\ Inv42_3acc_R5_1_I1 /\ Inv6_42ac_R5_1_I1 /\ Inv4_8e53_R5_0_I0 /\ Inv15883_404d_R2_1_I2 /\ HandleRequestVoteResponseAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,Inv10_928b_R5_1_I1,Inv42_3acc_R5_1_I1,Inv6_42ac_R5_1_I1,Inv4_8e53_R5_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv15883_404d_R2_1_I2,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ Inv10_928b_R5_1_I1 /\ Inv42_3acc_R5_1_I1 /\ Inv6_42ac_R5_1_I1 /\ Inv4_8e53_R5_0_I0 /\ Inv15883_404d_R2_1_I2 /\ HandleRequestVoteResponseAction => Inv15883_404d_R2_1_I2' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Inv10_928b_R5_1_I1,
+                        Inv42_3acc_R5_1_I1,
+                        Inv6_42ac_R5_1_I1,
+                        Inv4_8e53_R5_0_I0,
+                        Inv15883_404d_R2_1_I2,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW VARI \in Server',
+                        NEW VARJ \in Server'
+                 PROVE  (~((state[VARI] = Candidate /\ VARI # VARJ /\ currentTerm[VARI] = currentTerm[VARJ])) \/ (~((state[VARJ] = Leader))) \/ (~(votesGranted[VARI] \in Quorum)))'
+      BY DEF HandleRequestVoteResponseAction, Inv15883_404d_R2_1_I2
+    <2> QED
+      BY EmptyIntersectionImpliesNotBothQuorums, StaticQuorumsOverlap, FS_Intersection DEF TypeOK,Inv10_928b_R5_1_I1,Inv42_3acc_R5_1_I1,Inv6_42ac_R5_1_I1,Inv4_8e53_R5_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv15883_404d_R2_1_I2,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv15883_404d_R2_1_I2,AcceptAppendEntriesRequestAppendAction)
   <1>8. TypeOK /\ Inv15883_404d_R2_1_I2 /\ AcceptAppendEntriesRequestAppendAction => Inv15883_404d_R2_1_I2' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,Inv15883_404d_R2_1_I2
   \* (Inv15883_404d_R2_1_I2,HandleAppendEntriesResponseAction)
