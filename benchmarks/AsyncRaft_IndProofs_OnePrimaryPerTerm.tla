@@ -554,7 +554,7 @@ THEOREM L_8 == TypeOK /\ Inv5_3715_R5_0_I0 /\ Inv3_82b3_R3_1_I0 /\ Next => Inv3_
             <4>2. votedFor'[m.mdest] = mi.mdest
                 BY <2>3,<3>7 DEF TypeOK,Inv3_82b3_R3_1_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv5_3715_R5_0_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
             <4>3. votedFor'[m.mdest] = mj.mdest
-                BY <2>3,<3>7 DEF TypeOK,Inv3_82b3_R3_1_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv5_3715_R5_0_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+                BY SMTT(30),<2>3,<3>7 DEF TypeOK,Inv3_82b3_R3_1_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv5_3715_R5_0_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
             
             <4>4. QED BY <4>2, <4>3, <2>3,<3>7 DEF TypeOK,Inv3_82b3_R3_1_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv5_3715_R5_0_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
          <3>8. CASE m.mdest = mi.msource /\ currentTerm[m.mdest] = mi.mterm /\ mi.mvoteGranted 
