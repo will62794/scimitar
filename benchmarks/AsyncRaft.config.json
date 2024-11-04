@@ -155,7 +155,8 @@
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
         "\\A mi,mj \\in requestVoteResponseMsgs : (/\\ mi.mterm = mj.mterm /\\ mi.msource = mj.msource /\\ mi.mvoteGranted /\\ mj.mvoteGranted) => mi.mdest = mj.mdest",
         "\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest",
-        "~((state[VARI] = Candidate /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))) \\/ (~(votesGranted[VARI] \\in Quorum))"
+        "~((state[VARI] = Candidate /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))) \\/ (~(votesGranted[VARI] \\in Quorum))",
+        "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI])) \\/ (~(votesGranted[VARI] \\in Quorum))"
     ],
     "older_preds" : [
         "VARMAEREQ.mcommitIndex > 0",
