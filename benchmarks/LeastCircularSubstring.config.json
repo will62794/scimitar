@@ -1,0 +1,67 @@
+{
+    "preds"  :  [
+        "pc = \"L3\"",
+        "pc = \"L5\"",
+        "pc = \"L6\"",
+        "pc = \"L7\"",
+        "pc = \"L8\"",
+        "pc = \"L9\"",
+        "pc = \"L10\"",
+        "pc = \"L11\"",
+        "pc = \"L12\"",
+        "pc = \"L13\"",
+        "pc = \"L14\"",
+        "pc = \"LVR\"",
+        "pc = \"Done\"",
+        "b \\in Corpus",
+        "n = ZLen(b)",
+        "f[j - k - 1] = i",
+        "f[j - k] = nil",
+        "i = nil",
+        "j = 1",
+        "j < 2 * n",
+        "j >= 2 * n",
+        "k = 0",
+        "k = j - i - 1",
+        "k' = j",
+        "f' = [f EXCEPT ![j - k] = nil]",
+        "f' = [f EXCEPT ![j - k] = i + 1]",
+        "n > 0 /\\ b[j % n] = b[(k + i + 1) % n]",
+        "n > 0 /\\ b[j % n] /= b[(k + i + 1) % n]",
+        "j' = j + 1",
+        "pc' = \"L3\"",
+        "n = ZLen(b)",
+        "n >= 1",
+        "k <= j",
+        "i /= nil",
+        "pc = \"L10\" => i = nil"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "Correctness",
+    "constants"  :  {
+        "CharSetSize" : ["2"],
+        "MaxStringLength" : "4",
+        "Nat" : {"expr":"[ZSequences]ZSeqNat", "sub": true}
+    },
+    "constraint"  :  "",
+    "simulation_inv_check": false,
+    "simulation_inv_check_num_states": 700000,
+    "simulation_inv_check_depth": 20,
+    "quant_inv"  :  "",
+    "quant_vars"  :  [],
+    "quant_inv_alt"  :  null,
+    "model_consts"  :  "",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "lemma_def_expands": {
+            "Safety": ["H_TCConsistent"]
+
+        },
+        "action_def_expands":{
+        }
+    }    
+}
