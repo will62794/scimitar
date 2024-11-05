@@ -298,8 +298,9 @@ AdvanceCommitIndex(i) ==
           /\ commitIndex' = [commitIndex EXCEPT ![i] = newCommitIndex]
     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, currentTerm, state, votedFor, votesGranted, nextIndex, matchIndex, log, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
-UpdateTerm(mterm,mdest) ==
+UpdateTerm(m,mterm,mdest) ==
     /\ mterm > currentTerm[mdest]
+    /\ m \in (requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs)
     /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
     /\ state'          = [state       EXCEPT ![mdest] = Follower]
     /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
@@ -307,39 +308,39 @@ UpdateTerm(mterm,mdest) ==
     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
 
-\* ACTION: UpdateTerm
-\* Any RPC with a newer term causes the recipient to advance its term first.
-UpdateTermRVReq(mterm,mdest) ==
-    /\ mterm > currentTerm[mdest]
-    /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
-    /\ state'          = [state       EXCEPT ![mdest] = Follower]
-    /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
-        \* messages is unchanged so m can be processed further.
-    /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
+\* \* ACTION: UpdateTerm
+\* \* Any RPC with a newer term causes the recipient to advance its term first.
+\* UpdateTermRVReq(mterm,mdest) ==
+\*     /\ mterm > currentTerm[mdest]
+\*     /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
+\*     /\ state'          = [state       EXCEPT ![mdest] = Follower]
+\*     /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
+\*         \* messages is unchanged so m can be processed further.
+\*     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
-UpdateTermRVRes(mterm,mdest) ==
-    /\ mterm > currentTerm[mdest]
-    /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
-    /\ state'          = [state       EXCEPT ![mdest] = Follower]
-    /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
-        \* messages is unchanged so m can be processed further.
-    /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
+\* UpdateTermRVRes(mterm,mdest) ==
+\*     /\ mterm > currentTerm[mdest]
+\*     /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
+\*     /\ state'          = [state       EXCEPT ![mdest] = Follower]
+\*     /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
+\*         \* messages is unchanged so m can be processed further.
+\*     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
-UpdateTermAEReq(mterm,mdest) ==
-    /\ mterm > currentTerm[mdest]
-    /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
-    /\ state'          = [state       EXCEPT ![mdest] = Follower]
-    /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
-        \* messages is unchanged so m can be processed further.
-    /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
+\* UpdateTermAEReq(mterm,mdest) ==
+\*     /\ mterm > currentTerm[mdest]
+\*     /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
+\*     /\ state'          = [state       EXCEPT ![mdest] = Follower]
+\*     /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
+\*         \* messages is unchanged so m can be processed further.
+\*     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
-UpdateTermAERes(mterm,mdest) ==
-    /\ mterm > currentTerm[mdest]
-    /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
-    /\ state'          = [state       EXCEPT ![mdest] = Follower]
-    /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
-        \* messages is unchanged so m can be processed further.
-    /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
+\* UpdateTermAERes(mterm,mdest) ==
+\*     /\ mterm > currentTerm[mdest]
+\*     /\ currentTerm'    = [currentTerm EXCEPT ![mdest] = mterm]
+\*     /\ state'          = [state       EXCEPT ![mdest] = Follower]
+\*     /\ votedFor'       = [votedFor    EXCEPT ![mdest] = Nil]
+\*         \* messages is unchanged so m can be processed further.
+\*     /\ UNCHANGED <<appendEntriesRequestMsgs, appendEntriesResponseMsgs, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
 
 
@@ -540,7 +541,7 @@ HandleAppendEntriesResponse(m) ==
 
 \* RestartAction == TRUE /\ \E i \in Server : Restart(i)
 RequestVoteAction == TRUE /\ \E i \in Server : RequestVote(i)
-UpdateTermAction == TRUE /\ \E m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m.mterm, m.mdest)
+UpdateTermAction == TRUE /\ \E m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m, m.mterm, m.mdest)
 \* UpdateTermRVReqAction == TRUE /\ \E m \in requestVoteRequestMsgs : UpdateTermRVReq(m.mterm, m.mdest)
 \* UpdateTermRVResAction == TRUE /\ \E m \in requestVoteResponseMsgs : UpdateTermRVRes(m.mterm, m.mdest)
 \* UpdateTermAEReqAction == TRUE /\ \E m \in appendEntriesRequestMsgs : UpdateTermAEReq(m.mterm, m.mdest)
