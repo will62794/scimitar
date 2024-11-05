@@ -263,7 +263,14 @@ class InductiveInvGen():
                 # in the list.
                 if type(constants_obj[c]) == list:
                     val = constants_obj[c][-1] 
-                out += f"{c} = {val}\n"
+                is_sub = False
+                if type(constants_obj[c]) == dict:
+                    val = constants_obj[c]["expr"]
+                    is_sub = constants_obj[c]["sub"]
+                if not is_sub:
+                    out += f"{c} = {val}\n"
+                else:
+                    out += f"{c} <- {val}\n"
             return "CONSTANTS\n" + out
         return constants_obj
 
@@ -4189,9 +4196,9 @@ class InductiveInvGen():
                     print(lemma_source_map[start_line], obl_states[bid]["status"])
 
         logging.info(f"Checked local proof obligation with TLAPS in {time.time() - st}s.")
-        print("TLAPS UNPROVED:")
-        for ob in unproved_obls:
-            print(" ", ob)    
+        # print("TLAPS UNPROVED:")
+        # for ob in unproved_obls:
+        #     print(" ", ob)    
         return unproved_obls  
 
     def generate_per_action_ctis(self, obls_to_check_ctis, obl_pred_tup, obl, pre_props_per_action={}, defs_to_add=[]):
@@ -5120,8 +5127,32 @@ class InductiveInvGen():
         dot.node_attr["fontname"] = "courier"
         dot.node_attr["shape"] = "box"
         
-        # Store all nodes.
+        # Store all nodes in networkx graph.
+        import networkx as nx
+        G = nx.DiGraph()
         for e in self.proof_graph["edges"]:
+             # print(e)
+            G.add_edge(e[0], e[1])
+
+        print("EDGES:", G.number_of_edges())
+        print(len(list(G.nodes)))
+        print(list(G.nodes))
+        anc = nx.ancestors(G, "Safety_ClientRequestAction")
+        anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
+        # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
+        print("Ancestors:", len(anc))
+        print(anc)
+
+        cycles = nx.recursive_simple_cycles(G)
+        print("Cycles:", len(cycles))
+        cycle_nodes = []
+        for c in cycles:
+            cycle_nodes += c
+
+        
+
+        for e in self.proof_graph["edges"]:
+
             for n in e:
                 color = "black"
                 fillcolor = "white"
@@ -5196,6 +5227,12 @@ class InductiveInvGen():
                             # color = "red"
                             fillcolor = "salmon"
                         rounded=",rounded"
+                        if n in anc:
+                            fillcolor="lightblue"
+                        # if n in anc2 and n not in anc:
+                        #     fillcolor="yellow"
+                        # if n in cycle_nodes:
+                        #     fillcolor="orange"
                     
                     if save_tex:
                         style = ""
@@ -5254,9 +5291,12 @@ class InductiveInvGen():
                 "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[1],
                 "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[0],
             ]
+            attrs = {}
             if any(conds):
                 style += ",blue,line width=1.0mm"
-            dot.edge(e[0], e[1], style=style)
+            if e[0] in cycle_nodes and e[1] in cycle_nodes:
+                attrs = {"color": "red"}
+            dot.edge(e[0], e[1], style=style, **attrs)
 
         logging.info(f"Rendering proof graph ({len(self.proof_graph['edges'])} edges)")
         suffix = ""
