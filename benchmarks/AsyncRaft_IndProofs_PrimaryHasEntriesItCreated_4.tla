@@ -361,6 +361,18 @@ THEOREM L_1 == TypeOK /\ Inv24_ed8d_R0_1_I0 /\ Inv15_7bad_R0_2_I0 /\ Inv0_33b0_R
                      PROVE  (~(/\ log[j][k] = currentTerm[i]
                              /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k])))'
           OBVIOUS
+        <4> log'[m.mdest] = Append(log[m.mdest], (m.mentries)[1])
+\*        <4> log'[Len(log'[m.mdest])] = Append(log'[m.mdest], (m.mentries)[1])
+           BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,SMTT(3000),TWO_SERVERS_Assumption 
+                 DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
+         <4> Len(log'[m.mdest]) = Len(log[m.mdest]) + 1
+             BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,SMTT(3000),TWO_SERVERS_Assumption 
+         <4> Append(log[m.mdest], m.mentries[1])[Len(log[m.mdest])+1] = m.mentries[1]
+          BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,TWO_SERVERS_Assumption 
+           DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
+         <4> log'[m.mdest][Len(log[m.mdest])+1] = (m.mentries)[1]
+           BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,TWO_SERVERS_Assumption 
+           DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
         <4> QED
                  BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,SMTT(3000),TWO_SERVERS_Assumption 
                  DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
