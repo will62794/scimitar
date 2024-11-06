@@ -410,9 +410,8 @@ THEOREM L_8 == TypeOK /\ Inv0_2c32_R8_1_I1 /\ Inv0_2c32_R8_1_I1 /\ Inv0_2c32_R8_
   \* (Inv166_e30e_R11_0_I1,HandleRequestVoteRequestAction)
   <1>6. TypeOK /\ Inv166_e30e_R11_0_I1 /\ HandleRequestVoteRequestAction => Inv166_e30e_R11_0_I1' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv166_e30e_R11_0_I1,HandleRequestVoteResponseAction)
-  <1>7. TypeOK /\ Inv13_3715_R21_0_I0 /\ Inv13_3715_R21_0_I0 /\ Inv166_e30e_R11_0_I1 /\ HandleRequestVoteResponseAction => Inv166_e30e_R11_0_I1' 
+  <1>7. TypeOK /\ Inv13_3715_R21_0_I0 /\ Inv166_e30e_R11_0_I1 /\ HandleRequestVoteResponseAction => Inv166_e30e_R11_0_I1' 
     <2> SUFFICES ASSUME TypeOK,
-                        Inv13_3715_R21_0_I0,
                         Inv13_3715_R21_0_I0,
                         Inv166_e30e_R11_0_I1,
                         NEW m \in requestVoteResponseMsgs,
@@ -431,11 +430,17 @@ THEOREM L_8 == TypeOK /\ Inv0_2c32_R8_1_I1 /\ Inv0_2c32_R8_1_I1 /\ Inv0_2c32_R8_
           OBVIOUS
          <4> CASE VARI = t
              BY SMTT(30) DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
-         <4> CASE VARI # t
+         <4> CASE VARI # t /\ m.mdest = VARI
              BY SMTT(30) DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+         <4>3. CASE VARI # t /\ VARI # m.mdest /\ currentTerm[VARI] < currentTerm[m.mdest] + 1
+               BY <4>3 DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+          <4>4. CASE VARI # t /\ VARI # m.mdest /\ currentTerm[VARI] >= currentTerm[m.mdest] + 1 /\ state[VARI] \notin {Leader, Candidate}
+              BY <4>4 DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+           <4>5. CASE VARI # t /\ VARI # m.mdest /\ currentTerm[VARI] >= currentTerm[m.mdest] + 1 /\ state[VARI] \in {Leader, Candidate}
+              BY <4>5 DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
         
         <4> QED
-          BY SMTT(30) DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+          BY <4>3, <4>4, <4>5, SMTT(30) DEF TypeOK,Inv13_3715_R21_0_I0,Inv13_3715_R21_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv166_e30e_R11_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
         
       <3>2. QED
         BY <3>1
