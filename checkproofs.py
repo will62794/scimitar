@@ -120,7 +120,7 @@ def html_proof_report_lines(obligation_stats, tla_file):
 
 def tlapm_check_proof(tla_file):
     solver_flag = """--solver 'z3 -smt2 "$file"'"""
-    cmd = f"tlapm {solver_flag} --stretch 1 --toolbox 0 0 -I benchmarks --cleanfp --nofp {tla_file}"
+    cmd = f"tlapm {solver_flag} --stretch 1 --toolbox 0 0 -I benchmarks --cleanfp --threads 4 --nofp {tla_file}"
     print("tlapm cmd:", cmd)
     proc = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     toolbox_output = proc.stderr.read().decode(sys.stderr.encoding)
@@ -132,13 +132,16 @@ parser.add_argument('--report', help='Report containing proof checking stats.', 
 args = vars(parser.parse_args())
 
 # Check all proofs by default.
-import benchmark
-benchmarks_to_check = benchmark.benchmark_specs
-# benchmarks_to_check = filter(lambda b : b[0] != "mongo-logless-reconfig", benchmarks_to_check) # ignore for now.
-proofs_to_check = [f"benchmarks/{bm[1]}_IndProofs.tla" for bm in benchmarks_to_check if bm[1] is not None]
+# import benchmark
+# benchmarks_to_check = benchmark.benchmark_specs
+# # benchmarks_to_check = filter(lambda b : b[0] != "mongo-logless-reconfig", benchmarks_to_check) # ignore for now.
+# proofs_to_check = [f"benchmarks/{bm[1]}_IndProofs.tla" for bm in benchmarks_to_check if bm[1] is not None]
 
 if args["tla_file"] != None:
     proofs_to_check = [args["tla_file"]]
+else:
+    print("No TLA+ file specified. Exiting now.")
+    exit(0)
 
 # print(proofs_to_check)
 print(f"Checking proofs from {len(proofs_to_check)} files")
