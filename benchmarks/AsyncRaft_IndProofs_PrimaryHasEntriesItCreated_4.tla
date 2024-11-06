@@ -547,6 +547,10 @@ THEOREM L_14 == TypeOK /\ Inv61_fe26_R9_0_I1 /\ Next => Inv61_fe26_R9_0_I1'
                         NEW VARREQVM \in requestVoteRequestMsgs'
                  PROVE  (~(VARREQVM.msource = VARI) \/ (~(votesGranted[VARI] = {})))'
       BY DEF Inv61_fe26_R9_0_I1, RequestVoteAction
+    <2> CASE VARI = i
+          BY FS_Difference, FS_Subset DEF LastTerm, TypeOK,RequestVoteAction,RequestVote,Inv61_fe26_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    <2> CASE VARI # i
+          BY FS_Difference, FS_Subset DEF LastTerm, TypeOK,RequestVoteAction,RequestVote,Inv61_fe26_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType        
     <2> QED
       BY FS_Difference, FS_Subset DEF LastTerm, TypeOK,RequestVoteAction,RequestVote,Inv61_fe26_R9_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv61_fe26_R9_0_I1,UpdateTermAction)
