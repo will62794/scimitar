@@ -126,13 +126,41 @@ THEOREM L_1 == TypeOK /\ Inv4690_2f61_R0_0_I2 /\ Safety /\ Next => Safety'
   \* (Safety,e3aAction)
   <1>6. TypeOK /\ Safety /\ e3aAction => Safety' BY DEF TypeOK,e3aAction,e3a,Safety,\prec,H_MutualExclusion
   \* (Safety,e3bAction)
-  <1>7. TypeOK /\ Safety /\ e3bAction => Safety' BY DEF TypeOK,e3bAction,e3b,Safety,\prec,\prec,H_MutualExclusion
+  <1>7. TypeOK /\ Safety /\ e3bAction => Safety' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Safety,
+                        TRUE,
+                        NEW self \in Procs,
+                        pc[self] = "e3",
+                        NEW i \in {j \in Nat : j > max[self]},
+                        num' = [num EXCEPT ![self] = i],
+                        pc' = [pc EXCEPT ![self] = "e4"],
+                        UNCHANGED << flag, unchecked, max, nxt >>
+                 PROVE  Safety'
+      BY DEF e3b, e3bAction
+    <2> QED
+      BY DEF TypeOK,e3bAction,e3b,Safety,\prec,\prec,H_MutualExclusion
   \* (Safety,e4aAction)
   <1>8. TypeOK /\ Safety /\ e4aAction => Safety' BY DEF TypeOK,e4aAction,e4a,Safety,\prec,H_MutualExclusion
   \* (Safety,e4bAction)
   <1>9. TypeOK /\ Safety /\ e4bAction => Safety' BY DEF TypeOK,e4bAction,e4b,Safety,\prec,\prec,H_MutualExclusion
   \* (Safety,w1aAction)
-  <1>10. TypeOK /\ Safety /\ w1aAction => Safety' BY DEF TypeOK,w1aAction,w1a,Safety,\prec,\prec,H_MutualExclusion
+  <1>10. TypeOK /\ Safety /\ w1aAction => Safety' 
+    <2> SUFFICES ASSUME TypeOK,
+                        Safety,
+                        TRUE,
+                        NEW self \in Procs,
+                        pc[self] = "w1",
+                        unchecked[self] # {},
+                        NEW i \in unchecked[self],
+                        nxt' = [nxt EXCEPT ![self] = i],
+                        ~ flag[nxt'[self]],
+                        pc' = [pc EXCEPT ![self] = "w2"],
+                        UNCHANGED << num, flag, unchecked, max >>
+                 PROVE  Safety'
+      BY DEF w1a, w1aAction
+    <2> QED
+      BY DEF TypeOK,w1aAction,w1a,Safety,\prec,\prec,H_MutualExclusion
   \* (Safety,w1bAction)
   <1>11. TypeOK /\ Inv4690_2f61_R0_0_I2 /\ Safety /\ w1bAction => Safety' BY DEF TypeOK,Inv4690_2f61_R0_0_I2,w1bAction,w1b,Safety,\prec,\prec,H_MutualExclusion
   \* (Safety,w2Action)
@@ -2302,6 +2330,6 @@ THEOREM IndGlobal /\ Next => IndGlobal'
 \* Inv21195_R4_0_I3 == \A VARI \in Procs : ~(nxt[VARI] = VARI) \/ (~(unchecked[VARI] = {})) \/ (~(pc[VARI] = "w1"))
 =============================================================================
 \* Modification History
-\* Last modified Wed Oct 02 17:18:06 EDT 2024 by willyschultz
+\* Last modified Wed Nov 06 20:55:45 EST 2024 by willyschultz
 \* Last modified Tue Dec 18 13:48:46 PST 2018 by lamport
 \* Created Thu Nov 21 15:54:32 PST 2013 by lamport
