@@ -118,9 +118,13 @@ def html_proof_report_lines(obligation_stats, tla_file):
     html_lines.append("</html>")
     return html_lines
 
-def tlapm_check_proof(tla_file):
-    solver_flag = """--solver 'z3 -smt2 "$file"'"""
-    cmd = f"tlapm {solver_flag} --stretch 1 --toolbox 0 0 -I benchmarks --cleanfp --threads 4 --nofp {tla_file}"
+def tlapm_check_proof(tla_file, stretch=1, smt_only=True):
+    smt_only = False
+    if smt_only:
+        solver_flag = """--solver 'z3 -smt2 "$file"'"""
+    else:
+        solver_flag = ""
+    cmd = f"tlapm {solver_flag} --stretch {stretch} --toolbox 0 0 -I benchmarks --cleanfp --threads 4 --nofp {tla_file}"
     print("tlapm cmd:", cmd)
     proc = subprocess.Popen(cmd, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
     toolbox_output = proc.stderr.read().decode(sys.stderr.encoding)
@@ -129,6 +133,7 @@ def tlapm_check_proof(tla_file):
 parser = argparse.ArgumentParser(description='')
 parser.add_argument('--tla_file', help='TLA+ benchmark file containing proofs to check.', default=None, required=False, type=str)
 parser.add_argument('--report', help='Report containing proof checking stats.', default=None, required=False, type=str)
+parser.add_argument('--stretch', help='Timeout stretch factor.', default=1, required=False, type=int)
 args = vars(parser.parse_args())
 
 # Check all proofs by default.
@@ -152,7 +157,7 @@ for ind,tla_file in enumerate(proofs_to_check):
     # Check the proof with tlapm.
     checkproof_start = time.time()
     print(f"Checking proof in '{tla_file}' with tlapm ({ind+1}/{len(proofs_to_check)})")
-    tlapm_toolbox_output = tlapm_check_proof(tla_file)
+    tlapm_toolbox_output = tlapm_check_proof(tla_file, stretch=args["stretch"])
     checkproof_end = time.time()
     checkproof_time = round(checkproof_end - checkproof_start, 2)
     print("tlapm checked proof in " + str(checkproof_time) + "s")
