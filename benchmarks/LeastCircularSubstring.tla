@@ -13,7 +13,7 @@ EXTENDS Integers, ZSequences, TLC
 
 \* ASSUME CharacterSet \subseteq Nat
 
-VARIABLES b, n, f, i, j, k, pc
+VARIABLES var_b, var_n, var_f, var_i, var_j, var_k, var_pc
 
 CONSTANTS CharSetSize, MaxStringLength
 
@@ -24,84 +24,84 @@ Corpus == ZSeq(MCCharacterSet)
 nil == -1
 
 
-vars == << b, n, f, i, j, k, pc >>
+vars == << var_b, var_n, var_f, var_i, var_j, var_k, var_pc >>
 
 Init == (* Global variables *)
-        /\ b \in Corpus
-        /\ n = ZLen(b)
-        /\ f = [index \in 0..2*n |-> nil]
-        /\ i = nil
-        /\ j = 1
-        /\ k = 0
-        /\ pc = "L3"
+        /\ var_b \in Corpus
+        /\ var_n = ZLen(var_b)
+        /\ var_f = [index \in 0..2*var_n |-> nil]
+        /\ var_i = nil
+        /\ var_j = 1
+        /\ var_k = 0
+        /\ var_pc = "L3"
 
-L3 == /\ pc = "L3"
-      /\ IF j < 2 * n
-            THEN /\ pc' = "L5"
-            ELSE /\ pc' = "Done"
-      /\ UNCHANGED << b, n, f, i, j, k >>
+L3 == /\ var_pc = "L3"
+      /\ IF var_j < 2 * var_n
+            THEN /\ var_pc' = "L5"
+            ELSE /\ var_pc' = "Done"
+      /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L5 == /\ pc = "L5"
-      /\ i' = f[j - k - 1]
-      /\ pc' = "L6"
-      /\ UNCHANGED << b, n, f, j, k >>
+L5 == /\ var_pc = "L5"
+      /\ var_i' = var_f[var_j - var_k - 1]
+      /\ var_pc' = "L6"
+      /\ UNCHANGED << var_b, var_n, var_f, var_j, var_k >>
 
-L6 == /\ pc = "L6"
-      /\ IF b[j % n] /= b[(k + i + 1) % n] /\ i /= nil
-            THEN /\ pc' = "L7"
-            ELSE /\ pc' = "L10"
-      /\ UNCHANGED << b, n, f, i, j, k >>
+L6 == /\ var_pc = "L6"
+      /\ IF var_b[var_j % var_n] /= var_b[(var_k + var_i + 1) % var_n] /\ var_i /= nil
+            THEN /\ var_pc' = "L7"
+            ELSE /\ var_pc' = "L10"
+      /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L7 == /\ pc = "L7"
-      /\ IF b[j % n] < b[(k + i + 1) % n]
-            THEN /\ pc' = "L8"
-            ELSE /\ pc' = "L9"
-      /\ UNCHANGED << b, n, f, i, j, k >>
+L7 == /\ var_pc = "L7"
+      /\ IF var_b[var_j % var_n] < var_b[(var_k + var_i + 1) % var_n]
+            THEN /\ var_pc' = "L8"
+            ELSE /\ var_pc' = "L9"
+      /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L8 == /\ pc = "L8"
-      /\ k' = j - i - 1
-      /\ pc' = "L9"
-      /\ UNCHANGED << b, n, f, i, j >>
+L8 == /\ var_pc = "L8"
+      /\ var_k' = var_j - var_i - 1
+      /\ var_pc' = "L9"
+      /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j >>
 
-L9 == /\ pc = "L9"
-      /\ i' = f[i]
-      /\ pc' = "L6"
-      /\ UNCHANGED << b, n, f, j, k >>
+L9 == /\ var_pc = "L9"
+      /\ var_i' = var_f[var_j - var_k - 1]
+      /\ var_pc' = "L6"
+      /\ UNCHANGED << var_b, var_n, var_f, var_j, var_k >>
 
-L10 == /\ pc = "L10"
-       /\ IF b[j % n] /= b[(k + i + 1) % n] /\ i = nil
-             THEN /\ pc' = "L11"
-             ELSE /\ pc' = "L14"
-       /\ UNCHANGED << b, n, f, i, j, k >>
+L10 == /\ var_pc = "L10"
+       /\ IF var_b[var_j % var_n] /= var_b[(var_k + var_i + 1) % var_n] /\ var_i = nil
+             THEN /\ var_pc' = "L11"
+             ELSE /\ var_pc' = "L14"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L11 == /\ pc = "L11"
-       /\ IF b[j % n] < b[(k + i + 1) % n]
-             THEN /\ pc' = "L12"
-             ELSE /\ pc' = "L13"
-       /\ UNCHANGED << b, n, f, i, j, k >>
+L11 == /\ var_pc = "L11"
+       /\ IF var_b[var_j % var_n] < var_b[(var_k + var_i + 1) % var_n]
+             THEN /\ var_pc' = "L12"
+             ELSE /\ var_pc' = "L13"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L12 == /\ pc = "L12"
-       /\ k' = j
-       /\ pc' = "L13"
-       /\ UNCHANGED << b, n, f, i, j >>
+L12 == /\ var_pc = "L12"
+       /\ var_k' = var_j
+       /\ var_pc' = "L13"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j >>
 
-L13 == /\ pc = "L13"
-       /\ f' = [f EXCEPT ![j - k] = nil]
-       /\ pc' = "LVR"
-       /\ UNCHANGED << b, n, i, j, k >>
+L13 == /\ var_pc = "L13"
+       /\ var_f' = [var_f EXCEPT ![var_j - var_k] = nil]
+       /\ var_pc' = "LVR"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-L14 == /\ pc = "L14"
-       /\ f' = [f EXCEPT ![j - k] = i + 1]
-       /\ pc' = "LVR"
-       /\ UNCHANGED << b, n, i, j, k >>
+L14 == /\ var_pc = "L14"
+       /\ var_f' = [var_f EXCEPT ![var_j - var_k] = var_i + 1]
+       /\ var_pc' = "LVR"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
-LVR == /\ pc = "LVR"
-       /\ j' = j + 1
-       /\ pc' = "L3"
-       /\ UNCHANGED << b, n, f, i, k >>
+LVR == /\ var_pc = "LVR"
+       /\ var_j' = var_j + 1
+       /\ var_pc' = "L3"
+       /\ UNCHANGED << var_b, var_n, var_f, var_i, var_k >>
 
 (* Allow infinite stuttering to prevent deadlock on termination. *)
-Terminating == pc = "Done" /\ UNCHANGED vars
+Terminating == var_pc = "Done" /\ UNCHANGED vars
 
 L3Action == TRUE /\ L3
 L5Action == TRUE /\ L5
@@ -133,35 +133,35 @@ Next ==
 
 Spec == Init /\ [][Next]_vars
 
-Termination == <>(pc = "Done")
+Termination == <>(var_pc = "Done")
 
 \* END TRANSLATION 
 
 TypeOK ==
-  /\ b \in Corpus /\ ZLen(b) > 0
-  /\ n = ZLen(b)
-  /\ f \in [0..2*n -> 0..2*n \cup {nil}]
-  /\ i \in 0..2*n \cup {nil}
-  /\ j \in 0..2*n \cup {1}
-  /\ k \in ZIndices(b) \cup {0}
-  /\ pc \in {"L3", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "LVR", "Done"}
+  /\ var_b \in Corpus /\ ZLen(var_b) > 0
+  /\ var_n = ZLen(var_b)
+  /\ var_f \in [0..2*var_n -> 0..2*var_n \cup {nil}]
+  /\ var_i \in 0..2*var_n \cup {nil}
+  /\ var_j \in 0..2*var_n \cup {1}
+  /\ var_k \in ZIndices(var_b) \cup {0}
+  /\ var_pc \in {"L3", "L5", "L6", "L7", "L8", "L9", "L10", "L11", "L12", "L13", "L14", "LVR", "Done"}
 
 \* Is this shift the lexicographically-minimal rotation?
-IsLeastMinimalRotation(s, r) ==
+IsLeastMinimalRotation(s, r) == 
   LET rotation == Rotation(s, r) IN
   /\ \A other \in Rotations(s) :
     /\ rotation \preceq other.seq
     /\ rotation = other.seq => (r <= other.shift)
 
 Correctness ==
-  (pc = "Done") => IsLeastMinimalRotation(b, k)
+  (var_pc = "Done") => IsLeastMinimalRotation(var_b, var_k)
 
 
 ZSeqNat == 0 .. MaxStringLength
 
 CTICost == 0
 
-NextUnchanged == UNCHANGED << b, n, f, i, j, k >>
+NextUnchanged == UNCHANGED << var_b, var_n, var_f, var_i, var_j, var_k >>
 
 =============================================================================
 
