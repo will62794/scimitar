@@ -249,11 +249,14 @@ class TLASpec:
         for sub_elem in body.iter():
             # print("Sub elem:",sub_elem.tag)
             if sub_elem.tag == "UserDefinedOpKindRef":
-                # print(sub_elem.tag)
                 children = list(sub_elem)
                 assert children[0].tag == "UID"
                 uid = children[0].text
                 def_elem = self.spec_obj["defs"][uid]["elem"]
+                name = (self.spec_obj["defs"][uid]["uniquename"])
+                if "preceq" in name:
+                    # print(name)
+                    return (all_vars, all_updated_vars)
                 (new_vars,new_updated_vars) = self.get_vars_in_def_rec(def_elem)
                 # if len(new_vars) or len(new_updated_vars.keys()):
                 # print("new updated vars:", new_updated_vars)
@@ -267,6 +270,7 @@ class TLASpec:
                     else:
                         all_updated_vars[v] = new_updated_vars
             else:
+                # print(sub_elem)
                 (new_vars,new_updated_vars) = self.get_vars_in_def_rec(sub_elem)
                 # if len(new_vars) or len(new_updated_vars.keys()):
                 #     print(new_vars, new_updated_vars)
