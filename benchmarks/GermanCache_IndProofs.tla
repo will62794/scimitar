@@ -120,11 +120,92 @@ ASSUME A1 == \E N \in Nat : DATA = 1..N /\ IsFiniteSet(DATA) /\ DATA # {}
 THEOREM L_0 == TypeOK /\ TypeOK /\ Next => TypeOK'
   <1>. USE A0,A1
   \* (TypeOK,SendReqEAction)
-  <1>1. TypeOK /\ TypeOK /\ SendReqEAction => TypeOK' BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+  <1>1. TypeOK /\ TypeOK /\ SendReqEAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ SendReqEAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,SendReqEAction,SendReqE,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,RecvReqSAction)
-  <1>2. TypeOK /\ TypeOK /\ RecvReqSAction => TypeOK' BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+  <1>2. TypeOK /\ TypeOK /\ RecvReqSAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ RecvReqSAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,RecvReqSAction,RecvReqS,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,RecvReqEAction)
-  <1>3. TypeOK /\ TypeOK /\ RecvReqEAction => TypeOK' BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+  <1>3. TypeOK /\ TypeOK /\ RecvReqEAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ RecvReqEAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,RecvReqEAction,RecvReqE,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,SendInvAction)
   <1>4. TypeOK /\ TypeOK /\ SendInvAction => TypeOK' BY DEF TypeOK,SendInvAction,SendInv,TypeOK
   \* (TypeOK,SendInvAckAction)
@@ -159,9 +240,63 @@ THEOREM L_0 == TypeOK /\ TypeOK /\ Next => TypeOK'
     <2>12. QED
       BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,SendGntSAction)
-  <1>7. TypeOK /\ TypeOK /\ SendGntSAction => TypeOK' BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+  <1>7. TypeOK /\ TypeOK /\ SendGntSAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ SendGntSAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,SendGntSAction,SendGntS,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,SendGntEAction)
-  <1>8. TypeOK /\ TypeOK /\ SendGntEAction => TypeOK' BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+  <1>8. TypeOK /\ TypeOK /\ SendGntEAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ SendGntEAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,SendGntEAction,SendGntE,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
   \* (TypeOK,RecvGntSAction)
   <1>9. TypeOK /\ TypeOK /\ RecvGntSAction => TypeOK' BY DEF TypeOK,RecvGntSAction,RecvGntS,TypeOK
   \* (TypeOK,RecvGntEAction)
@@ -169,7 +304,34 @@ THEOREM L_0 == TypeOK /\ TypeOK /\ Next => TypeOK'
   \* (TypeOK,StoreAction)
   <1>11. TypeOK /\ TypeOK /\ StoreAction => TypeOK' BY DEF TypeOK,StoreAction,Store,TypeOK
   \* (TypeOK,SendReqSAction)
-  <1>12. TypeOK /\ TypeOK /\ SendReqSAction => TypeOK' BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+  <1>12. TypeOK /\ TypeOK /\ SendReqSAction => TypeOK' 
+    <2> SUFFICES ASSUME TypeOK /\ TypeOK /\ SendReqSAction
+                 PROVE  TypeOK'
+      OBVIOUS
+    <2>1. (Cache \in [NODE -> CACHE])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>2. (Chan1 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>3. (Chan2 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>4. (Chan3 \in [NODE -> MSG])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>5. (InvSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>6. (ShrSet \in [NODE -> BOOLEAN])'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>7. (ExGntd \in BOOLEAN)'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>8. (CurCmd \in MSG_CMD)'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>9. (CurPtr \in NODE)'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>10. (MemData \in DATA)'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>11. (AuxData \in DATA)'
+      BY DEF TypeOK,SendReqSAction,SendReqS,TypeOK
+    <2>12. QED
+      BY <2>1, <2>10, <2>11, <2>2, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF TypeOK
 <1>13. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11,<1>12 DEF Next
 
 
