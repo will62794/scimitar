@@ -5151,6 +5151,24 @@ class InductiveInvGen():
 
         
 
+        def limit_string_list_width(s, max_width=50):
+            coi_str = ",".join(s)
+            
+            # Add line breaks if line exceeds 80 chars
+            curr_line = ""
+            lines = []
+            for var in coi_str.split(","):
+                if len(curr_line + "," + var) > 50:
+                    lines.append(curr_line)
+                    curr_line = var
+                else:
+                    if curr_line:
+                        curr_line += "," + var
+                    else:
+                        curr_line = var
+            if curr_line:
+                lines.append(curr_line)
+            return "{" + "<BR/>".join(lines) + "}"
         for e in self.proof_graph["edges"]:
 
             for n in e:
@@ -5172,7 +5190,10 @@ class InductiveInvGen():
                         shape = "box"
                         num_ctis_left = self.proof_graph["nodes"][n]["ctis_remaining"]
                         fillcolor = lightgreen if num_ctis_left == 0 else "orange"
-                        coi = "{" + ",".join(sorted(self.proof_graph["nodes"][n]["coi_vars"])) + "}"
+                        # Join sorted vars with commas
+                        sorted_vars = sorted(self.proof_graph["nodes"][n]["coi_vars"])
+                        coi = limit_string_list_width(sorted_vars)
+
                         if "curr_node" in self.proof_graph and self.proof_graph["curr_node"] == n and self.proof_graph["nodes"][n]["ctis_remaining"] > 0:
                             # Mark node.
                             fillcolor = "yellow"
