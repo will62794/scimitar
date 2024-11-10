@@ -4111,32 +4111,52 @@ class InductiveInvGen():
         logging.info("Checking simulation bound for all invariants.")
         use_pred_identifiers = self.use_fast_pred_eval
         boolean_style = "tla"
-        ninvs = 1000
+        ninvs = 2000
         logging.info("Generating %d candidate invariants." % ninvs)
         all_invs = mc.generate_invs(
             self.preds, ninvs, min_num_conjuncts=2, max_num_conjuncts=3,quant_vars=self.quant_vars, 
             boolean_style = boolean_style,
             use_pred_identifiers=use_pred_identifiers)
         invs = all_invs["raw_invs"]
-        depth = 20
         sat_inv_table = []
-        logging.info("CHECKING SIMULATION INV BOUNDS\n---------------------")
+        logging.info("\n---- Checking simulation invariant bounds\n" + "-"*70)
         # nums = [10,100,200,1000,2000,8000]
         # state_nums = [1000,2000,5000,7500,10000,15000,25000,30000,40000,50000,75000,90000]
-        state_nums = [10000,50000,100000,200000]
-        for state_num in state_nums:
+        depths = [5,10,15,20,25,30,35,40]
+        # depths = [5]
+        # state_nums = [10000,50000,100000,200000]
+        state_nums = [1000,10000,100000]
+        params_to_check = list(itertools.product(depths, state_nums))
+        logging.info(f"Will check total of {len(params_to_check)} parameter vals.")
+        data = []
+        for depth,state_num in params_to_check:
             num = state_num // tlc_workers // depth
             simulation_inv_tlc_flags=f"-depth {depth} -simulate num={num}"
-            logging.info(f"(num_states={state_num},depth={depth},num={num},workers={tlc_workers})")
+            # logging.info(f"(num_states={state_num},depth={depth},num={num},workers={tlc_workers})")
             main_sat_invs = self.check_invariants(invs, tlc_workers=tlc_workers, tlc_flags=simulation_inv_tlc_flags)
             # sat_invs = set([f"Inv{iv[0]}" for iv in main_sat_invs])
             logging.info(f"Found {len(main_sat_invs)} sat invariants. (num={num})")
+            logging.info(f"(num_states={state_num},depth={depth},num={num},workers={tlc_workers},sat_invs={len(main_sat_invs)})")
+
             logging.info("\n= = = = =\n")
             sat_inv_table.append(len(main_sat_invs))
+            data.append((depth, state_num, len(main_sat_invs), len(invs)))
         print("sat inv counts:")
         for ind,num in enumerate(state_nums):
             print("num states=", num, ", num_sat_invs=", sat_inv_table[ind])
 
+        # Plot data.
+        plt.figure(figsize=(8, 6))
+        # Facet plots by number of states generated.
+        for num in state_nums:
+            xdata = [d[0] for d in data if d[1] == num]
+            ydata = [d[2] for d in data if d[1] == num]
+            plt.plot(xdata, ydata, marker='o', linestyle='-')
+        plt.xlabel("Depth")
+        plt.ylabel("Number of Satisfied Invariants (sat_invs)")
+        plt.title("Sat Invariants vs Depth")
+        plt.grid(True)
+        plt.savefig(f"simulation_inv_bounds_{self.specname}.pdf")
     def reparse_spec_with_proof_graph_defs(self):
         """ Re-parse the main spec but include any new lemma definitions that now exist in the generated proof graph."""
         specname = f"{self.specname}_lemma_parse"
