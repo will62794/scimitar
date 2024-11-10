@@ -5503,6 +5503,7 @@ class InductiveInvGen():
 
         self.load_parse_tree = True
         self.use_fast_pred_eval = False
+        self.reparsing_duration_secs = 0
 
         print("Config CONSTANT instances.")
         for c in self.get_config_constant_instances():
@@ -5533,8 +5534,9 @@ class InductiveInvGen():
                 print("ERROR: error parsing TLA+ spec:", e)
                 self.tla_spec_obj = None
 
-        # self.auto_check_simulation_bound()
-        # return
+        if self.all_args["auto_check_simulation_bounds"]:
+            self.auto_check_simulation_bound()
+            return
         self.latest_roundi = 0
 
         if self.proof_tree_mode:
@@ -5717,6 +5719,7 @@ if __name__ == "__main__":
     parser.add_argument('--reprove_failed_nodes', help='Try to reprove failed nodes in loaded proof graph.', default=False, action='store_true')
     parser.add_argument('--tlapm_install_dir', help='TLAPM binary to use if needed.', required=False, default="/usr/local", type=str)
     parser.add_argument('--do_tlaps_induction_checks', help='check inducttion with tlapm.', required=False, default=False, action='store_true')
+    parser.add_argument('--auto_check_simulation_bounds', help='Auto check simulation depth bounds for invariants.', required=False, default=False, action='store_true')
 
     # Apalache related commands.
     parser.add_argument('--use_apalache_ctigen', help='Use Apalache for CTI generation (experimental).', required=False, default=False, action='store_true')
