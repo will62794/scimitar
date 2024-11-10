@@ -4157,6 +4157,7 @@ class InductiveInvGen():
         plt.title("Sat Invariants vs Depth")
         plt.grid(True)
         plt.savefig(f"simulation_inv_bounds_{self.specname}.pdf")
+
     def reparse_spec_with_proof_graph_defs(self):
         """ Re-parse the main spec but include any new lemma definitions that now exist in the generated proof graph."""
         specname = f"{self.specname}_lemma_parse"
