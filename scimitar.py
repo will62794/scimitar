@@ -4290,6 +4290,9 @@ class InductiveInvGen():
 
         self.auto_lemma_action_decomposition = True
 
+        self.latest_elimination_iter = 0
+        self.latest_roundi = 0
+
         self.cti_elimination_round_stats = {}
 
         # TODO: Make node/action configurable.
@@ -4537,6 +4540,7 @@ class InductiveInvGen():
             logging.info("Number of total unique k-CTIs found: {}. (took {:.2f} secs)".format(len(k_ctis), (time.time()-ctigen_start)))
 
             subround = 0
+            self.subround = 0
 
             # Limit number of CTIs if necessary.
             # Limiting is done above per action now.
@@ -4776,6 +4780,7 @@ class InductiveInvGen():
                                             proof_graph_node=curr_obligation,
                                             proof_graph_action=k_cti_action)
                 subround += 1
+                self.subround = subround
 
                 logging.info(f"[ END CTI elimination Round {roundi}, subround {subround}. ]")
 
@@ -5359,6 +5364,9 @@ class InductiveInvGen():
 
         if not save_tex:
             dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True)
+            include_incremental = False
+            if include_incremental:
+                dot.render(self.specdir + "/" + self.specname + suffix + "_incremental/" + self.specname + suffix + f"_ind-proof-tree_round_{self.latest_roundi}_{self.subround}_{self.latest_elimination_iter}", quiet=True, cleanup=True)
             dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True, format="png")
 
         if save_tex:
