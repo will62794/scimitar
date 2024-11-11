@@ -84,3 +84,5 @@ discovery_data/
 *_ind-proof-tree*sd*
 *ind-proof-tree.pdf*
 *ind-proof-tree
+benchmarks/*_incremental/
+simulation_inv_bounds*
