@@ -4114,7 +4114,7 @@ class InductiveInvGen():
         ninvs = 2000
         logging.info("Generating %d candidate invariants." % ninvs)
         all_invs = mc.generate_invs(
-            self.preds, ninvs, min_num_conjuncts=2, max_num_conjuncts=3,quant_vars=self.quant_vars, 
+            self.preds, ninvs, min_num_conjuncts=3, max_num_conjuncts=3,quant_vars=self.quant_vars, 
             boolean_style = boolean_style,
             use_pred_identifiers=use_pred_identifiers)
         invs = all_invs["raw_invs"]
@@ -4122,10 +4122,12 @@ class InductiveInvGen():
         logging.info("\n---- Checking simulation invariant bounds\n" + "-"*70)
         # nums = [10,100,200,1000,2000,8000]
         # state_nums = [1000,2000,5000,7500,10000,15000,25000,30000,40000,50000,75000,90000]
-        depths = [5,10,15,20,25,30,35,40]
+        depths = [5,10,15,20,25,30,35,40,50,60]
+        # depths = [5,10]
         # depths = [5]
         # state_nums = [10000,50000,100000,200000]
-        state_nums = [1000,10000,100000]
+        state_nums = [1000,10000,50000,100000]
+        # state_nums = [1000]
         params_to_check = list(itertools.product(depths, state_nums))
         logging.info(f"Will check total of {len(params_to_check)} parameter vals.")
         data = []
@@ -4141,6 +4143,9 @@ class InductiveInvGen():
             logging.info("\n= = = = =\n")
             sat_inv_table.append(len(main_sat_invs))
             data.append((depth, state_num, len(main_sat_invs), len(invs)))
+        main_sat_invs = self.check_invariants(invs, tlc_workers=tlc_workers)
+        true_num_invs = len(main_sat_invs)
+
         print("sat inv counts:")
         for ind,num in enumerate(state_nums):
             print("num states=", num, ", num_sat_invs=", sat_inv_table[ind])
@@ -4151,11 +4156,13 @@ class InductiveInvGen():
         for num in state_nums:
             xdata = [d[0] for d in data if d[1] == num]
             ydata = [d[2] for d in data if d[1] == num]
-            plt.plot(xdata, ydata, marker='o', linestyle='-')
+            plt.plot(xdata, ydata, markersize=4, marker='o', linestyle='-', label=f'States = {num}')
+        plt.plot([0,max(depths)], [true_num_invs, true_num_invs], markersize=4, marker='o', linestyle='-', label=f'Full states')
         plt.xlabel("Depth")
         plt.ylabel("Number of Satisfied Invariants (sat_invs)")
         plt.title("Sat Invariants vs Depth")
         plt.grid(True)
+        plt.legend()
         plt.savefig(f"simulation_inv_bounds_{self.specname}.pdf")
 
     def reparse_spec_with_proof_graph_defs(self):
