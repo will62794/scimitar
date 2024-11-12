@@ -5736,6 +5736,7 @@ if __name__ == "__main__":
     parser.add_argument('--disable_grammar_slicing', help='Disable slicing of grammars.', required=False, default=False, action='store_true')# how to make one argument exclusive with another?
     # Add arg for pred weight tuning flag.
     parser.add_argument('--enable_pred_weight_tuning', help='Enable predicate weight tuning.', required=False, default=False, action='store_true')
+    parser.add_argument('--auto_init_config_params', help='Generate detailed config parameters automatically', required=False, default=False, action='store_true')
     
     
     # Proof tree related commands.
@@ -5821,6 +5822,29 @@ if __name__ == "__main__":
 
     fcfg = open(spec_config_file)
     spec_config = json.load(fcfg)
+
+
+    # Initialize the config with parameters needed for verification (e.g. grammar predicates, etc.),
+    # assuming a give seed/base config is given.
+    if args["auto_init_config_params"]:
+        spec_obj = tlaparse.parse_tla_file(specdir, specname)
+        # Extract preds separately for each action.
+        all_preds = []
+        actions = []
+        for udef in spec_obj.get_all_user_defs(level="2"):
+            if udef.endswith("Action"):
+                actions.append(udef)
+        for a in actions:
+            print(f"-- Extracting quant predicates for action: {a}")
+            new_grammar_preds = spec_obj.extract_quant_and_predicate_grammar(a)
+            all_preds += new_grammar_preds
+
+        print(f"Extracted {len(all_preds)} grammar predicates.")
+        for p in all_preds:
+            print(p)
+
+        # Just initialize the config and terminate.
+        exit(0)
 
     # Load config parameters.
     preds = spec_config["preds"]
