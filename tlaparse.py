@@ -33,8 +33,8 @@ class TLASpec:
 
         # Extract XML AST into alternate structured representation
         # for convenience.
-        self.spec_obj = self.extract_spec_obj(self.ast)
         self.spec_text_lines = spec_text_lines
+        self.spec_obj = self.extract_spec_obj(self.ast)
 
     def get_spec_obj(self):
         return self.spec_obj
