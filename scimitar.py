@@ -5840,7 +5840,17 @@ if __name__ == "__main__":
             all_preds += new_grammar_preds
 
         print(f"Extracted {len(all_preds)} grammar predicates.")
+
+        max_quant_prefix = []
         for p in all_preds:
+            # print(p[0], p[1])
+            if len([p[0]]) > len(max_quant_prefix):
+                max_quant_prefix = p[0]
+
+        print("\n===============\nQUANT PREFIX:", max_quant_prefix)
+        print("ALL UNIQUE PREDICATES:")
+        all_unique_preds = set([p[1] for p in all_preds])
+        for p in all_unique_preds:
             print(p)
 
         # Just initialize the config and terminate.
