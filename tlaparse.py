@@ -64,6 +64,11 @@ class TLASpec:
         # print("end line:", start_line)
         out = start_line + "".join(middle_lines) + end_line
         return out
+    
+    def get_elem_text(self, elem):
+        begin = self.elem_to_location_tuple(elem, "begin")
+        end = self.elem_to_location_tuple(elem, "end")
+        return self.get_text_from_location_endpoints(begin, end)
 
     def extract_spec_obj(self, ast):
         """ Parse user definitions and variables, etc. from spec."""
@@ -420,18 +425,50 @@ class TLASpec:
         # if bound is not None:
             # print("BOUND symbols:", bound)
         operator = elem.find("operator")
+        operands = elem.find("operands")
         userDef = operator.find("UserDefinedOpKindRef")
 
         if userDef is not None:
+            print("USERDEF")
             uid = userDef.find("UID").text
             udef = self.spec_obj["defs"][uid]
             udef_elem = udef["elem"]
+            # print("BODY TEXT:")
+            # print(self.get_elem_text(udef_elem))
+
+            operand_names = []
+
+            for operand in operands:
+                print("OPERAND", operand.tag, self.get_elem_text(operand))
+                operand_names.append(self.get_elem_text(operand))
+                # If a an operand argument passed to this operator is from a bound
+                # quantifier variable, then we need to rename the bound variable
+                # to match the name of the operator definition argument.
+            for ind,op in enumerate(udef_elem.find("params")):
+                print("DEF PARAM:", op)
+                paramref = op.find("FormalParamNodeRef")
+                if paramref is not None:
+                    paramrefUID = paramref.find("UID").text
+                    paramrefDef = self.formal_params_table[paramrefUID]["elem"]
+                    paramName = paramrefDef.find("uniquename").text
+                    for q in curr_quants:
+                        print("quant arg:", q[1])
+                        if q[1] == operand_names[ind]:
+                            print(" --> BOUND RENAME:", self.get_elem_text(operand), "TO:", paramName)
+                            rename_mapping = {self.get_elem_text(operand) : paramName}
+                            print(rename_mapping)
+                    # Rename bound quant vars.
+                    curr_quants = [q if q[1] != operand_names[ind] else (q[0], paramName, q[2]) for q in curr_quants]
+                            # print("current quant:", curr_quants)
+
+                    
             print(udef_elem.tag)
             # for op in udef_elem.find("operands"):
             #     print(op)
             for a in udef_elem:
                 print(a)
             body = udef_elem.find("body")
+            # TODO. Bind renamed variables as arguments.
             print("user def:", udef)
             if body is not None:
                 self.extract_quant_preds(body, curr_quants, curr_preds)
@@ -449,7 +486,7 @@ class TLASpec:
         if uid is not None and uid.text in self.spec_obj["builtins"]:
             builtin = self.spec_obj["builtins"][uid.text]
 
-        # Conjunction list.
+        # Conjunction/disjunction.
         if builtin is not None and builtin["uniquename"] in ["\\land", "\\lor"]:
             print(builtin)
             print(elem.find("operands"))
@@ -463,17 +500,23 @@ class TLASpec:
             pred = QuantPred(curr_quants, elem)
             curr_preds.append((curr_quants, elem))
 
+        # Conjunction/disjunction list.
         if builtin is not None and builtin["uniquename"] in ["$ConjList", "$DisjList"]:
             print("CONJUNCTION LIST")
             for conj in elem.find("operands"):
                 level = conj.find("level").text
-                print(conj)
+                # print(conj)
                 # print("conjunct level: ", level)
                 # For now append level 1 conjunct predicates.
                 if level in ["0", "1"]:
                     pred = QuantPred(curr_quants, conj)
-                    print(pred.quant_prefix_text())
+                    # print(pred.quant_prefix_text())
                     curr_preds.append((curr_quants, conj))
+                # if level in ["2"]:
+                #     print("=============LEVEL 2=============")
+                #     print(pred.quant_prefix_text())
+                #     print(conj)
+
 
         # Bounded quantifier.
         if builtin is not None and builtin["uniquename"] in ["$BoundedForall", "$BoundedExists"]:
@@ -557,7 +600,8 @@ class TLASpec:
                 self.extract_quant_preds(el, curr_quants, curr_preds)
 
         if elem.tag == "OpApplNode":
-
+            for c in elem:
+                print("----", c.tag)
             self.extract_OpApplNode(elem, curr_quants, curr_preds)
             return
 
@@ -594,14 +638,17 @@ class TLASpec:
         #     # text = self.get_text_from_location_endpoints(begin, end)
         #     print(quant)           
 
-        print("EXTRACTED PREDICATES:")
+        # print("EXTRACTED PREDICATES:")
+        extracted_preds = []
         for pred in curr_preds:
             begin = self.elem_to_location_tuple(pred[1], "begin")
             end = self.elem_to_location_tuple(pred[1], "end")
             # print("BEGIN:", begin)
             # print("END  :", end)
             text = self.get_text_from_location_endpoints(begin, end)
-            print(pred[0], text)
+            # print(pred[0], text)
+            extracted_preds.append((pred[0], text))
+        return extracted_preds
 
         # print("---EXTRACT PREDS")
         # self.extract_predicates(node_elem)
@@ -794,7 +841,7 @@ def parse_tla_file(workdir, specname):
     # return tree
 
 if __name__ == "__main__":
-    tla_file = "Hermes"
+    tla_file = "TwoPhase"
     my_spec = parse_tla_file("benchmarks", tla_file)
 
     top_level_defs = my_spec.get_all_user_defs(level="1")
@@ -807,14 +854,28 @@ if __name__ == "__main__":
     # print(action_node, )
 
     # print("EXTRACT QUANT")
-    # # my_spec.extract_quant_and_predicate_grammar("HandleRequestVoteRequestAction")
+    all_preds = []
+    actions = []
+    for udef in my_spec.get_all_user_defs(level="2"):
+        if udef.endswith("Action"):
+            actions.append(udef)
+    for a in actions[:]:
+        print(f"\n>>>> Extracting quant predicates for action: {a}")
+        new_preds = my_spec.extract_quant_and_predicate_grammar(a)
+        all_preds += new_preds
+    # print(all_preds)
+    for p in all_preds:
+        print(p[0], p[1])
+    #   my_spec.extract_quant_and_predicate_grammar("RMChooseToAbortAction")
+    # my_spec.extract_quant_and_predicate_grammar("RMPrepareAction")
+    # my_spec.extract_quant_and_predicate_grammar("TMRcvPreparedAction")
     # defname = "AcceptAppendEntriesRequestAppendAction"
     # print(f"Extracting from: {defname}")
     # # my_spec.extract_quant_and_predicate_grammar("TMRcvPreparedAction")
     # my_spec.extract_quant_and_predicate_grammar(defname)
     # # my_spec.extract_quant_and_predicate_grammar("Inv362_1_4_def")
     # # my_spec.extract_quant_and_predicate_grammar("RMPrepareAction")
-    # exit()
+    exit()
 
     action = "HWrite"
     print("### Getting vars in action:", action)
