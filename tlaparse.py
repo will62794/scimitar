@@ -68,7 +68,9 @@ class TLASpec:
     def get_elem_text(self, elem):
         begin = self.elem_to_location_tuple(elem, "begin")
         end = self.elem_to_location_tuple(elem, "end")
-        return self.get_text_from_location_endpoints(begin, end)
+        if begin and end:
+            return self.get_text_from_location_endpoints(begin, end)
+        return ""
 
     def extract_spec_obj(self, ast):
         """ Parse user definitions and variables, etc. from spec."""
@@ -615,9 +617,11 @@ class TLASpec:
             return
 
     def elem_to_location_tuple(self, elem, begin_or_end):
-        line = int(elem.find("location").find("line").find(begin_or_end).text)
-        col = int(elem.find("location").find("column").find(begin_or_end).text)   
-        return (line, col)    
+        line = elem.find(f"./location/line/{begin_or_end}")
+        col = elem.find(f"./location/column/{begin_or_end}")
+        if line is not None and col is not None:
+            return (int(line.text), int(col.text))
+        return None
 
     def extract_quant_and_predicate_grammar(self, defname):
         """ From a given quantified definition (either action or state predicate) extract quantifier prefix template and atomic predicates."""
