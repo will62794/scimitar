@@ -418,7 +418,7 @@ class TLASpec:
         # spec_obj = self.extract_spec_obj(spec_ast)
         # return self.spec_obj["defs"]
         # pass
-    
+
     def extract_OpApplNode(self, elem, curr_quants, curr_preds):
 
         # bound = elem.find("boundSymbols")
@@ -505,6 +505,15 @@ class TLASpec:
             print("CONJUNCTION LIST")
             for conj in elem.find("operands"):
                 level = conj.find("level").text
+
+                # Ignore UNCHANGED statements.
+                print("CONJ TEXT:", self.get_elem_text(conj))
+                print(conj.tag)
+                UNCHANGED_uid = "67"
+                if conj.tag == "OpApplNode" and conj.find("operator") and conj.find("operator").find("BuiltInKindRef").find("UID").text == UNCHANGED_uid:
+                    print("UNCHANGED")
+                    continue
+
                 # print(conj)
                 # print("conjunct level: ", level)
                 # For now append level 1 conjunct predicates.
@@ -513,9 +522,9 @@ class TLASpec:
                     # print(pred.quant_prefix_text())
                     curr_preds.append((curr_quants, conj))
                 # if level in ["2"]:
-                #     print("=============LEVEL 2=============")
-                #     print(pred.quant_prefix_text())
-                #     print(conj)
+                #     curr_preds.append((curr_quants, conj))
+                #     opapplnodes = conj.find('OpApplNode')
+
 
 
         # Bounded quantifier.
@@ -864,8 +873,17 @@ if __name__ == "__main__":
         new_preds = my_spec.extract_quant_and_predicate_grammar(a)
         all_preds += new_preds
     # print(all_preds)
+    max_quant_prefix = []
     for p in all_preds:
-        print(p[0], p[1])
+        # print(p[0], p[1])
+        if len([p[0]]) > len(max_quant_prefix):
+            max_quant_prefix = p[0]
+
+    print("\n===============\nMAX QUANT PREFIX:", max_quant_prefix)
+    print("ALL UNIQUE PREDICATES:")
+    all_unique_preds = set([p[1] for p in all_preds])
+    for p in all_unique_preds:
+        print(p)
     #   my_spec.extract_quant_and_predicate_grammar("RMChooseToAbortAction")
     # my_spec.extract_quant_and_predicate_grammar("RMPrepareAction")
     # my_spec.extract_quant_and_predicate_grammar("TMRcvPreparedAction")
