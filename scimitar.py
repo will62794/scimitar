@@ -4283,6 +4283,73 @@ class InductiveInvGen():
             logging.info("Number of action k-CTIs found: {}. (took {:.2f} secs)".format(len(k_ctis_action), (time.time()-action_tstart)))
         return k_ctis
 
+    def plot_slice_stats(self):
+
+        state_slice_sizes = [self.slicing_stats["state_slices"][k] for k in self.slicing_stats["state_slices"]]
+        pred_slice_sizes = [len(k) for k in self.slicing_stats["pred_slices"]]
+        state_slice_max = max(state_slice_sizes)
+        logging.info(f"Pred slices median ({len(pred_slice_sizes)}): {median(pred_slice_sizes)} (of {len(self.preds)} total preds)")
+        logging.info(f"State slices ({len(state_slice_sizes)}): {self.slicing_stats['state_slices']}")
+        logging.info(f"State slice sizes: {state_slice_sizes}")
+        logging.info(f"State slice max: {max(state_slice_sizes)}")
+        median_pct =  median(state_slice_sizes) / max(state_slice_sizes)
+        logging.info(f"State slice median: {median(state_slice_sizes)} ({round(median_pct * 100, 3)} %)")
+        logging.info(f"State slice 75th percentile: {percentile(state_slice_sizes, 0.75)} ({round(percentile(state_slice_sizes, 0.75) / max(state_slice_sizes) * 100, 3)} %)")
+
+        # Create a histogram with buckets of width 25
+        try:
+            # plt.figure(figsize=(6, 3))
+
+            # Create histogram.
+            state_slice_sizes.remove(max(state_slice_sizes))
+            nbins=12
+            # plt.plot(state_slice_sizes, bins=range(0, state_slice_max, state_slice_max//nbins ), edgecolor='black', cumulative=True)
+            # plt.plot(state_slice_sizes, cumulative=True)
+            # plt.plot(state_slice_sizes)
+
+            # Creating CDF plot
+            sorted_values = [x / max(state_slice_sizes) for x in np.sort(list(state_slice_sizes))]
+            cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
+
+            plt.figure(figsize=(10, 6))
+            plt.plot(sorted_values, cdf, marker="o", linestyle="-")
+            plt.xlabel('Total Unique Cached States')
+            plt.ylabel('Cumulative Probability')
+            plt.title('CDF of Slice Sizes (Total Unique Cached States)')
+            plt.grid(True)
+            # plt.show()
+
+            # Labels and title
+
+            # no labeling of x-ticks.
+            # plt.xticks(range(0, max(state_slice_sizes), 25))
+            # plt.tick_params(
+            #     axis='x',          # changes apply to the x-axis
+            #     which='both',      # both major and minor ticks are affected
+            #     bottom=False,      # ticks along the bottom edge are off
+            #     top=False,         # ticks along the top edge are off
+            #     labelbottom=False) # labels along the bottom edge are off
+            # plt.tick_params(
+            #     axis='y',          # changes apply to the x-axis
+            #     which='both',      # both major and minor ticks are affected
+            #     bottom=False,      # ticks along the bottom edge are off
+            #     top=False,         # ticks along the top edge are off
+            #     labelbottom=False) # labels along the bottom edge are off
+
+
+            plt.xlabel('State slice size as pct of full state space')
+            plt.ylabel('State slice count (normalized)')
+
+            # Save the plot as an SVG file
+            # svg_binned_histogram_path = f'{self.specname}_stats/slice_histogram_{self.specname}._sd{self.seed}.pdf'
+            svg_binned_histogram_path = f'{self.specdir}/{self.specname}_slice_dist_sd{self.seed}.pdf'
+            plt.savefig(svg_binned_histogram_path, format='pdf')
+            plt.close()
+        except Exception as e:
+            print("EXCEPTION:", e)
+            pass
+
+
     def do_invgen_proof_tree_mode(self):
         """ Do localized invariant synthesis based on an inductive proof graph structure."""
 
@@ -4863,56 +4930,7 @@ class InductiveInvGen():
             logging.info(f"(Round {roundi}) Cumulative Invariant checking duration: %f secs.", indgen.get_invcheck_duration())
             logging.info(f"(Round {roundi}) Cumulative CTI elimination checks duration: %f secs.", indgen.get_ctielimcheck_duration())
 
-
-            state_slice_sizes = [self.slicing_stats["state_slices"][k] for k in self.slicing_stats["state_slices"]]
-            pred_slice_sizes = [len(k) for k in self.slicing_stats["pred_slices"]]
-            state_slice_max = max(state_slice_sizes)
-            logging.info(f"Pred slices median ({len(pred_slice_sizes)}): {median(pred_slice_sizes)} (of {len(self.preds)} total preds)")
-            logging.info(f"State slices ({len(state_slice_sizes)}): {self.slicing_stats['state_slices']}")
-            logging.info(f"State slice sizes: {state_slice_sizes}")
-            logging.info(f"State slice max: {max(state_slice_sizes)}")
-            median_pct =  median(state_slice_sizes) / max(state_slice_sizes)
-            logging.info(f"State slice median: {median(state_slice_sizes)} ({round(median_pct * 100, 3)} %)")
-            logging.info(f"State slice 75th percentile: {percentile(state_slice_sizes, 0.75)} ({round(percentile(state_slice_sizes, 0.75) / max(state_slice_sizes) * 100, 3)} %)")
-
-
-            # Create a histogram with buckets of width 25
-            # try:
-                # plt.figure(figsize=(6, 3))
-
-                # # Create histogram.
-                # state_slice_sizes.remove(max(state_slice_sizes))
-                # nbins=12
-                # plt.hist(state_slice_sizes, bins=range(0, state_slice_max, state_slice_max//nbins ), edgecolor='black', cumulative=False)
-
-                # # Labels and title
-
-                # # no labeling of x-ticks.
-                # # plt.xticks(range(0, max(state_slice_sizes), 25))
-                # plt.tick_params(
-                #     axis='x',          # changes apply to the x-axis
-                #     which='both',      # both major and minor ticks are affected
-                #     bottom=False,      # ticks along the bottom edge are off
-                #     top=False,         # ticks along the top edge are off
-                #     labelbottom=False) # labels along the bottom edge are off
-                # plt.tick_params(
-                #     axis='y',          # changes apply to the x-axis
-                #     which='both',      # both major and minor ticks are affected
-                #     bottom=False,      # ticks along the bottom edge are off
-                #     top=False,         # ticks along the top edge are off
-                #     labelbottom=False) # labels along the bottom edge are off
-
-
-                # plt.xlabel('State slice counts')
-                # plt.ylabel('State slice size')
-
-                # Save the plot as an SVG file
-                # svg_binned_histogram_25_path = f'binned_histogram_25_{self.specname}._sd{self.seed}.pdf'
-                # plt.savefig(svg_binned_histogram_25_path, format='pdf')
-            # except Exception as e:
-                # print(e)
-                # pass
-
+            self.plot_slice_stats()
 
 #
 #
