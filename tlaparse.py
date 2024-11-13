@@ -125,6 +125,8 @@ class TLASpec:
                     if elem.tag == "BuiltInKind":
                         builtins[curr_uid] = op
 
+        # self.visit_all_nodes(root)
+
         # for e in defs_table:
         #     print(e, defs_table[e])
 
@@ -421,6 +423,25 @@ class TLASpec:
         # return self.spec_obj["defs"]
         # pass
 
+    def visit_all_nodes(self,node):
+        print(f"Tag: {node.tag}, Text: {node.text.strip() if node.text else 'None'}")
+        primed_operator_builtin_uid = "13"
+        print(node)
+        # Store original spec text in the node.
+        elem_text = self.get_elem_text(node)
+        if len(elem_text) and node.tag not in ["OpApplNode"]:
+            node.set("spec_text", elem_text)
+
+        for child in node:
+            # if node.tag == "OpApplNode" and node.find("operator/BuiltInKindRef"):
+            #     UID = node.find("operator/BuiltInKindRef").find("UID").text
+            #     if UID == primed_operator_builtin_uid:
+            #         print("    ",node.tag, self.get_elem_text(node), UID)
+            #         end_loc = node.find("./location/column/begin")
+            #         print(end_loc)
+            #         end_loc.spec_text = self.get_elem_text(node)
+            self.visit_all_nodes(child)
+
     def extract_OpApplNode(self, elem, curr_quants, curr_preds):
 
         # bound = elem.find("boundSymbols")
@@ -523,6 +544,9 @@ class TLASpec:
                     pred = QuantPred(curr_quants, conj)
                     # print(pred.quant_prefix_text())
                     curr_preds.append((curr_quants, conj))
+
+                # self.visit_all_nodes(conj)
+
                 # if level in ["2"]:
                 #     curr_preds.append((curr_quants, conj))
                 #     opapplnodes = conj.find('OpApplNode')
@@ -660,7 +684,7 @@ class TLASpec:
             # print("END  :", end)
             text = self.get_text_from_location_endpoints(begin, end)
             # print(pred[0], text)
-            extracted_preds.append((pred[0], text))
+            extracted_preds.append((pred[0], text, pred[1]))
         return extracted_preds
 
         # print("---EXTRACT PREDS")
@@ -785,6 +809,225 @@ class TLASpec:
         # print("   ")
         return edges
 
+    def syntax_elem_to_str(self, elem):
+        print("ELEM:", elem.tag)
+
+        if elem.tag == "FormalParamNodeRef":
+            print("FORMAL PARAM REF")
+            uid = elem.find("UID").text
+            return self.formal_params_table[uid]["elem"].find("uniquename").text
+        
+        if elem.tag == "OpDeclNodeRef":
+            uid = userDef.find("UID").text
+            print(self.spec_obj["var_decls"][uid]["elem"])
+            return self.spec_obj["var_decls"][uid]["elem"].text
+            # return elem.find("uniquename").text
+        
+        if elem.tag == "StringNode":
+            return elem.find("StringValue").text
+            # return elem.find("StringValue").text
+
+        operator = elem.find("operator")
+        operands = elem.find("operands")
+        userDef = operator.find("UserDefinedOpKindRef")
+
+        # bound = elem.find("boundSymbols")
+        # if bound is not None:
+            # print("BOUND symbols:", bound)
+
+        if userDef is not None:
+            uid = userDef.find("UID").text
+            udef = self.spec_obj["defs"][uid]
+            udef_elem = udef["elem"]
+            operand_names = []
+
+            return uid
+
+            for operand in operands:
+                print("OPERAND", operand.tag, self.get_elem_text(operand))
+                operand_names.append(self.get_elem_text(operand))
+                # If a an operand argument passed to this operator is from a bound
+                # quantifier variable, then we need to rename the bound variable
+                # to match the name of the operator definition argument.
+            for ind,op in enumerate(udef_elem.find("params")):
+                print("DEF PARAM:", op)
+                paramref = op.find("FormalParamNodeRef")
+                if paramref is not None:
+                    paramrefUID = paramref.find("UID").text
+                    paramrefDef = self.formal_params_table[paramrefUID]["elem"]
+                    paramName = paramrefDef.find("uniquename").text
+                    for q in curr_quants:
+                        print("quant arg:", q[1])
+                        if q[1] == operand_names[ind]:
+                            print(" --> BOUND RENAME:", self.get_elem_text(operand), "TO:", paramName)
+                            rename_mapping = {self.get_elem_text(operand) : paramName}
+                            print(rename_mapping)
+                    # Rename bound quant vars.
+                    curr_quants = [q if q[1] != operand_names[ind] else (q[0], paramName, q[2]) for q in curr_quants]
+                            # print("current quant:", curr_quants)
+
+                    
+            print(udef_elem.tag)
+            # for op in udef_elem.find("operands"):
+            #     print(op)
+            for a in udef_elem:
+                print(a)
+            body = udef_elem.find("body")
+            # TODO. Bind renamed variables as arguments.
+            print("user def:", udef)
+            if body is not None:
+                self.extract_quant_preds(body, curr_quants, curr_preds)
+
+        # Builtin operator.
+        builtInRef = operator.find("BuiltInKindRef")
+
+        if builtInRef is None:
+            # for o in operator:
+                # print(o.tag)
+            return
+
+        uid = builtInRef.find("UID")
+
+        builtin = None
+        if uid is not None and uid.text in self.spec_obj["builtins"]:
+            builtin = self.spec_obj["builtins"][uid.text]
+            # print(builtin["uniquename"])
+
+        # For $Pair
+        if builtin is not None and builtin["uniquename"] in ["$Pair"]:
+            strs = []
+            for ind,conj in enumerate(elem.find("operands")):
+                cstr = str(self.syntax_elem_to_str(conj))
+                print("== ", conj.tag, ind, cstr)
+                strs.append(cstr)
+            return strs[0] + " " + "|->" + " " + strs[1]
+
+        if builtin is not None and builtin["uniquename"] in ["$RcdConstructor"]:
+            strs = []
+            for conj in elem.find("operands"):
+                # print("== ", conj.tag)
+                cstr = str(self.syntax_elem_to_str(conj))
+                strs.append(cstr)
+            return "[" + strs[0] + " " + "|->" + " " + strs[1] + "]"
+
+        if builtin is not None and builtin["uniquename"] in ["\\in", "\\cup", "="]:
+            strs = []
+            for conj in elem.find("operands"):
+                # print("== ", conj.tag)
+                cstr = str(self.syntax_elem_to_str(conj))
+                strs.append(cstr)
+            return strs[0] + " " + builtin["uniquename"] + " " + strs[1]
+            # return builtin["uniquename"]
+
+        # Conjunction/disjunction.
+        if builtin is not None and builtin["uniquename"] in ["\\land", "\\lor"]:
+            # print(builtin)
+            # print(elem.find("operands"))
+            return builtin["uniquename"]
+            # for conj in elem.find("operands"):
+            #     print(conj)
+            #     if conj.tag == "OpApplNode":
+            #         self.extract_OpApplNode(conj, curr_quants, curr_preds)
+
+        if builtin is not None and builtin["uniquename"] == "TRUE":
+            # pred = QuantPred(curr_quants, elem)
+            # curr_preds.append((curr_quants, elem))
+            return "TRUE"
+
+        # Conjunction/disjunction list.
+        if builtin is not None and builtin["uniquename"] in ["$ConjList", "$DisjList"]:
+            print("CONJUNCTION LIST")
+            for conj in elem.find("operands"):
+                level = conj.find("level").text
+
+                # Ignore UNCHANGED statements.
+                print("CONJ TEXT:", self.get_elem_text(conj))
+                print(conj.tag)
+                UNCHANGED_uid = "67"
+                if conj.tag == "OpApplNode" and conj.find("operator") and conj.find("operator").find("BuiltInKindRef").find("UID").text == UNCHANGED_uid:
+                    print("UNCHANGED")
+                    continue
+
+                # print(conj)
+                # print("conjunct level: ", level)
+                # For now append level 1 conjunct predicates.
+                # if level in ["0", "1"]:
+                #     pred = QuantPred(curr_quants, conj)
+                #     # print(pred.quant_prefix_text())
+                #     curr_preds.append((curr_quants, conj))
+
+                # self.visit_all_nodes(conj)
+
+                # if level in ["2"]:
+                #     curr_preds.append((curr_quants, conj))
+                #     opapplnodes = conj.find('OpApplNode')
+
+
+
+        # Bounded quantifier.
+        if builtin is not None and builtin["uniquename"] in ["$BoundedForall", "$BoundedExists"]:
+            # builtin = self.spec_obj["builtins"][uid.text]
+            # if builtin["uniquename"] in ["$BoundedForall", "$BoundedExists"]:
+            print("QUANT", builtin["uniquename"])
+            print("uid", uid.text)
+            operands = elem.find("operands")
+            boundSymbols = elem.find("boundSymbols")
+
+            for sym in boundSymbols:
+                print("bound:", sym)
+                for x in sym:
+                    print("sym", x)
+                    if x.tag == "FormalParamNodeRef":
+                        formalParamUID = x.find("UID").text
+                        param = self.formal_params_table[formalParamUID]["elem"]
+                        paramName = param.find("uniquename").text
+                        print("param name:", paramName)
+                    if x.tag == "OpApplNode":
+
+                        begin = self.elem_to_location_tuple(x, "begin")
+                        end = self.elem_to_location_tuple(x, "end")
+                        print(begin, end)
+                        text = self.get_text_from_location_endpoints(begin, end)
+                        print("bound text:", text)
+                        for a in x:
+                            # if a.tag == "operator":
+                                # begin = self.elem_to_location_tuple(a, "begin")
+                                # end = self.elem_to_location_tuple(a, "end")
+                                # print("BEGIN:", begin)
+                                # print("END  :", end)
+                                # text = self.get_text_from_location_endpoints(begin, end)
+                                # print(text)
+                                # print(a)
+                            print(a)
+                            # print(list(a))
+                            # for c in a:
+                            #     print(c)
+                        # self.extract_quant_and_predicate_grammar()
+                            
+                        begin = self.elem_to_location_tuple(elem, "begin")
+                        end = self.elem_to_location_tuple(elem, "end")
+                        txt = self.get_text_from_location_endpoints(begin, end)
+                        print("TXT:", txt)
+
+                        # curr_quants.append(x)
+
+                        # curr_quants.append(QuantPrefix(builtin["uniquename"], ))
+
+                        curr_quants.append((builtin["uniquename"], paramName, text))
+            # curr_quants.append(builtin)
+            # curr_quants.append(elem)
+            print(curr_quants)
+            for elem in operands:
+                print("quant operand:", elem.tag)
+                self.extract_quant_preds(elem, curr_quants, curr_preds)
+
+                # print("operands:", operands)
+                # opAppl = operands.find("OpApplNode")
+                # if opAppl is not None:
+                #     if opAppl.find("operator") is not None:
+                #         v = opAppl.find("operator").find("BuiltInKindRef")
+                #         print(v)
+        return 
 
     def compute_coi_table(self, lemmas, actions):
         "Compute the set of cone-of-influence (COI) variables for an action lemma pair."
@@ -857,6 +1100,21 @@ if __name__ == "__main__":
     tla_file = "TwoPhase"
     my_spec = parse_tla_file("benchmarks", tla_file)
 
+    actions = []
+    for udef in my_spec.get_all_user_defs(level="2"):
+        if udef.endswith("Action"):
+            actions.append(udef)
+
+    # my_spec.ast.write("tla_ast.xml")
+
+    # def print_node(node):
+    #     if node.tag == "OpApplNode":
+            
+    #     if "spec_text" in node.attrib:
+    #         return node.spec_text
+
+    # exit()
+
     top_level_defs = my_spec.get_all_user_defs(level="1")
     spec_obj = my_spec.get_spec_obj()
     print(f"Found {len(top_level_defs)} top level defs.")
@@ -868,10 +1126,7 @@ if __name__ == "__main__":
 
     # print("EXTRACT QUANT")
     all_preds = []
-    actions = []
-    for udef in my_spec.get_all_user_defs(level="2"):
-        if udef.endswith("Action"):
-            actions.append(udef)
+    actions = ["TMRcvPreparedAction"]
     for a in actions[:]:
         print(f"\n>>>> Extracting quant predicates for action: {a}")
         new_preds = my_spec.extract_quant_and_predicate_grammar(a)
@@ -879,7 +1134,10 @@ if __name__ == "__main__":
     # print(all_preds)
     max_quant_prefix = []
     for p in all_preds:
-        # print(p[0], p[1])
+        print(p[0], p[1], p[2])
+        ret = my_spec.syntax_elem_to_str(p[2])
+        print(" -> String val:", ret)
+        print("")
         if len([p[0]]) > len(max_quant_prefix):
             max_quant_prefix = p[0]
 
