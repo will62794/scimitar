@@ -4309,13 +4309,17 @@ class InductiveInvGen():
 
             # Creating CDF plot
             sorted_values = [x / max(state_slice_sizes) for x in np.sort(list(state_slice_sizes))]
+            percentile_50 = np.percentile(sorted_values, 50)
             cdf = np.arange(1, len(sorted_values) + 1) / len(sorted_values)
 
             plt.figure(figsize=(10, 6))
             plt.plot(sorted_values, cdf, marker="o", linestyle="-")
+            plt.axvline(percentile_50 / max(sorted_values), color='purple', linestyle='--', label=f'50th Percentile (Median): {percentile_50 / max(sorted_values):.2f}')
+
             plt.xlabel('Total Unique Cached States')
             plt.ylabel('Cumulative Probability')
             plt.title('CDF of Slice Sizes (Total Unique Cached States)')
+            plt.legend()
             plt.grid(True)
             # plt.show()
 
