@@ -1,0 +1,2525 @@
+{
+  "proof_graph": {
+    "edges": [
+      [
+        "Safety_AcceptAppendEntriesRequestAppendAction",
+        "Safety"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Safety_ClientRequestAction",
+        "Safety"
+      ],
+      [
+        "Safety_AcceptAppendEntriesRequestAppendAction",
+        "Safety"
+      ],
+      [
+        "Safety_AcceptAppendEntriesRequestAppendAction",
+        "Safety"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0",
+        "Safety_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0",
+        "Safety_BecomeLeaderAction"
+      ],
+      [
+        "Safety_ClientRequestAction",
+        "Safety"
+      ],
+      [
+        "Safety_ClientRequestAction",
+        "Safety"
+      ],
+      [
+        "Inv15_7bad_R0_2_I0",
+        "Safety_ClientRequestAction"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_AppendEntriesAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_BecomeLeaderAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_AppendEntriesAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_AppendEntriesAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Safety",
+        "Inv0_33b0_R0_0_I0_AppendEntriesAction"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_BecomeLeaderAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0_BecomeLeaderAction",
+        "Inv0_33b0_R0_0_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0",
+        "Inv0_33b0_R0_0_I0_BecomeLeaderAction"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_ClientRequestAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_HandleRequestVoteResponseAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0",
+        "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_ClientRequestAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_ClientRequestAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0",
+        "Inv24_ed8d_R0_1_I0_ClientRequestAction"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_HandleRequestVoteResponseAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0_HandleRequestVoteResponseAction",
+        "Inv24_ed8d_R0_1_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0",
+        "Inv24_ed8d_R0_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv15_7bad_R0_2_I0_BecomeLeaderAction",
+        "Inv15_7bad_R0_2_I0"
+      ],
+      [
+        "Inv15_7bad_R0_2_I0_BecomeLeaderAction",
+        "Inv15_7bad_R0_2_I0"
+      ],
+      [
+        "Inv15_7bad_R0_2_I0_BecomeLeaderAction",
+        "Inv15_7bad_R0_2_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0",
+        "Inv15_7bad_R0_2_I0_BecomeLeaderAction"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_AppendEntriesAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_HandleRequestVoteResponseAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_AppendEntriesAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_AppendEntriesAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv24_ed8d_R0_1_I0",
+        "Inv12_e9c6_R1_1_I0_AppendEntriesAction"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_HandleRequestVoteResponseAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv12_e9c6_R1_1_I0_HandleRequestVoteResponseAction",
+        "Inv12_e9c6_R1_1_I0"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2",
+        "Inv12_e9c6_R1_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_BecomeLeaderAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_BecomeLeaderAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_BecomeLeaderAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0",
+        "Inv11_d848_R2_1_I0_BecomeLeaderAction"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2",
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv9072_27f5_R5_1_I2",
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2",
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction",
+        "Inv11_d848_R2_1_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0",
+        "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2",
+        "Inv33_5a2e_R2_2_I0_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv11_d848_R2_1_I0",
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv82_3acc_R6_1_I1",
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0",
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2",
+        "Inv33_5a2e_R2_2_I0_ClientRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv789_4aa6_R6_2_I1",
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv1281_1f30_R6_2_I1",
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1",
+        "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction",
+        "Inv33_5a2e_R2_2_I0"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1",
+        "Inv33_5a2e_R2_2_I0_RequestVoteAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_AppendEntriesAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_RequestVoteAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_AppendEntriesAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_AppendEntriesAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv33_5a2e_R2_2_I0",
+        "Inv15967_602c_R4_1_I2_AppendEntriesAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv789_4aa6_R6_2_I1",
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1",
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv7_8db7_R7_1_I1",
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv1281_1f30_R6_2_I1",
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv173_650b_R7_1_I1",
+        "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_RequestVoteAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv15967_602c_R4_1_I2_RequestVoteAction",
+        "Inv15967_602c_R4_1_I2"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1",
+        "Inv15967_602c_R4_1_I2_RequestVoteAction"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_HandleRequestVoteResponseAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_RequestVoteAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_HandleRequestVoteResponseAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_HandleRequestVoteResponseAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2",
+        "Inv8_8e53_R5_0_I0_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_RequestVoteAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv8_8e53_R5_0_I0_RequestVoteAction",
+        "Inv8_8e53_R5_0_I0"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1",
+        "Inv8_8e53_R5_0_I0_RequestVoteAction"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_UpdateTermAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv61_fe26_R9_0_I1",
+        "Inv127_0bd2_R5_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_UpdateTermAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv127_0bd2_R5_1_I2_UpdateTermAction",
+        "Inv127_0bd2_R5_1_I2"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1",
+        "Inv127_0bd2_R5_1_I2_UpdateTermAction"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteResponseAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_RequestVoteAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1",
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteResponseAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteResponseAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv10_82b3_R11_1_I0",
+        "Inv9_42ac_R5_1_I2_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_RequestVoteAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv9_42ac_R5_1_I2_RequestVoteAction",
+        "Inv9_42ac_R5_1_I2"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv9_42ac_R5_1_I2_RequestVoteAction"
+      ],
+      [
+        "Inv789_4aa6_R6_2_I1_RequestVoteAction",
+        "Inv789_4aa6_R6_2_I1"
+      ],
+      [
+        "Inv789_4aa6_R6_2_I1_RequestVoteAction",
+        "Inv789_4aa6_R6_2_I1"
+      ],
+      [
+        "Inv789_4aa6_R6_2_I1_RequestVoteAction",
+        "Inv789_4aa6_R6_2_I1"
+      ],
+      [
+        "Inv1281_1f30_R6_2_I1",
+        "Inv789_4aa6_R6_2_I1_RequestVoteAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv8_2014_R15_0_I0",
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv0_33b0_R0_0_I0",
+        "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1",
+        "Inv4_c57a_R6_2_I1_ClientRequestAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv40_6261_R15_1_I1",
+        "Inv4_c57a_R6_2_I1_ClientRequestAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv82_3acc_R6_1_I1",
+        "Inv4_c57a_R6_2_I1_ClientRequestAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_ClientRequestAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1",
+        "Inv4_c57a_R6_2_I1_ClientRequestAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv1281_1f30_R6_2_I1",
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction",
+        "Inv4_c57a_R6_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1",
+        "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1_HandleRequestVoteRequestAction",
+        "Inv2513_1e2e_R6_3_I1"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1_HandleRequestVoteRequestAction",
+        "Inv2513_1e2e_R6_3_I1"
+      ],
+      [
+        "Inv2513_1e2e_R6_3_I1_HandleRequestVoteRequestAction",
+        "Inv2513_1e2e_R6_3_I1"
+      ],
+      [
+        "Inv12_9e78_R16_0_I0",
+        "Inv2513_1e2e_R6_3_I1_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv7_8db7_R7_1_I1_AppendEntriesAction",
+        "Inv7_8db7_R7_1_I1"
+      ],
+      [
+        "Inv7_8db7_R7_1_I1_AppendEntriesAction",
+        "Inv7_8db7_R7_1_I1"
+      ],
+      [
+        "Inv7_8db7_R7_1_I1_AppendEntriesAction",
+        "Inv7_8db7_R7_1_I1"
+      ],
+      [
+        "Inv11_afc0_R17_0_I0",
+        "Inv7_8db7_R7_1_I1_AppendEntriesAction"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_AppendEntriesAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_HandleRequestVoteRequestAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_RequestVoteAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_UpdateTermAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_AppendEntriesAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_AppendEntriesAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1",
+        "Inv173_650b_R7_1_I1_AppendEntriesAction"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_HandleRequestVoteRequestAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_HandleRequestVoteRequestAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv8_2014_R15_0_I0",
+        "Inv173_650b_R7_1_I1_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_RequestVoteAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_RequestVoteAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv8_2014_R15_0_I0",
+        "Inv173_650b_R7_1_I1_RequestVoteAction"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_UpdateTermAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv173_650b_R7_1_I1_UpdateTermAction",
+        "Inv173_650b_R7_1_I1"
+      ],
+      [
+        "Inv8_2014_R15_0_I0",
+        "Inv173_650b_R7_1_I1_UpdateTermAction"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction",
+        "Inv0_2c32_R8_1_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction",
+        "Inv0_2c32_R8_1_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction",
+        "Inv0_2c32_R8_1_I1"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv13_3715_R21_0_I0",
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1",
+        "Inv166_e30e_R11_0_I1_RequestVoteAction"
+      ],
+      [
+        "Inv10_82b3_R11_1_I0_HandleRequestVoteRequestAction",
+        "Inv10_82b3_R11_1_I0"
+      ],
+      [
+        "Inv10_82b3_R11_1_I0_HandleRequestVoteRequestAction",
+        "Inv10_82b3_R11_1_I0"
+      ],
+      [
+        "Inv10_82b3_R11_1_I0_HandleRequestVoteRequestAction",
+        "Inv10_82b3_R11_1_I0"
+      ],
+      [
+        "Inv13_3715_R21_0_I0",
+        "Inv10_82b3_R11_1_I0_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv8_2014_R15_0_I0_AppendEntriesAction",
+        "Inv8_2014_R15_0_I0"
+      ],
+      [
+        "Inv8_2014_R15_0_I0_AppendEntriesAction",
+        "Inv8_2014_R15_0_I0"
+      ],
+      [
+        "Inv8_2014_R15_0_I0_AppendEntriesAction",
+        "Inv8_2014_R15_0_I0"
+      ],
+      [
+        "Inv4_c57a_R6_2_I1",
+        "Inv8_2014_R15_0_I0_AppendEntriesAction"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_HandleRequestVoteRequestAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_UpdateTermAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_HandleRequestVoteRequestAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_HandleRequestVoteRequestAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv13_3715_R21_0_I0",
+        "Inv363_d176_R15_2_I1_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv363_d176_R15_2_I1_RequestVoteAction"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_RequestVoteAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv13_3715_R21_0_I0",
+        "Inv363_d176_R15_2_I1_RequestVoteAction"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_UpdateTermAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv363_d176_R15_2_I1_UpdateTermAction",
+        "Inv363_d176_R15_2_I1"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv363_d176_R15_2_I1_UpdateTermAction"
+      ],
+      [
+        "Inv11_afc0_R17_0_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv11_afc0_R17_0_I0"
+      ],
+      [
+        "Inv11_afc0_R17_0_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv11_afc0_R17_0_I0"
+      ],
+      [
+        "Inv11_afc0_R17_0_I0_AcceptAppendEntriesRequestAppendAction",
+        "Inv11_afc0_R17_0_I0"
+      ],
+      [
+        "Inv21_c904_R28_0_I0",
+        "Inv11_afc0_R17_0_I0_AcceptAppendEntriesRequestAppendAction"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_RequestVoteAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_UpdateTermAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_RequestVoteAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_RequestVoteAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv13_3715_R21_0_I0_RequestVoteAction"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_UpdateTermAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv13_3715_R21_0_I0_UpdateTermAction",
+        "Inv13_3715_R21_0_I0"
+      ],
+      [
+        "Inv14_f533_R11_2_I0",
+        "Inv13_3715_R21_0_I0_UpdateTermAction"
+      ],
+      [
+        "Inv21_c904_R28_0_I0_AppendEntriesAction",
+        "Inv21_c904_R28_0_I0"
+      ],
+      [
+        "Inv21_c904_R28_0_I0_AppendEntriesAction",
+        "Inv21_c904_R28_0_I0"
+      ],
+      [
+        "Inv21_c904_R28_0_I0_AppendEntriesAction",
+        "Inv21_c904_R28_0_I0"
+      ],
+      [
+        "Inv11_afc0_R17_0_I0",
+        "Inv21_c904_R28_0_I0_AppendEntriesAction"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_UpdateTermAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv13_3715_R21_0_I0",
+        "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_RequestVoteAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1",
+        "Inv166_e30e_R11_0_I1_RequestVoteAction"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_UpdateTermAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv166_e30e_R11_0_I1_UpdateTermAction",
+        "Inv166_e30e_R11_0_I1"
+      ],
+      [
+        "Inv0_2c32_R8_1_I1",
+        "Inv166_e30e_R11_0_I1_UpdateTermAction"
+      ]
+    ],
+    "nodes": {
+      "Safety": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "H_PrimaryHasEntriesItCreated",
+        "order": 1,
+        "depth": 0,
+        "is_root": true
+      },
+      "Safety_AcceptAppendEntriesRequestAppendAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 78,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log"
+        ],
+        "num_grammar_preds": 70,
+        "num_invs_generated_per_iter": {
+          "1": 139
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 630.6211569309235,
+        "latest_elimination_iter": 1
+      },
+      "Safety_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 64,
+        "num_invs_generated_per_iter": {
+          "1": 43
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 354.85095477104187,
+        "latest_elimination_iter": 1
+      },
+      "Safety_ClientRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "log"
+        ],
+        "num_grammar_preds": 53,
+        "num_invs_generated_per_iter": {
+          "1": 23
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 455.64125084877014,
+        "latest_elimination_iter": 1
+      },
+      "Inv0_33b0_R0_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : \\A VARLOGINDI \\in LogIndices : ((VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))",
+        "order": 2,
+        "depth": 1
+      },
+      "Inv24_ed8d_R0_1_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])))",
+        "order": 3,
+        "depth": 1
+      },
+      "Inv15_7bad_R0_2_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))))",
+        "order": 4,
+        "depth": 1
+      },
+      "Inv0_33b0_R0_0_I0_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "commitIndex",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 79,
+        "num_invs_generated_per_iter": {
+          "1": 43
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 356.39499855041504,
+        "latest_elimination_iter": 1
+      },
+      "Inv0_33b0_R0_0_I0_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 81,
+        "num_invs_generated_per_iter": {
+          "1": 25
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 362.4474182128906,
+        "latest_elimination_iter": 1
+      },
+      "Inv12_e9c6_R1_1_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI])) \\/ (~(votesGranted[VARI] \\in Quorum)))",
+        "order": 5,
+        "depth": 2
+      },
+      "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 38,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 80,
+        "num_invs_generated_per_iter": {
+          "1": 16
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 411.3137936592102,
+        "latest_elimination_iter": 1
+      },
+      "Inv24_ed8d_R0_1_I0_ClientRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 63,
+        "num_invs_generated_per_iter": {
+          "1": 23
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 356.8289906978607,
+        "latest_elimination_iter": 1
+      },
+      "Inv24_ed8d_R0_1_I0_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 83,
+        "num_invs_generated_per_iter": {
+          "1": 63
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 379.8939833641052,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_d848_R2_1_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))) \\/ (~(votesGranted[VARI] \\in Quorum)))",
+        "order": 6,
+        "depth": 2
+      },
+      "Inv33_5a2e_R2_2_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)))",
+        "order": 7,
+        "depth": 2
+      },
+      "Inv15_7bad_R0_2_I0_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 49,
+        "num_invs_generated_per_iter": {
+          "1": 17
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 169.48369193077087,
+        "latest_elimination_iter": 1
+      },
+      "Inv12_e9c6_R1_1_I0_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "commitIndex",
+          "votesGranted",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 89,
+        "num_invs_generated_per_iter": {
+          "1": 33
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 325.8712377548218,
+        "latest_elimination_iter": 1
+      },
+      "Inv12_e9c6_R1_1_I0_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 93,
+        "num_invs_generated_per_iter": {
+          "1": 23,
+          "2": 8351,
+          "3": 57199
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 2693.5715968608856,
+        "latest_elimination_iter": 3
+      },
+      "Inv15967_602c_R4_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : ~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI]))",
+        "order": 8,
+        "depth": 3
+      },
+      "Inv11_d848_R2_1_I0_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 49,
+        "num_invs_generated_per_iter": {
+          "1": 17
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 308.6010298728943,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_d848_R2_1_I0_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 823,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 94,
+        "num_invs_generated_per_iter": {
+          "1": 24,
+          "2": 348,
+          "3": 24192
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 2558.9786212444305,
+        "latest_elimination_iter": 3
+      },
+      "Inv8_8e53_R5_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})",
+        "order": 9,
+        "depth": 3
+      },
+      "Inv127_0bd2_R5_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : (VARJ \\in votesGranted[VARJ]) \\/ (~(VARI \\in GrantedVoteSet(VARJ) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
+        "order": 10,
+        "depth": 3
+      },
+      "Inv9072_27f5_R5_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : ((state[VARJ] = Follower)) \\/ ((votesGranted[VARI] \\in Quorum)) \\/ (~((state[VARI] = Leader)))",
+        "order": 11,
+        "depth": 3
+      },
+      "Inv9_42ac_R5_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))",
+        "order": 12,
+        "depth": 3
+      },
+      "Inv33_5a2e_R2_2_I0_AcceptAppendEntriesRequestAppendAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 36,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 100,
+        "num_invs_generated_per_iter": {
+          "1": 23
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 576.3066694736481,
+        "latest_elimination_iter": 1
+      },
+      "Inv33_5a2e_R2_2_I0_ClientRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 852,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 109,
+        "num_invs_generated_per_iter": {
+          "1": 44,
+          "2": 4482
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 2258.0986444950104,
+        "latest_elimination_iter": 2
+      },
+      "Inv33_5a2e_R2_2_I0_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 667,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 125,
+        "num_invs_generated_per_iter": {
+          "1": 95,
+          "2": 9259
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 2633.962322473526,
+        "latest_elimination_iter": 2
+      },
+      "Inv33_5a2e_R2_2_I0_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 893,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 96,
+        "num_invs_generated_per_iter": {
+          "1": 37,
+          "2": 3660
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1947.860771894455,
+        "latest_elimination_iter": 2
+      },
+      "Inv82_3acc_R6_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : (votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))",
+        "order": 13,
+        "depth": 3
+      },
+      "Inv789_4aa6_R6_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : ((state[VARI] = Follower)) \\/ ((votedFor[VARI] # Nil /\\ VARI \\in votesGranted[votedFor[VARI]]))",
+        "order": 14,
+        "depth": 3
+      },
+      "Inv1281_1f30_R6_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARJ \\in Server : ((state[VARJ] = Follower)) \\/ ((votedFor[VARJ] = VARJ))",
+        "order": 15,
+        "depth": 3
+      },
+      "Inv4_c57a_R6_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(H_LogEntryInTermImpliesSafeAtTerm /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor)",
+        "order": 16,
+        "depth": 3
+      },
+      "Inv2513_1e2e_R6_3_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm) \\/ (~(VARREQVRES.mvoteGranted))",
+        "order": 17,
+        "depth": 3
+      },
+      "Inv15967_602c_R4_1_I2_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "commitIndex",
+          "votesGranted",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 109,
+        "num_invs_generated_per_iter": {
+          "1": 39
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 596.4537882804871,
+        "latest_elimination_iter": 1
+      },
+      "Inv15967_602c_R4_1_I2_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 366,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 194,
+        "num_invs_generated_per_iter": {
+          "1": 121,
+          "2": 8336
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 4887.0306515693665,
+        "latest_elimination_iter": 2
+      },
+      "Inv15967_602c_R4_1_I2_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 440,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 80,
+        "num_invs_generated_per_iter": {
+          "1": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 625.907773733139,
+        "latest_elimination_iter": 1
+      },
+      "Inv7_8db7_R7_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : ((currentTerm[VARJ] > currentTerm[VARI])) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm))",
+        "order": 18,
+        "depth": 4
+      },
+      "Inv173_650b_R7_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARREQVRES \\in requestVoteResponseMsgs : (H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs) \\/ (~(currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm))",
+        "order": 19,
+        "depth": 4
+      },
+      "Inv8_8e53_R5_0_I0_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 68,
+        "num_invs_generated_per_iter": {
+          "1": 22
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 451.02482867240906,
+        "latest_elimination_iter": 1
+      },
+      "Inv8_8e53_R5_0_I0_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 61,
+        "num_invs_generated_per_iter": {
+          "1": 24,
+          "2": 41
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 561.3774785995483,
+        "latest_elimination_iter": 2
+      },
+      "Inv0_2c32_R8_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : ((currentTerm[VARI] <= currentTerm[VARJ])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))",
+        "order": 20,
+        "depth": 4
+      },
+      "Inv127_0bd2_R5_1_I2_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 615,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 104,
+        "num_invs_generated_per_iter": {
+          "1": 28,
+          "2": 75
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1004.5474648475647,
+        "latest_elimination_iter": 2
+      },
+      "Inv127_0bd2_R5_1_I2_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 51,
+        "num_invs_generated_per_iter": {
+          "1": 20
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 703.275536775589,
+        "latest_elimination_iter": 1
+      },
+      "Inv61_fe26_R9_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARREQVM \\in requestVoteRequestMsgs : ~(VARREQVM.msource = VARI) \\/ (~(votesGranted[VARI] = {}))",
+        "order": 21,
+        "depth": 4
+      },
+      "Inv9_42ac_R5_1_I2_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1200,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 125,
+        "num_invs_generated_per_iter": {
+          "1": 51,
+          "2": 3168
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1638.7691910266876,
+        "latest_elimination_iter": 2
+      },
+      "Inv9_42ac_R5_1_I2_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 503,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 68,
+        "num_invs_generated_per_iter": {
+          "1": 23
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 359.309734582901,
+        "latest_elimination_iter": 1
+      },
+      "Inv9_42ac_R5_1_I2_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 68,
+        "num_invs_generated_per_iter": {
+          "1": 23
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 305.44532203674316,
+        "latest_elimination_iter": 1
+      },
+      "Inv166_e30e_R11_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : ((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))",
+        "order": 22,
+        "depth": 4
+      },
+      "Inv10_82b3_R11_1_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A mi,mj \\in requestVoteResponseMsgs : (/\\ mi.mterm = mj.mterm /\\ mi.msource = mj.msource /\\ mi.mvoteGranted /\\ mj.mvoteGranted) => mi.mdest = mj.mdest)",
+        "order": 23,
+        "depth": 4
+      },
+      "Inv14_f533_R11_2_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)",
+        "order": 24,
+        "depth": 4
+      },
+      "Inv789_4aa6_R6_2_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 44,
+        "num_invs_generated_per_iter": {
+          "1": 17
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 257.18043279647827,
+        "latest_elimination_iter": 1
+      },
+      "Inv4_c57a_R6_2_I1_AcceptAppendEntriesRequestAppendAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 278,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 88,
+        "num_invs_generated_per_iter": {
+          "1": 32
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1146.9415140151978,
+        "latest_elimination_iter": 1
+      },
+      "Inv4_c57a_R6_2_I1_ClientRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 971,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 84,
+        "num_invs_generated_per_iter": {
+          "1": 41,
+          "2": 355
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1811.832516670227,
+        "latest_elimination_iter": 2
+      },
+      "Inv4_c57a_R6_2_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 102,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 105,
+        "num_invs_generated_per_iter": {
+          "1": 52,
+          "2": 790
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 2010.8246290683746,
+        "latest_elimination_iter": 2
+      },
+      "Inv8_2014_R15_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs)",
+        "order": 25,
+        "depth": 4
+      },
+      "Inv40_6261_R15_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : ((state[VARI] = Follower)) \\/ ((VARI \\in votesGranted[VARI]))",
+        "order": 26,
+        "depth": 4
+      },
+      "Inv363_d176_R15_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : (\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest) \\/ (~(votedFor[VARI] # Nil))",
+        "order": 27,
+        "depth": 4
+      },
+      "Inv2513_1e2e_R6_3_I1_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 72,
+        "num_invs_generated_per_iter": {
+          "1": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 179.6516273021698,
+        "latest_elimination_iter": 1
+      },
+      "Inv12_9e78_R16_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARREQVM \\in requestVoteRequestMsgs : (currentTerm[VARREQVM.msource] >= VARREQVM.mterm)",
+        "order": 28,
+        "depth": 4
+      },
+      "Inv7_8db7_R7_1_I1_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "commitIndex",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 79,
+        "num_invs_generated_per_iter": {
+          "1": 34
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 253.87107038497925,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_afc0_R17_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : (\\A INDK \\in DOMAIN log[VARI] : log[VARI][INDK] <= currentTerm[VARI])",
+        "order": 29,
+        "depth": 5
+      },
+      "Inv173_650b_R7_1_I1_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "commitIndex",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 98,
+        "num_invs_generated_per_iter": {
+          "1": 39
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 905.047447681427,
+        "latest_elimination_iter": 1
+      },
+      "Inv173_650b_R7_1_I1_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 109,
+        "num_invs_generated_per_iter": {
+          "1": 32
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 926.7771592140198,
+        "latest_elimination_iter": 1
+      },
+      "Inv173_650b_R7_1_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 89,
+        "num_invs_generated_per_iter": {
+          "1": 31
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 933.2348642349243,
+        "latest_elimination_iter": 1
+      },
+      "Inv173_650b_R7_1_I1_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 89,
+        "num_invs_generated_per_iter": {
+          "1": 31
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 915.3590483665466,
+        "latest_elimination_iter": 1
+      },
+      "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 68,
+        "num_invs_generated_per_iter": {
+          "1": 24
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 237.63122606277466,
+        "latest_elimination_iter": 1
+      },
+      "Inv166_e30e_R11_0_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 600,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 78,
+        "num_invs_generated_per_iter": {
+          "1": 164
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 755.3075299263,
+        "latest_elimination_iter": 1
+      },
+      "Inv166_e30e_R11_0_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 600,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 57,
+        "num_invs_generated_per_iter": {
+          "1": 25
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 296.1677739620209,
+        "latest_elimination_iter": 1
+      },
+      "Inv13_3715_R21_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)",
+        "order": 30,
+        "depth": 5
+      },
+      "Inv10_82b3_R11_1_I0_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 72,
+        "num_invs_generated_per_iter": {
+          "1": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 166.11918330192566,
+        "latest_elimination_iter": 1
+      },
+      "Inv8_2014_R15_0_I0_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "commitIndex",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 85,
+        "num_invs_generated_per_iter": {
+          "1": 35
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 629.9104790687561,
+        "latest_elimination_iter": 1
+      },
+      "Inv363_d176_R15_2_I1_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 128,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor",
+          "log"
+        ],
+        "num_grammar_preds": 72,
+        "num_invs_generated_per_iter": {
+          "1": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 399.23125410079956,
+        "latest_elimination_iter": 1
+      },
+      "Inv363_d176_R15_2_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1063,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor"
+        ],
+        "num_grammar_preds": 70,
+        "num_invs_generated_per_iter": {
+          "1": 28,
+          "2": 157
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 694.473959684372,
+        "latest_elimination_iter": 2
+      },
+      "Inv363_d176_R15_2_I1_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor"
+        ],
+        "num_grammar_preds": 41,
+        "num_invs_generated_per_iter": {
+          "1": 20
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 323.29370522499084,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_afc0_R17_0_I0_AcceptAppendEntriesRequestAppendAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 234,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log"
+        ],
+        "num_grammar_preds": 70,
+        "num_invs_generated_per_iter": {
+          "1": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 241.8376123905182,
+        "latest_elimination_iter": 1
+      },
+      "Inv21_c904_R28_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARMAEREQ \\in appendEntriesRequestMsgs : ~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm)",
+        "order": 31,
+        "depth": 6
+      },
+      "Inv13_3715_R21_0_I0_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor"
+        ],
+        "num_grammar_preds": 57,
+        "num_invs_generated_per_iter": {
+          "1": 21
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 324.0916976928711,
+        "latest_elimination_iter": 1
+      },
+      "Inv13_3715_R21_0_I0_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor"
+        ],
+        "num_grammar_preds": 41,
+        "num_invs_generated_per_iter": {
+          "1": 20
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 316.8632709980011,
+        "latest_elimination_iter": 1
+      },
+      "Inv21_c904_R28_0_I0_AppendEntriesAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 800,
+        "coi_vars": [
+          "appendEntriesRequestMsgs",
+          "currentTerm",
+          "state",
+          "log",
+          "commitIndex",
+          "nextIndex"
+        ],
+        "num_grammar_preds": 79,
+        "num_invs_generated_per_iter": {
+          "1": 34
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 200.5125756263733,
+        "latest_elimination_iter": 1
+      },
+      "Inv166_e30e_R11_0_I1_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 600,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "appendEntriesRequestMsgs",
+          "appendEntriesResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 115,
+        "num_invs_generated_per_iter": {
+          "1": 102
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 411.8913531303406,
+        "latest_elimination_iter": 1
+      }
+    },
+    "safety": "H_PrimaryHasEntriesItCreated",
+    "curr_node": "Inv166_e30e_R11_0_I1_UpdateTermAction"
+  },
+  "strengthening_conjuncts": [
+    [
+      "Inv0_33b0_R0_0_I0",
+      "\\A VARI \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : \\A VARLOGINDI \\in LogIndices : ((VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))",
+      "((VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))"
+    ],
+    [
+      "Inv24_ed8d_R0_1_I0",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])))",
+      "(~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])))"
+    ],
+    [
+      "Inv15_7bad_R0_2_I0",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))))",
+      "(~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))))"
+    ],
+    [
+      "Inv12_e9c6_R1_1_I0",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI])) \\/ (~(votesGranted[VARI] \\in Quorum)))",
+      "(~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI])) \\/ (~(votesGranted[VARI] \\in Quorum)))"
+    ],
+    [
+      "Inv11_d848_R2_1_I0",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))) \\/ (~(votesGranted[VARI] \\in Quorum)))",
+      "(~((state[VARI] = Candidate /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader))) \\/ (~(votesGranted[VARI] \\in Quorum)))"
+    ],
+    [
+      "Inv33_5a2e_R2_2_I0",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : (~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)))",
+      "(~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)))"
+    ],
+    [
+      "Inv15967_602c_R4_1_I2",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : ~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI]))",
+      "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs)) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI]))"
+    ],
+    [
+      "Inv8_8e53_R5_0_I0",
+      "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})",
+      "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})"
+    ],
+    [
+      "Inv127_0bd2_R5_1_I2",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : (VARJ \\in votesGranted[VARJ]) \\/ (~(VARI \\in GrantedVoteSet(VARJ) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
+      "(VARJ \\in votesGranted[VARJ]) \\/ (~(VARI \\in GrantedVoteSet(VARJ) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))"
+    ],
+    [
+      "Inv9072_27f5_R5_1_I2",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : ((state[VARJ] = Follower)) \\/ ((votesGranted[VARI] \\in Quorum)) \\/ (~((state[VARI] = Leader)))",
+      "((state[VARJ] = Follower)) \\/ ((votesGranted[VARI] \\in Quorum)) \\/ (~((state[VARI] = Leader)))"
+    ],
+    [
+      "Inv9_42ac_R5_1_I2",
+      "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))",
+      "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))"
+    ],
+    [
+      "Inv82_3acc_R6_1_I1",
+      "\\A VARI \\in Server : (votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))",
+      "(votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))"
+    ],
+    [
+      "Inv789_4aa6_R6_2_I1",
+      "\\A VARI \\in Server : ((state[VARI] = Follower)) \\/ ((votedFor[VARI] # Nil /\\ VARI \\in votesGranted[votedFor[VARI]]))",
+      "((state[VARI] = Follower)) \\/ ((votedFor[VARI] # Nil /\\ VARI \\in votesGranted[votedFor[VARI]]))"
+    ],
+    [
+      "Inv1281_1f30_R6_2_I1",
+      "\\A VARJ \\in Server : ((state[VARJ] = Follower)) \\/ ((votedFor[VARJ] = VARJ))",
+      "((state[VARJ] = Follower)) \\/ ((votedFor[VARJ] = VARJ))"
+    ],
+    [
+      "Inv4_c57a_R6_2_I1",
+      "(H_LogEntryInTermImpliesSafeAtTerm /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor)",
+      "(H_LogEntryInTermImpliesSafeAtTerm /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor)"
+    ],
+    [
+      "Inv2513_1e2e_R6_3_I1",
+      "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm) \\/ (~(VARREQVRES.mvoteGranted))",
+      "(currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm) \\/ (~(VARREQVRES.mvoteGranted))"
+    ],
+    [
+      "Inv7_8db7_R7_1_I1",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARMAEREQ \\in appendEntriesRequestMsgs : ((currentTerm[VARJ] > currentTerm[VARI])) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm))",
+      "((currentTerm[VARJ] > currentTerm[VARI])) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm))"
+    ],
+    [
+      "Inv173_650b_R7_1_I1",
+      "\\A VARREQVRES \\in requestVoteResponseMsgs : (H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs) \\/ (~(currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm))",
+      "(H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs) \\/ (~(currentTerm[VARREQVRES.mdest] >= VARREQVRES.mterm))"
+    ],
+    [
+      "Inv0_2c32_R8_1_I1",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : ((currentTerm[VARI] <= currentTerm[VARJ])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))",
+      "((currentTerm[VARI] <= currentTerm[VARJ])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))"
+    ],
+    [
+      "Inv61_fe26_R9_0_I1",
+      "\\A VARI \\in Server : \\A VARREQVM \\in requestVoteRequestMsgs : ~(VARREQVM.msource = VARI) \\/ (~(votesGranted[VARI] = {}))",
+      "~(VARREQVM.msource = VARI) \\/ (~(votesGranted[VARI] = {}))"
+    ],
+    [
+      "Inv166_e30e_R11_0_I1",
+      "\\A VARI \\in Server : ((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))",
+      "((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))"
+    ],
+    [
+      "Inv10_82b3_R11_1_I0",
+      "(\\A mi,mj \\in requestVoteResponseMsgs : (/\\ mi.mterm = mj.mterm /\\ mi.msource = mj.msource /\\ mi.mvoteGranted /\\ mj.mvoteGranted) => mi.mdest = mj.mdest)",
+      "(\\A mi,mj \\in requestVoteResponseMsgs : (/\\ mi.mterm = mj.mterm /\\ mi.msource = mj.msource /\\ mi.mvoteGranted /\\ mj.mvoteGranted) => mi.mdest = mj.mdest)"
+    ],
+    [
+      "Inv14_f533_R11_2_I0",
+      "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)",
+      "(currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)"
+    ],
+    [
+      "Inv8_2014_R15_0_I0",
+      "(H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs)",
+      "(H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs)"
+    ],
+    [
+      "Inv40_6261_R15_1_I1",
+      "\\A VARI \\in Server : ((state[VARI] = Follower)) \\/ ((VARI \\in votesGranted[VARI]))",
+      "((state[VARI] = Follower)) \\/ ((VARI \\in votesGranted[VARI]))"
+    ],
+    [
+      "Inv363_d176_R15_2_I1",
+      "\\A VARI \\in Server : (\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest) \\/ (~(votedFor[VARI] # Nil))",
+      "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest) \\/ (~(votedFor[VARI] # Nil))"
+    ],
+    [
+      "Inv12_9e78_R16_0_I0",
+      "\\A VARREQVM \\in requestVoteRequestMsgs : (currentTerm[VARREQVM.msource] >= VARREQVM.mterm)",
+      "(currentTerm[VARREQVM.msource] >= VARREQVM.mterm)"
+    ],
+    [
+      "Inv11_afc0_R17_0_I0",
+      "\\A VARI \\in Server : (\\A INDK \\in DOMAIN log[VARI] : log[VARI][INDK] <= currentTerm[VARI])",
+      "(\\A INDK \\in DOMAIN log[VARI] : log[VARI][INDK] <= currentTerm[VARI])"
+    ],
+    [
+      "Inv13_3715_R21_0_I0",
+      "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)",
+      "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)"
+    ],
+    [
+      "Inv21_c904_R28_0_I0",
+      "\\A VARMAEREQ \\in appendEntriesRequestMsgs : ~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm)",
+      "~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] > VARMAEREQ.mterm)"
+    ]
+  ],
+  "roundi": 0,
+  "num_rounds": 45,
+  "num_iters": 5,
+  "seed": 4,
+  "stats": {
+    "num_lemma_nodes": 31,
+    "num_failed_lemma_nodes": 0,
+    "state_cache_duration_secs": 0,
+    "invcheck_duration_secs": 0,
+    "ctielimcheck_duration_secs": 0,
+    "total_duration_secs": 10.104620933532715,
+    "num_preds": 142,
+    "date": "2024-11-13 19:02:17"
+  }
+}
