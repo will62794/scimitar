@@ -1,0 +1,470 @@
+{
+  "proof_graph": {
+    "edges": [
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1",
+        "Safety_BecomeLeaderAction"
+      ],
+      [
+        "Safety_BecomeLeaderAction",
+        "Safety"
+      ],
+      [
+        "Inv1506_3acc_R0_0_I1",
+        "Safety_BecomeLeaderAction"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_HandleRequestVoteResponseAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_RequestVoteAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_HandleRequestVoteResponseAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_HandleRequestVoteResponseAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0",
+        "Inv31_8e53_R0_0_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_RequestVoteAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv31_8e53_R0_0_I1_RequestVoteAction",
+        "Inv31_8e53_R0_0_I1"
+      ],
+      [
+        "Inv163_6611_R1_1_I1",
+        "Inv31_8e53_R0_0_I1_RequestVoteAction"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_HandleRequestVoteRequestAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_RequestVoteAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_HandleRequestVoteRequestAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_HandleRequestVoteRequestAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1",
+        "Inv24_42ac_R1_0_I0_HandleRequestVoteRequestAction"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_RequestVoteAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv24_42ac_R1_0_I0_RequestVoteAction",
+        "Inv24_42ac_R1_0_I0"
+      ],
+      [
+        "Inv7_f533_R3_1_I0",
+        "Inv24_42ac_R1_0_I0_RequestVoteAction"
+      ],
+      [
+        "Inv163_6611_R1_1_I1_HandleRequestVoteResponseAction",
+        "Inv163_6611_R1_1_I1"
+      ],
+      [
+        "Inv163_6611_R1_1_I1_HandleRequestVoteResponseAction",
+        "Inv163_6611_R1_1_I1"
+      ],
+      [
+        "Inv163_6611_R1_1_I1_HandleRequestVoteResponseAction",
+        "Inv163_6611_R1_1_I1"
+      ],
+      [
+        "Inv7_f533_R3_1_I0",
+        "Inv163_6611_R1_1_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_HandleRequestVoteResponseAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_RequestVoteAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_HandleRequestVoteResponseAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_HandleRequestVoteResponseAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv7_3715_R5_0_I0",
+        "Inv11_e30e_R3_0_I1_HandleRequestVoteResponseAction"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_RequestVoteAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv11_e30e_R3_0_I1_RequestVoteAction",
+        "Inv11_e30e_R3_0_I1"
+      ],
+      [
+        "Inv163_6611_R1_1_I1",
+        "Inv11_e30e_R3_0_I1_RequestVoteAction"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_RequestVoteAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_UpdateTermAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_RequestVoteAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_RequestVoteAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_f533_R3_1_I0",
+        "Inv7_3715_R5_0_I0_RequestVoteAction"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_UpdateTermAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_3715_R5_0_I0_UpdateTermAction",
+        "Inv7_3715_R5_0_I0"
+      ],
+      [
+        "Inv7_f533_R3_1_I0",
+        "Inv7_3715_R5_0_I0_UpdateTermAction"
+      ]
+    ],
+    "nodes": {
+      "Safety": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "H_OnePrimaryPerTerm",
+        "order": 1,
+        "depth": 0,
+        "is_root": true
+      },
+      "Safety_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 45,
+        "num_invs_generated_per_iter": {
+          "1": 82,
+          "2": 2219
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 539.8291873931885,
+        "latest_elimination_iter": 2
+      },
+      "Inv31_8e53_R0_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})",
+        "order": 2,
+        "depth": 1
+      },
+      "Inv1506_3acc_R0_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : (votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))",
+        "order": 3,
+        "depth": 1
+      },
+      "Inv31_8e53_R0_0_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1046,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 63,
+        "num_invs_generated_per_iter": {
+          "1": 56
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 606.1383512020111,
+        "latest_elimination_iter": 1
+      },
+      "Inv31_8e53_R0_0_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 45,
+        "num_invs_generated_per_iter": {
+          "1": 15,
+          "2": 810
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 678.3312034606934,
+        "latest_elimination_iter": 2
+      },
+      "Inv24_42ac_R1_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))",
+        "order": 4,
+        "depth": 2
+      },
+      "Inv163_6611_R1_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : \\A VARJ \\in Server : ((currentTerm[VARJ] >= currentTerm[VARI])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))",
+        "order": 5,
+        "depth": 2
+      },
+      "Inv24_42ac_R1_0_I0_HandleRequestVoteRequestAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteRequestMsgs",
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "log",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 109,
+        "num_invs_generated_per_iter": {
+          "1": 112,
+          "2": 10119
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 1251.0157797336578,
+        "latest_elimination_iter": 2
+      },
+      "Inv24_42ac_R1_0_I0_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 60,
+        "num_invs_generated_per_iter": {
+          "1": 15
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 343.22418093681335,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_e30e_R3_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Server : ((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))",
+        "order": 6,
+        "depth": 3
+      },
+      "Inv7_f533_R3_1_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)",
+        "order": 7,
+        "depth": 3
+      },
+      "Inv163_6611_R1_1_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 63,
+        "num_invs_generated_per_iter": {
+          "1": 16
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 224.80744814872742,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_e30e_R3_0_I1_HandleRequestVoteResponseAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 74,
+        "num_invs_generated_per_iter": {
+          "1": 20
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 637.5368804931641,
+        "latest_elimination_iter": 1
+      },
+      "Inv11_e30e_R3_0_I1_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "currentTerm",
+          "state",
+          "votedFor",
+          "votesGranted"
+        ],
+        "num_grammar_preds": 49,
+        "num_invs_generated_per_iter": {
+          "1": 15
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 474.29888343811035,
+        "latest_elimination_iter": 1
+      },
+      "Inv7_3715_R5_0_I0": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)",
+        "order": 8,
+        "depth": 4
+      },
+      "Inv7_3715_R5_0_I0_RequestVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "state",
+          "votedFor"
+        ],
+        "num_grammar_preds": 50,
+        "num_invs_generated_per_iter": {
+          "1": 13
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 383.1992256641388,
+        "latest_elimination_iter": 1
+      },
+      "Inv7_3715_R5_0_I0_UpdateTermAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 2000,
+        "coi_vars": [
+          "requestVoteResponseMsgs",
+          "currentTerm",
+          "votedFor"
+        ],
+        "num_grammar_preds": 33,
+        "num_invs_generated_per_iter": {
+          "1": 11
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 363.7239851951599,
+        "latest_elimination_iter": 1
+      }
+    },
+    "safety": "H_OnePrimaryPerTerm",
+    "curr_node": "Inv7_3715_R5_0_I0_UpdateTermAction"
+  },
+  "strengthening_conjuncts": [
+    [
+      "Inv31_8e53_R0_0_I1",
+      "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})",
+      "(\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {})"
+    ],
+    [
+      "Inv1506_3acc_R0_0_I1",
+      "\\A VARI \\in Server : (votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))",
+      "(votesGranted[VARI] \\in Quorum) \\/ (~((state[VARI] = Leader)))"
+    ],
+    [
+      "Inv24_42ac_R1_0_I0",
+      "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))",
+      "(\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted))"
+    ],
+    [
+      "Inv163_6611_R1_1_I1",
+      "\\A VARI \\in Server : \\A VARJ \\in Server : ((currentTerm[VARJ] >= currentTerm[VARI])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))",
+      "((currentTerm[VARJ] >= currentTerm[VARI])) \\/ (~((state[VARI] \\in {Leader,Candidate} /\\ VARJ \\in votesGranted[VARI])))"
+    ],
+    [
+      "Inv11_e30e_R3_0_I1",
+      "\\A VARI \\in Server : ((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))",
+      "((\\A t \\in votesGranted[VARI] : /\\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI )) \\/ (((state[VARI] = Follower)))"
+    ],
+    [
+      "Inv7_f533_R3_1_I0",
+      "\\A VARREQVRES \\in requestVoteResponseMsgs : (currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)",
+      "(currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)"
+    ],
+    [
+      "Inv7_3715_R5_0_I0",
+      "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)",
+      "(\\A m \\in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\\ (m.mvoteGranted /\\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)"
+    ]
+  ],
+  "roundi": 8,
+  "num_rounds": 70,
+  "num_iters": 5,
+  "seed": 1,
+  "stats": {
+    "num_lemma_nodes": 8,
+    "num_failed_lemma_nodes": 0,
+    "state_cache_duration_secs": 650.8169932365417,
+    "invcheck_duration_secs": 864.8602721691132,
+    "ctielimcheck_duration_secs": 1690.9075906276703,
+    "total_duration_secs": 6346.57789349556,
+    "num_preds": 143,
+    "date": "2024-11-02 02:36:03"
+  }
+}
