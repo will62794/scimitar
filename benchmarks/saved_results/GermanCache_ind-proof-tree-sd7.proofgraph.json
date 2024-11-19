@@ -1,0 +1,4320 @@
+{
+  "proof_graph": {
+    "edges": [
+      [
+        "Safety_RecvGntEAction",
+        "Safety"
+      ],
+      [
+        "Safety_RecvGntSAction",
+        "Safety"
+      ],
+      [
+        "Safety_RecvGntEAction",
+        "Safety"
+      ],
+      [
+        "Safety_RecvGntEAction",
+        "Safety"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1",
+        "Safety_RecvGntEAction"
+      ],
+      [
+        "Safety_RecvGntSAction",
+        "Safety"
+      ],
+      [
+        "Safety_RecvGntSAction",
+        "Safety"
+      ],
+      [
+        "Inv11_3662_R0_1_I1",
+        "Safety_RecvGntSAction"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntSAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_SendGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2",
+        "Inv122_03a2_R0_0_I1_RecvGntEAction"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntSAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_RecvGntSAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1",
+        "Inv122_03a2_R0_0_I1_RecvGntSAction"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_SendGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv122_03a2_R0_0_I1_SendGntEAction",
+        "Inv122_03a2_R0_0_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1",
+        "Inv122_03a2_R0_0_I1_SendGntEAction"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_RecvGntEAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_SendGntSAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_RecvGntEAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_RecvGntEAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1",
+        "Inv11_3662_R0_1_I1_RecvGntEAction"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_SendGntSAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv11_3662_R0_1_I1_SendGntSAction",
+        "Inv11_3662_R0_1_I1"
+      ],
+      [
+        "Inv12_513a_R2_1_I1",
+        "Inv11_3662_R0_1_I1_SendGntSAction"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntEAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntSAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendInvAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntEAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntEAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1",
+        "Inv5378_0d22_R1_0_I2_SendGntEAction"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntSAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendGntSAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1",
+        "Inv5378_0d22_R1_0_I2_SendGntSAction"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendInvAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv5378_0d22_R1_0_I2_SendInvAction",
+        "Inv5378_0d22_R1_0_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2",
+        "Inv5378_0d22_R1_0_I2_SendInvAction"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntEAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntSAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntEAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntEAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1",
+        "Inv33_1336_R1_1_I1_SendGntEAction"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntSAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv33_1336_R1_1_I1_SendGntSAction",
+        "Inv33_1336_R1_1_I1"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1",
+        "Inv33_1336_R1_1_I1_SendGntSAction"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntEAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntSAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvInvAckAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntEAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntEAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv11_e00a_R5_0_I1",
+        "Inv22_d756_R1_2_I1_RecvGntEAction"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntSAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvGntSAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv12_4ccb_R5_1_I1",
+        "Inv22_d756_R1_2_I1_RecvGntSAction"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvInvAckAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1_RecvInvAckAction",
+        "Inv22_d756_R1_2_I1"
+      ],
+      [
+        "Inv10_8267_R5_2_I1",
+        "Inv22_d756_R1_2_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvGntEAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvInvAckAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvGntEAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvGntEAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1",
+        "Inv12_513a_R2_1_I1_RecvGntEAction"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvInvAckAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv12_513a_R2_1_I1_RecvInvAckAction",
+        "Inv12_513a_R2_1_I1"
+      ],
+      [
+        "Inv7_7199_R6_1_I1",
+        "Inv12_513a_R2_1_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_RecvInvAckAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_SendInvAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_RecvInvAckAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_RecvInvAckAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1",
+        "Inv1_85ad_R3_0_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_SendInvAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1_SendInvAction",
+        "Inv1_85ad_R3_0_I1"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv1_85ad_R3_0_I1_SendInvAction"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1_RecvInvAckAction",
+        "Inv5_a2c7_R3_1_I1"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1_RecvInvAckAction",
+        "Inv5_a2c7_R3_1_I1"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1_RecvInvAckAction",
+        "Inv5_a2c7_R3_1_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1",
+        "Inv5_a2c7_R3_1_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqSAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_SendGntEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2",
+        "Inv6410_fc2f_R3_2_I2_RecvReqEAction"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqSAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_RecvReqSAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2",
+        "Inv6410_fc2f_R3_2_I2_RecvReqSAction"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_SendGntEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2_SendGntEAction",
+        "Inv6410_fc2f_R3_2_I2"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv6410_fc2f_R3_2_I2_SendGntEAction"
+      ],
+      [
+        "Inv11_e00a_R5_0_I1_RecvInvAckAction",
+        "Inv11_e00a_R5_0_I1"
+      ],
+      [
+        "Inv11_e00a_R5_0_I1_RecvInvAckAction",
+        "Inv11_e00a_R5_0_I1"
+      ],
+      [
+        "Inv11_e00a_R5_0_I1_RecvInvAckAction",
+        "Inv11_e00a_R5_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1",
+        "Inv11_e00a_R5_0_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv12_4ccb_R5_1_I1_RecvInvAckAction",
+        "Inv12_4ccb_R5_1_I1"
+      ],
+      [
+        "Inv12_4ccb_R5_1_I1_RecvInvAckAction",
+        "Inv12_4ccb_R5_1_I1"
+      ],
+      [
+        "Inv12_4ccb_R5_1_I1_RecvInvAckAction",
+        "Inv12_4ccb_R5_1_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1",
+        "Inv12_4ccb_R5_1_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntEAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntSAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntEAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntEAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1",
+        "Inv10_8267_R5_2_I1_RecvGntEAction"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntSAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv10_8267_R5_2_I1_RecvGntSAction",
+        "Inv10_8267_R5_2_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1",
+        "Inv10_8267_R5_2_I1_RecvGntSAction"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_RecvGntEAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_SendInvAckAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_RecvGntEAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_RecvGntEAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1",
+        "Inv7_7199_R6_1_I1_RecvGntEAction"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_SendInvAckAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_SendInvAckAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Safety",
+        "Inv7_7199_R6_1_I1_SendInvAckAction"
+      ],
+      [
+        "Inv7_7199_R6_1_I1_SendInvAckAction",
+        "Inv7_7199_R6_1_I1"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1",
+        "Inv7_7199_R6_1_I1_SendInvAckAction"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntEAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntSAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendInvAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntEAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntEAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv1_eb94_R7_0_I1_SendGntEAction"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntSAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendGntSAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2",
+        "Inv1_eb94_R7_0_I1_SendGntSAction"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendInvAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv1_eb94_R7_0_I1_SendInvAction",
+        "Inv1_eb94_R7_0_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1",
+        "Inv1_eb94_R7_0_I1_SendInvAction"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1_RecvInvAckAction",
+        "Inv111_0f39_R7_1_I1"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1_RecvInvAckAction",
+        "Inv111_0f39_R7_1_I1"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1_RecvInvAckAction",
+        "Inv111_0f39_R7_1_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1",
+        "Inv111_0f39_R7_1_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendGntEAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendInvAckAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendGntEAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendGntEAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv15_5b11_R8_0_I1_SendGntEAction"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendInvAckAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv15_5b11_R8_0_I1_SendInvAckAction",
+        "Inv15_5b11_R8_0_I1"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1",
+        "Inv15_5b11_R8_0_I1_SendInvAckAction"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntEAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntSAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntEAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntEAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1",
+        "Inv9560_0995_R9_0_I2_SendGntEAction"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntSAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2_SendGntSAction",
+        "Inv9560_0995_R9_0_I2"
+      ],
+      [
+        "Inv5_a2c7_R3_1_I1",
+        "Inv9560_0995_R9_0_I2_SendGntSAction"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntEAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntSAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendInvAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntEAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntEAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv11_c03f_R12_0_I1_SendGntEAction"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntSAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendGntSAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2",
+        "Inv11_c03f_R12_0_I1_SendGntSAction"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendInvAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1_SendInvAction",
+        "Inv11_c03f_R12_0_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1",
+        "Inv11_c03f_R12_0_I1_SendInvAction"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1_SendInvAction",
+        "Inv40_2bf0_R13_1_I1"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1_SendInvAction",
+        "Inv40_2bf0_R13_1_I1"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1_SendInvAction",
+        "Inv40_2bf0_R13_1_I1"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2",
+        "Inv40_2bf0_R13_1_I1_SendInvAction"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1_SendInvAckAction",
+        "Inv17_9e93_R14_0_I1"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1_SendInvAckAction",
+        "Inv17_9e93_R14_0_I1"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1_SendInvAckAction",
+        "Inv17_9e93_R14_0_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1",
+        "Inv17_9e93_R14_0_I1_SendInvAckAction"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_RecvInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_SendInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_RecvInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_RecvInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3",
+        "Inv4424_0201_R14_1_I2_RecvInvAckAction"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_SendInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2_SendInvAckAction",
+        "Inv4424_0201_R14_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2",
+        "Inv4424_0201_R14_1_I2_SendInvAckAction"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqEAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqSAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_SendInvAckAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqEAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqEAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv13_45c1_R14_2_I1_RecvReqEAction"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqSAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_RecvReqSAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv13_45c1_R14_2_I1_RecvReqSAction"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_SendInvAckAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1_SendInvAckAction",
+        "Inv13_45c1_R14_2_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1",
+        "Inv13_45c1_R14_2_I1_SendInvAckAction"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqEAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqSAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_SendInvAckAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqEAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqEAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv26_259c_R15_0_I1_RecvReqEAction"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqSAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_RecvReqSAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv26_259c_R15_0_I1_RecvReqSAction"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_SendInvAckAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv26_259c_R15_0_I1_SendInvAckAction",
+        "Inv26_259c_R15_0_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1",
+        "Inv26_259c_R15_0_I1_SendInvAckAction"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendGntEAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendInvAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendGntEAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendGntEAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1",
+        "Inv64_c47d_R16_1_I1_SendGntEAction"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendInvAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv64_c47d_R16_1_I1_SendInvAction",
+        "Inv64_c47d_R16_1_I1"
+      ],
+      [
+        "Inv6410_fc2f_R3_2_I2",
+        "Inv64_c47d_R16_1_I1_SendInvAction"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqEAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqSAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_SendInvAckAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqEAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqEAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4",
+        "Inv4763_b566_R19_0_I2_RecvReqEAction"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqSAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_RecvReqSAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4",
+        "Inv4763_b566_R19_0_I2_RecvReqSAction"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_SendInvAckAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv4763_b566_R19_0_I2_SendInvAckAction",
+        "Inv4763_b566_R19_0_I2"
+      ],
+      [
+        "Inv76_d564_R22_2_I1",
+        "Inv4763_b566_R19_0_I2_SendInvAckAction"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_RecvInvAckAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_SendInvAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_RecvInvAckAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_RecvInvAckAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv20_5035_R26_0_I1",
+        "Inv39_7204_R20_0_I1_RecvInvAckAction"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_SendInvAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv39_7204_R20_0_I1_SendInvAction",
+        "Inv39_7204_R20_0_I1"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv39_7204_R20_0_I1_SendInvAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendGntEAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendGntEAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendGntEAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv1057_089e_R21_0_I3_SendGntEAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv11_c03f_R12_0_I1",
+        "Inv1057_089e_R21_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv13_812b_R27_1_I1",
+        "Inv1057_089e_R21_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1",
+        "Inv1057_089e_R21_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv7_7199_R6_1_I1",
+        "Inv1057_089e_R21_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1057_089e_R21_0_I3_SendInvAckAction",
+        "Inv1057_089e_R21_0_I3"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1",
+        "Inv1057_089e_R21_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction",
+        "Inv2458_2a15_R21_1_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2",
+        "Inv2458_2a15_R21_1_I2_RecvInvAckAction"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntEAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntSAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendInvAckAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntEAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntEAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv4043_dbee_R22_0_I2_SendGntEAction"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntSAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendGntSAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4424_0201_R14_1_I2",
+        "Inv4043_dbee_R22_0_I2_SendGntSAction"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendInvAckAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2_SendInvAckAction",
+        "Inv4043_dbee_R22_0_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv4043_dbee_R22_0_I2_SendInvAckAction"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqEAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqSAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqEAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqEAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv76_d564_R22_2_I1_RecvReqEAction"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqSAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv76_d564_R22_2_I1_RecvReqSAction",
+        "Inv76_d564_R22_2_I1"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv76_d564_R22_2_I1_RecvReqSAction"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendGntSAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendInvAckAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendGntSAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendGntSAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv957_c432_R31_0_I2",
+        "Inv1103_d53b_R25_0_I4_SendGntSAction"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendInvAckAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv1103_d53b_R25_0_I4_SendInvAckAction",
+        "Inv1103_d53b_R25_0_I4"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv1103_d53b_R25_0_I4_SendInvAckAction"
+      ],
+      [
+        "Inv20_5035_R26_0_I1_SendInvAction",
+        "Inv20_5035_R26_0_I1"
+      ],
+      [
+        "Inv20_5035_R26_0_I1_SendInvAction",
+        "Inv20_5035_R26_0_I1"
+      ],
+      [
+        "Inv20_5035_R26_0_I1_SendInvAction",
+        "Inv20_5035_R26_0_I1"
+      ],
+      [
+        "Inv13_45c1_R14_2_I1",
+        "Inv20_5035_R26_0_I1_SendInvAction"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_RecvGntSAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_SendGntEAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_RecvGntSAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_RecvGntSAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv43_39a8_R34_0_I1",
+        "Inv50_ba79_R27_1_I1_RecvGntSAction"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_SendGntEAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1_SendGntEAction",
+        "Inv50_ba79_R27_1_I1"
+      ],
+      [
+        "Inv22_d756_R1_2_I1",
+        "Inv50_ba79_R27_1_I1_SendGntEAction"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendGntEAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendGntEAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendGntEAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv39_7204_R20_0_I1",
+        "Inv2146_6e63_R28_0_I2_SendGntEAction"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1",
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1",
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Safety",
+        "Inv2146_6e63_R28_0_I2_SendInvAckAction"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv2146_6e63_R28_0_I2_SendInvAction",
+        "Inv2146_6e63_R28_0_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2",
+        "Inv2146_6e63_R28_0_I2_SendInvAction"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntEAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntSAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntEAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntEAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv39_7204_R20_0_I1",
+        "Inv1149_870b_R29_2_I2_SendGntEAction"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntSAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2_SendGntSAction",
+        "Inv1149_870b_R29_2_I2"
+      ],
+      [
+        "Inv2458_2a15_R21_1_I2",
+        "Inv1149_870b_R29_2_I2_SendGntSAction"
+      ],
+      [
+        "Inv957_c432_R31_0_I2_RecvInvAckAction",
+        "Inv957_c432_R31_0_I2"
+      ],
+      [
+        "Inv957_c432_R31_0_I2_RecvInvAckAction",
+        "Inv957_c432_R31_0_I2"
+      ],
+      [
+        "Inv957_c432_R31_0_I2_RecvInvAckAction",
+        "Inv957_c432_R31_0_I2"
+      ],
+      [
+        "Inv26_259c_R15_0_I1",
+        "Inv957_c432_R31_0_I2_RecvInvAckAction"
+      ],
+      [
+        "Inv957_c432_R31_0_I2_RecvInvAckAction",
+        "Inv957_c432_R31_0_I2"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3",
+        "Inv957_c432_R31_0_I2_RecvInvAckAction"
+      ],
+      [
+        "Inv43_39a8_R34_0_I1_SendGntEAction",
+        "Inv43_39a8_R34_0_I1"
+      ],
+      [
+        "Inv43_39a8_R34_0_I1_SendGntEAction",
+        "Inv43_39a8_R34_0_I1"
+      ],
+      [
+        "Inv43_39a8_R34_0_I1_SendGntEAction",
+        "Inv43_39a8_R34_0_I1"
+      ],
+      [
+        "Inv1_85ad_R3_0_I1",
+        "Inv43_39a8_R34_0_I1_SendGntEAction"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqSAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendGntEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendInvAckAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv687_881e_R35_2_I2_RecvReqEAction"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqSAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_RecvReqSAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv4043_dbee_R22_0_I2",
+        "Inv687_881e_R35_2_I2_RecvReqSAction"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendGntEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendGntEAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv687_881e_R35_2_I2_SendGntEAction"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendInvAckAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv687_881e_R35_2_I2_SendInvAckAction",
+        "Inv687_881e_R35_2_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2",
+        "Inv687_881e_R35_2_I2_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendGntEAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendGntEAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendGntEAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv17_9e93_R14_0_I1",
+        "Inv1942_3576_R37_0_I3_SendGntEAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2",
+        "Inv1942_3576_R37_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2",
+        "Inv1942_3576_R37_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2",
+        "Inv1942_3576_R37_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv50_ba79_R27_1_I1",
+        "Inv1942_3576_R37_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAckAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv40_2bf0_R13_1_I1",
+        "Inv1942_3576_R37_0_I3_SendInvAckAction"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv1942_3576_R37_0_I3_SendInvAction",
+        "Inv1942_3576_R37_0_I3"
+      ],
+      [
+        "Inv687_881e_R35_2_I2",
+        "Inv1942_3576_R37_0_I3_SendInvAction"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqSAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendGntEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendInvAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv1000_d532_R39_3_I2_RecvReqEAction"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqSAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_RecvReqSAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv1000_d532_R39_3_I2_RecvReqSAction"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendGntEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendGntEAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv1000_d532_R39_3_I2_SendGntEAction"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendInvAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv1000_d532_R39_3_I2_SendInvAction",
+        "Inv1000_d532_R39_3_I2"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3",
+        "Inv1000_d532_R39_3_I2_SendInvAction"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvInvAckAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqEAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqSAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_SendInvAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvInvAckAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvInvAckAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv20_5035_R26_0_I1",
+        "Inv111_3e57_R40_1_I2_RecvInvAckAction"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqEAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqEAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv111_3e57_R40_1_I2_RecvReqEAction"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqSAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_RecvReqSAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv1149_870b_R29_2_I2",
+        "Inv111_3e57_R40_1_I2_RecvReqSAction"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_SendInvAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_3e57_R40_1_I2_SendInvAction",
+        "Inv111_3e57_R40_1_I2"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv111_3e57_R40_1_I2_SendInvAction"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_RecvGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntSAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_RecvGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_RecvGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv9560_0995_R9_0_I2",
+        "Inv848_bea9_R40_1_I2_RecvGntEAction"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntEAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv12_513a_R2_1_I1",
+        "Inv848_bea9_R40_1_I2_SendGntEAction"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntSAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv848_bea9_R40_1_I2_SendGntSAction",
+        "Inv848_bea9_R40_1_I2"
+      ],
+      [
+        "Inv12_513a_R2_1_I1",
+        "Inv848_bea9_R40_1_I2_SendGntSAction"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqSAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_SendGntEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3",
+        "Inv23009_51f5_R41_3_I3_RecvReqEAction"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqSAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_RecvReqSAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3",
+        "Inv23009_51f5_R41_3_I3_RecvReqSAction"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_SendGntEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3_SendGntEAction",
+        "Inv23009_51f5_R41_3_I3"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv23009_51f5_R41_3_I3_SendGntEAction"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendGntEAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendInvAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendGntEAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendGntEAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv111_0f39_R7_1_I1",
+        "Inv7513_6fbd_R44_0_I3_SendGntEAction"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendInvAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv7513_6fbd_R44_0_I3_SendInvAction",
+        "Inv7513_6fbd_R44_0_I3"
+      ],
+      [
+        "Inv23009_51f5_R41_3_I3",
+        "Inv7513_6fbd_R44_0_I3_SendInvAction"
+      ]
+    ],
+    "nodes": {
+      "Safety": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "CtrlProp1",
+        "order": 1,
+        "depth": 0,
+        "is_root": true
+      },
+      "Safety_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1455,
+        "coi_vars": [
+          "Cache",
+          "Chan2"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 32,
+          "2": 421
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 142.24852800369263,
+        "latest_elimination_iter": 2
+      },
+      "Safety_RecvGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1024,
+        "coi_vars": [
+          "Cache",
+          "Chan2"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 2,
+          "2": 43
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 108.71651268005371,
+        "latest_elimination_iter": 2
+      },
+      "Inv122_03a2_R0_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Cache[VARJ].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+        "order": 2,
+        "depth": 1
+      },
+      "Inv11_3662_R0_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Cache[VARI].State = \"E\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))",
+        "order": 3,
+        "depth": 1
+      },
+      "Inv122_03a2_R0_0_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 353,
+        "coi_vars": [
+          "Cache",
+          "Chan2"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 3,
+          "2": 46,
+          "3": 9789
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 66.66267371177673,
+        "latest_elimination_iter": 3
+      },
+      "Inv122_03a2_R0_0_I1_RecvGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 669,
+        "coi_vars": [
+          "Cache",
+          "Chan2"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 44
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 37.13490891456604,
+        "latest_elimination_iter": 2
+      },
+      "Inv122_03a2_R0_0_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 448,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 26,
+          "2": 636
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 180.8412163257599,
+        "latest_elimination_iter": 2
+      },
+      "Inv5378_0d22_R1_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\") \\/ (~(VARI # VARJ)))",
+        "order": 4,
+        "depth": 2
+      },
+      "Inv33_1336_R1_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))",
+        "order": 5,
+        "depth": 2
+      },
+      "Inv22_d756_R1_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Cache[VARI].State = \"I\") \\/ ((ShrSet[VARI]))",
+        "order": 6,
+        "depth": 2
+      },
+      "Inv11_3662_R0_1_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 928,
+        "coi_vars": [
+          "Cache",
+          "Chan2"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 5,
+          "2": 44
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 41.519779920578,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_3662_R0_1_I1_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1432,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 5,
+          "2": 60
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 75.19616651535034,
+        "latest_elimination_iter": 2
+      },
+      "Inv12_513a_R2_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ExGntd) \\/ (~(Cache[VARI].State = \"E\"))",
+        "order": 7,
+        "depth": 2
+      },
+      "Inv5378_0d22_R1_0_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 274,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 2,
+          "2": 35
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 48.226553440093994,
+        "latest_elimination_iter": 2
+      },
+      "Inv5378_0d22_R1_0_I2_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 73,
+        "coi_vars": [
+          "Chan2",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 2,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 39.4610641002655,
+        "latest_elimination_iter": 2
+      },
+      "Inv5378_0d22_R1_0_I2_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 233,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 14,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 125,
+          "3": 7033
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 114.55823421478271,
+        "latest_elimination_iter": 3
+      },
+      "Inv1_85ad_R3_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))",
+        "order": 8,
+        "depth": 3
+      },
+      "Inv5_a2c7_R3_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ExGntd) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+        "order": 9,
+        "depth": 3
+      },
+      "Inv6410_fc2f_R3_2_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ)))",
+        "order": 10,
+        "depth": 3
+      },
+      "Inv33_1336_R1_1_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 44,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 12
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 44.032559394836426,
+        "latest_elimination_iter": 2
+      },
+      "Inv33_1336_R1_1_I1_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 267,
+        "coi_vars": [
+          "Chan2",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 3,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 35.75360727310181,
+        "latest_elimination_iter": 2
+      },
+      "Inv22_d756_R1_2_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1568,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 7,
+          "2": 58
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 114.39503908157349,
+        "latest_elimination_iter": 2
+      },
+      "Inv22_d756_R1_2_I1_RecvGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 58
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 111.62157940864563,
+        "latest_elimination_iter": 2
+      },
+      "Inv22_d756_R1_2_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 16,
+          "2": 300
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 210.07153987884521,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_e00a_R5_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+        "order": 11,
+        "depth": 3
+      },
+      "Inv12_4ccb_R5_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntS\"))",
+        "order": 12,
+        "depth": 3
+      },
+      "Inv10_8267_R5_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Cache[VARI].State = \"I\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))",
+        "order": 13,
+        "depth": 3
+      },
+      "Inv12_513a_R2_1_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 16,
+        "num_invs_generated_per_iter": {
+          "1": 7,
+          "2": 52
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 94.61713814735413,
+        "latest_elimination_iter": 2
+      },
+      "Inv12_513a_R2_1_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 3,
+          "2": 34
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 103.02936244010925,
+        "latest_elimination_iter": 2
+      },
+      "Inv7_7199_R6_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Cache[VARJ].State = \"E\"))",
+        "order": 14,
+        "depth": 3
+      },
+      "Inv1_85ad_R3_0_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 6,
+          "2": 223
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 161.2310893535614,
+        "latest_elimination_iter": 2
+      },
+      "Inv1_85ad_R3_0_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1172,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 181
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 150.7994043827057,
+        "latest_elimination_iter": 2
+      },
+      "Inv1_eb94_R7_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))",
+        "order": 15,
+        "depth": 4
+      },
+      "Inv111_0f39_R7_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(InvSet[VARI]))",
+        "order": 16,
+        "depth": 4
+      },
+      "Inv5_a2c7_R3_1_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 52
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 39.05712032318115,
+        "latest_elimination_iter": 2
+      },
+      "Inv15_5b11_R8_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\"))",
+        "order": 17,
+        "depth": 4
+      },
+      "Inv6410_fc2f_R3_2_I2_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 887,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 26,
+          "2": 396,
+          "3": 9648
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 155.02692580223083,
+        "latest_elimination_iter": 3
+      },
+      "Inv6410_fc2f_R3_2_I2_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 971,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 121
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 38.915292739868164,
+        "latest_elimination_iter": 2
+      },
+      "Inv6410_fc2f_R3_2_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 250,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 9,
+          "2": 92
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 69.715407371521,
+        "latest_elimination_iter": 2
+      },
+      "Inv9560_0995_R9_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))",
+        "order": 18,
+        "depth": 4
+      },
+      "Inv11_e00a_R5_0_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 9,
+          "2": 66
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 65.6771388053894,
+        "latest_elimination_iter": 2
+      },
+      "Inv12_4ccb_R5_1_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 9,
+          "2": 66
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 65.0688214302063,
+        "latest_elimination_iter": 2
+      },
+      "Inv10_8267_R5_2_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1598,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 9,
+          "2": 84
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 102.25591659545898,
+        "latest_elimination_iter": 2
+      },
+      "Inv10_8267_R5_2_I1_RecvGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 84
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 100.63776993751526,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_c03f_R12_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARJ \\in NODE : (Chan2[VARJ].Cmd = \"Empty\") \\/ ((Chan3[VARJ].Cmd = \"Empty\"))",
+        "order": 19,
+        "depth": 4
+      },
+      "Inv7_7199_R6_1_I1_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 84
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 43.179100036621094,
+        "latest_elimination_iter": 2
+      },
+      "Inv7_7199_R6_1_I1_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 721,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 84
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 135.31897521018982,
+        "latest_elimination_iter": 2
+      },
+      "Inv40_2bf0_R13_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+        "order": 20,
+        "depth": 4
+      },
+      "Inv1_eb94_R7_0_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1328,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 106
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 158.1016490459442,
+        "latest_elimination_iter": 2
+      },
+      "Inv1_eb94_R7_0_I1_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 6,
+          "2": 58,
+          "3": 7407
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 280.2949872016907,
+        "latest_elimination_iter": 3
+      },
+      "Inv1_eb94_R7_0_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 82
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 155.93794560432434,
+        "latest_elimination_iter": 2
+      },
+      "Inv17_9e93_R14_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))",
+        "order": 21,
+        "depth": 5
+      },
+      "Inv4424_0201_R14_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((ExGntd))",
+        "order": 22,
+        "depth": 5
+      },
+      "Inv13_45c1_R14_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI]))",
+        "order": 23,
+        "depth": 5
+      },
+      "Inv111_0f39_R7_1_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 66
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 75.13971757888794,
+        "latest_elimination_iter": 2
+      },
+      "Inv26_259c_R15_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARJ \\in NODE : (Chan3[VARJ].Cmd = \"Empty\") \\/ (~(InvSet[VARJ]))",
+        "order": 24,
+        "depth": 5
+      },
+      "Inv15_5b11_R8_0_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 563,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 67
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 57.42806363105774,
+        "latest_elimination_iter": 2
+      },
+      "Inv15_5b11_R8_0_I1_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 229,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 11,
+          "2": 84
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 48.09499740600586,
+        "latest_elimination_iter": 2
+      },
+      "Inv64_c47d_R16_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))",
+        "order": 25,
+        "depth": 5
+      },
+      "Inv9560_0995_R9_0_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 77,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 36
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 50.423935651779175,
+        "latest_elimination_iter": 2
+      },
+      "Inv9560_0995_R9_0_I2_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 147,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 36
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 45.70369338989258,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_c03f_R12_0_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1385,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 13,
+          "2": 67
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 151.85514664649963,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_c03f_R12_0_I1_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 8,
+          "2": 53
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 143.87004351615906,
+        "latest_elimination_iter": 2
+      },
+      "Inv11_c03f_R12_0_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 11,
+          "2": 54
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 129.3567979335785,
+        "latest_elimination_iter": 2
+      },
+      "Inv40_2bf0_R13_1_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 114,
+          "3": 5076
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 156.7581582069397,
+        "latest_elimination_iter": 3
+      },
+      "Inv4763_b566_R19_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI])))",
+        "order": 26,
+        "depth": 5
+      },
+      "Inv17_9e93_R14_0_I1_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "ShrSet"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 103
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 51.64486384391785,
+        "latest_elimination_iter": 2
+      },
+      "Inv39_7204_R20_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+        "order": 27,
+        "depth": 6
+      },
+      "Inv4424_0201_R14_1_I2_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1240,
+        "coi_vars": [
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 9,
+        "num_invs_generated_per_iter": {
+          "1": 1,
+          "2": 7,
+          "3": 759,
+          "4": 4948
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 108.34924244880676,
+        "latest_elimination_iter": 4
+      },
+      "Inv4424_0201_R14_1_I2_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 596,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 16,
+          "2": 111,
+          "3": 2805
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 153.9939308166504,
+        "latest_elimination_iter": 3
+      },
+      "Inv1057_089e_R21_0_I3": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd) \\/ (~(VARI # VARJ))) \\/ ((Chan3[VARJ].Cmd = \"Empty\"))",
+        "order": 28,
+        "depth": 6
+      },
+      "Inv2458_2a15_R21_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (CurCmd = \"ReqE\") \\/ (~(Chan2[VARI].Cmd = \"Inv\")) \\/ ((ExGntd))",
+        "order": 29,
+        "depth": 6
+      },
+      "Inv13_45c1_R14_2_I1_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1596,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 125,
+          "3": 8716
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 200.46045351028442,
+        "latest_elimination_iter": 3
+      },
+      "Inv13_45c1_R14_2_I1_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 5,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 97.86671304702759,
+        "latest_elimination_iter": 2
+      },
+      "Inv13_45c1_R14_2_I1_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 16,
+          "2": 92
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 89.06635451316833,
+        "latest_elimination_iter": 2
+      },
+      "Inv4043_dbee_R22_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((CurCmd = \"ReqS\"))",
+        "order": 30,
+        "depth": 6
+      },
+      "Inv76_d564_R22_2_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI]))",
+        "order": 31,
+        "depth": 6
+      },
+      "Inv26_259c_R15_0_I1_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1597,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 5,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 105.91014385223389,
+        "latest_elimination_iter": 2
+      },
+      "Inv26_259c_R15_0_I1_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 5,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 100.87961435317993,
+        "latest_elimination_iter": 2
+      },
+      "Inv26_259c_R15_0_I1_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 17,
+          "2": 92
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 89.35508489608765,
+        "latest_elimination_iter": 2
+      },
+      "Inv64_c47d_R16_1_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 49,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 16
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 60.916587352752686,
+        "latest_elimination_iter": 2
+      },
+      "Inv64_c47d_R16_1_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 848,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 14,
+        "num_invs_generated_per_iter": {
+          "1": 7,
+          "2": 26
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 44.410226821899414,
+        "latest_elimination_iter": 2
+      },
+      "Inv4763_b566_R19_0_I2_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 330,
+        "coi_vars": [
+          "Cache",
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 29,
+        "num_invs_generated_per_iter": {
+          "1": 17,
+          "2": 284,
+          "3": 27543,
+          "4": 179870,
+          "5": 45213
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 3352.7050116062164,
+        "latest_elimination_iter": 5
+      },
+      "Inv4763_b566_R19_0_I2_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 405,
+        "coi_vars": [
+          "Cache",
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 29,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 76
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 79.27839350700378,
+        "latest_elimination_iter": 2
+      },
+      "Inv4763_b566_R19_0_I2_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 17,
+          "2": 92
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 44.791322469711304,
+        "latest_elimination_iter": 2
+      },
+      "Inv1103_d53b_R25_0_I4": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARJ \\in NODE : (CurCmd = \"ReqE\") \\/ ((InvSet[VARJ])) \\/ (~(Chan2[VARJ].Cmd = \"Empty\")) \\/ (~(Cache[VARJ].State = \"I\")) \\/ ((CurCmd = \"ReqS\")) \\/ (~(ShrSet[VARJ]))",
+        "order": 32,
+        "depth": 6
+      },
+      "Inv39_7204_R20_0_I1_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 17,
+          "2": 70
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 78.98396348953247,
+        "latest_elimination_iter": 2
+      },
+      "Inv39_7204_R20_0_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1383,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 13,
+          "2": 40
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 80.44477224349976,
+        "latest_elimination_iter": 2
+      },
+      "Inv20_5035_R26_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+        "order": 33,
+        "depth": 7
+      },
+      "Inv1057_089e_R21_0_I3_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 650,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 63
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 93.56149530410767,
+        "latest_elimination_iter": 2
+      },
+      "Inv1057_089e_R21_0_I3_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 16,
+          "2": 93
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 132.43467235565186,
+        "latest_elimination_iter": 2
+      },
+      "Inv13_812b_R27_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"InvAck\"))",
+        "order": 34,
+        "depth": 7
+      },
+      "Inv50_ba79_R27_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Cache[VARI].State = \"S\") \\/ (~(ExGntd))",
+        "order": 35,
+        "depth": 7
+      },
+      "Inv2458_2a15_R21_1_I2_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1899,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 26,
+          "2": 69,
+          "3": 3198
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 122.7561514377594,
+        "latest_elimination_iter": 3
+      },
+      "Inv2146_6e63_R28_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))",
+        "order": 36,
+        "depth": 7
+      },
+      "Inv4043_dbee_R22_0_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1342,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 64
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 112.8007264137268,
+        "latest_elimination_iter": 2
+      },
+      "Inv4043_dbee_R22_0_I2_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 14,
+          "2": 51
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 86.31513714790344,
+        "latest_elimination_iter": 2
+      },
+      "Inv4043_dbee_R22_0_I2_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1127,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 15,
+          "2": 101,
+          "3": 1355
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 121.51357555389404,
+        "latest_elimination_iter": 3
+      },
+      "Inv1149_870b_R29_2_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARJ \\in NODE : (CurCmd = \"ReqE\") \\/ ((CurCmd = \"ReqS\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\")))",
+        "order": 37,
+        "depth": 7
+      },
+      "Inv76_d564_R22_2_I1_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1060,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 42
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 51.69975996017456,
+        "latest_elimination_iter": 2
+      },
+      "Inv76_d564_R22_2_I1_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1075,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 42
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 56.84568119049072,
+        "latest_elimination_iter": 2
+      },
+      "Inv1103_d53b_R25_0_I4_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 56,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 27,
+        "num_invs_generated_per_iter": {
+          "1": 23,
+          "2": 113,
+          "3": 5572
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 333.39269185066223,
+        "latest_elimination_iter": 3
+      },
+      "Inv1103_d53b_R25_0_I4_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 27,
+        "num_invs_generated_per_iter": {
+          "1": 30,
+          "2": 122
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 46.70396018028259,
+        "latest_elimination_iter": 2
+      },
+      "Inv957_c432_R31_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : (ExGntd) \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(CurCmd = \"ReqS\")))",
+        "order": 38,
+        "depth": 7
+      },
+      "Inv20_5035_R26_0_I1_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 19,
+          "2": 59
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 56.93383073806763,
+        "latest_elimination_iter": 2
+      },
+      "Inv50_ba79_R27_1_I1_RecvGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 16,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 52
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 55.84913897514343,
+        "latest_elimination_iter": 2
+      },
+      "Inv50_ba79_R27_1_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 393,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 19,
+          "2": 70
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 107.11286497116089,
+        "latest_elimination_iter": 2
+      },
+      "Inv43_39a8_R34_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"GntS\") \\/ (~(ExGntd))",
+        "order": 39,
+        "depth": 8
+      },
+      "Inv2146_6e63_R28_0_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 114,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 22,
+          "2": 72
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 95.67587184906006,
+        "latest_elimination_iter": 2
+      },
+      "Inv2146_6e63_R28_0_I2_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 42,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 37
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 82.34338212013245,
+        "latest_elimination_iter": 2
+      },
+      "Inv2146_6e63_R28_0_I2_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 79,
+          "3": 1197
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 81.51368641853333,
+        "latest_elimination_iter": 3
+      },
+      "Inv687_881e_R35_2_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(InvSet[VARJ]))",
+        "order": 40,
+        "depth": 8
+      },
+      "Inv1149_870b_R29_2_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 67,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 38
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 50.39062738418579,
+        "latest_elimination_iter": 2
+      },
+      "Inv1149_870b_R29_2_I2_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 334,
+        "coi_vars": [
+          "Chan2",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 7,
+          "2": 28
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 44.52425718307495,
+        "latest_elimination_iter": 2
+      },
+      "Inv957_c432_R31_0_I2_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 34,
+          "3": 1331,
+          "4": 4225
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 238.586008310318,
+        "latest_elimination_iter": 4
+      },
+      "Inv1942_3576_R37_0_I3": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARJ].Cmd = \"Empty\") \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd) \\/ (~(VARI # VARJ))))",
+        "order": 41,
+        "depth": 8
+      },
+      "Inv43_39a8_R34_0_I1_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 67,
+        "coi_vars": [
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 38
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 47.34326219558716,
+        "latest_elimination_iter": 2
+      },
+      "Inv687_881e_R35_2_I2_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1301,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 11,
+          "2": 55
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 99.83446216583252,
+        "latest_elimination_iter": 2
+      },
+      "Inv687_881e_R35_2_I2_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1304,
+        "coi_vars": [
+          "Chan1",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 11,
+          "2": 31
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 67.73164653778076,
+        "latest_elimination_iter": 2
+      },
+      "Inv687_881e_R35_2_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 654,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 24,
+        "num_invs_generated_per_iter": {
+          "1": 30,
+          "2": 82
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 83.38775515556335,
+        "latest_elimination_iter": 2
+      },
+      "Inv687_881e_R35_2_I2_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 519,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 26,
+          "2": 129,
+          "3": 1002
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 110.4259250164032,
+        "latest_elimination_iter": 3
+      },
+      "Inv1000_d532_R39_3_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARJ].Cmd = \"Inv\") \\/ (~(InvSet[VARI])) \\/ (~(ExGntd))",
+        "order": 42,
+        "depth": 9
+      },
+      "Inv1942_3576_R37_0_I3_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 498,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 24,
+        "num_invs_generated_per_iter": {
+          "1": 31,
+          "2": 83
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 90.9761962890625,
+        "latest_elimination_iter": 2
+      },
+      "Inv1942_3576_R37_0_I3_SendInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1104,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd"
+        ],
+        "num_grammar_preds": 26,
+        "num_invs_generated_per_iter": {
+          "1": 36,
+          "2": 167,
+          "3": 907
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 93.24741458892822,
+        "latest_elimination_iter": 3
+      },
+      "Inv1942_3576_R37_0_I3_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 32,
+          "2": 83
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 51.147390365600586,
+        "latest_elimination_iter": 2
+      },
+      "Inv111_3e57_R40_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI] = ShrSet[VARI]))",
+        "order": 43,
+        "depth": 9
+      },
+      "Inv848_bea9_R40_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Cache[VARI].State = \"E\") \\/ (~(ShrSet[VARJ])) \\/ (~(VARI # VARJ))",
+        "order": 44,
+        "depth": 9
+      },
+      "Inv1000_d532_R39_3_I2_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 294,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 24,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 49
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 79.84655332565308,
+        "latest_elimination_iter": 2
+      },
+      "Inv1000_d532_R39_3_I2_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 315,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 24,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 49
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 71.8986165523529,
+        "latest_elimination_iter": 2
+      },
+      "Inv1000_d532_R39_3_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 74,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr",
+          "MemData"
+        ],
+        "num_grammar_preds": 21,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 50
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 66.98358392715454,
+        "latest_elimination_iter": 2
+      },
+      "Inv1000_d532_R39_3_I2_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 888,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 14,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 38,
+          "3": 1722,
+          "4": 23011
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 174.29349184036255,
+        "latest_elimination_iter": 4
+      },
+      "Inv23009_51f5_R41_3_I3": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(ExGntd) \\/ (~(InvSet[VARI]) \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ))))",
+        "order": 45,
+        "depth": 10
+      },
+      "Inv111_3e57_R40_1_I2_RecvInvAckAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Chan2",
+          "Chan3",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "MemData"
+        ],
+        "num_grammar_preds": 24,
+        "num_invs_generated_per_iter": {
+          "1": 33,
+          "2": 93
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 99.66354274749756,
+        "latest_elimination_iter": 2
+      },
+      "Inv111_3e57_R40_1_I2_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1518,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 13,
+          "2": 42
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 95.65555191040039,
+        "latest_elimination_iter": 2
+      },
+      "Inv111_3e57_R40_1_I2_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1452,
+        "coi_vars": [
+          "Chan1",
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 23,
+        "num_invs_generated_per_iter": {
+          "1": 13,
+          "2": 42
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 93.433598279953,
+        "latest_elimination_iter": 2
+      },
+      "Inv111_3e57_R40_1_I2_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1392,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 19,
+          "2": 44
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 90.98970365524292,
+        "latest_elimination_iter": 2
+      },
+      "Inv848_bea9_R40_1_I2_RecvGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 14,
+          "2": 60
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 65.61064291000366,
+        "latest_elimination_iter": 2
+      },
+      "Inv848_bea9_R40_1_I2_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 371,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 71
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 125.65717005729675,
+        "latest_elimination_iter": 2
+      },
+      "Inv848_bea9_R40_1_I2_SendGntSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 541,
+        "coi_vars": [
+          "Cache",
+          "Chan2",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 22,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 71
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 120.06353402137756,
+        "latest_elimination_iter": 2
+      },
+      "Inv23009_51f5_R41_3_I3_RecvReqEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 914,
+        "coi_vars": [
+          "Chan1",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 16,
+        "num_invs_generated_per_iter": {
+          "1": 3,
+          "2": 16,
+          "3": 4530,
+          "4": 8759
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 180.95624685287476,
+        "latest_elimination_iter": 4
+      },
+      "Inv23009_51f5_R41_3_I3_RecvReqSAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 953,
+        "coi_vars": [
+          "Chan1",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 16,
+        "num_invs_generated_per_iter": {
+          "1": 4,
+          "2": 14
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 45.43940734863281,
+        "latest_elimination_iter": 2
+      },
+      "Inv23009_51f5_R41_3_I3_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 128,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 45
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 76.88090324401855,
+        "latest_elimination_iter": 2
+      },
+      "Inv7513_6fbd_R44_0_I3": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in NODE : \\A VARJ \\in NODE : (InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd)) \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))",
+        "order": 46,
+        "depth": 11
+      },
+      "Inv7513_6fbd_R44_0_I3_SendGntEAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 286,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd",
+          "CurPtr"
+        ],
+        "num_grammar_preds": 20,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 45
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 56.423969745635986,
+        "latest_elimination_iter": 2
+      },
+      "Inv7513_6fbd_R44_0_I3_SendInvAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 593,
+        "coi_vars": [
+          "Chan2",
+          "InvSet",
+          "ShrSet",
+          "ExGntd",
+          "CurCmd"
+        ],
+        "num_grammar_preds": 18,
+        "num_invs_generated_per_iter": {
+          "1": 20,
+          "2": 45
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 47.08818078041077,
+        "latest_elimination_iter": 2
+      }
+    },
+    "safety": "CtrlProp1",
+    "curr_node": "Inv7513_6fbd_R44_0_I3_SendInvAction"
+  },
+  "strengthening_conjuncts": [
+    [
+      "Inv122_03a2_R0_0_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Cache[VARJ].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+      "(Cache[VARJ].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"GntE\"))"
+    ],
+    [
+      "Inv11_3662_R0_1_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Cache[VARI].State = \"E\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))",
+      "~(Cache[VARI].State = \"E\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))"
+    ],
+    [
+      "Inv5378_0d22_R1_0_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\") \\/ (~(VARI # VARJ)))",
+      "(Chan2[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\") \\/ (~(VARI # VARJ)))"
+    ],
+    [
+      "Inv33_1336_R1_1_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))",
+      "~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"GntS\"))"
+    ],
+    [
+      "Inv22_d756_R1_2_I1",
+      "\\A VARI \\in NODE : (Cache[VARI].State = \"I\") \\/ ((ShrSet[VARI]))",
+      "(Cache[VARI].State = \"I\") \\/ ((ShrSet[VARI]))"
+    ],
+    [
+      "Inv12_513a_R2_1_I1",
+      "\\A VARI \\in NODE : (ExGntd) \\/ (~(Cache[VARI].State = \"E\"))",
+      "(ExGntd) \\/ (~(Cache[VARI].State = \"E\"))"
+    ],
+    [
+      "Inv1_85ad_R3_0_I1",
+      "\\A VARI \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))",
+      "(Chan2[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))"
+    ],
+    [
+      "Inv5_a2c7_R3_1_I1",
+      "\\A VARI \\in NODE : (ExGntd) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+      "(ExGntd) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))"
+    ],
+    [
+      "Inv6410_fc2f_R3_2_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ)))",
+      "~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ)))"
+    ],
+    [
+      "Inv11_e00a_R5_0_I1",
+      "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))",
+      "(ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntE\"))"
+    ],
+    [
+      "Inv12_4ccb_R5_1_I1",
+      "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntS\"))",
+      "(ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"GntS\"))"
+    ],
+    [
+      "Inv10_8267_R5_2_I1",
+      "\\A VARI \\in NODE : (Cache[VARI].State = \"I\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))",
+      "(Cache[VARI].State = \"I\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))"
+    ],
+    [
+      "Inv7_7199_R6_1_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Cache[VARJ].State = \"E\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(Cache[VARJ].State = \"E\"))"
+    ],
+    [
+      "Inv1_eb94_R7_0_I1",
+      "\\A VARI \\in NODE : (Chan2[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))",
+      "(Chan2[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"Empty\"))"
+    ],
+    [
+      "Inv111_0f39_R7_1_I1",
+      "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(InvSet[VARI]))",
+      "(ShrSet[VARI]) \\/ (~(InvSet[VARI]))"
+    ],
+    [
+      "Inv15_5b11_R8_0_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARJ].Cmd = \"GntE\"))"
+    ],
+    [
+      "Inv9560_0995_R9_0_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))",
+      "~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))"
+    ],
+    [
+      "Inv11_c03f_R12_0_I1",
+      "\\A VARJ \\in NODE : (Chan2[VARJ].Cmd = \"Empty\") \\/ ((Chan3[VARJ].Cmd = \"Empty\"))",
+      "(Chan2[VARJ].Cmd = \"Empty\") \\/ ((Chan3[VARJ].Cmd = \"Empty\"))"
+    ],
+    [
+      "Inv40_2bf0_R13_1_I1",
+      "\\A VARI \\in NODE : ~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+      "~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))"
+    ],
+    [
+      "Inv17_9e93_R14_0_I1",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ ((ShrSet[VARI]))"
+    ],
+    [
+      "Inv4424_0201_R14_1_I2",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((ExGntd))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((ExGntd))"
+    ],
+    [
+      "Inv13_45c1_R14_2_I1",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI]))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI]))"
+    ],
+    [
+      "Inv26_259c_R15_0_I1",
+      "\\A VARJ \\in NODE : (Chan3[VARJ].Cmd = \"Empty\") \\/ (~(InvSet[VARJ]))",
+      "(Chan3[VARJ].Cmd = \"Empty\") \\/ (~(InvSet[VARJ]))"
+    ],
+    [
+      "Inv64_c47d_R16_1_I1",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))",
+      "~(Chan2[VARI].Cmd = \"GntE\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))"
+    ],
+    [
+      "Inv4763_b566_R19_0_I2",
+      "\\A VARI \\in NODE : ~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI])))",
+      "~(Cache[VARI].State = \"I\") \\/ (~(Chan2[VARI].Cmd = \"Empty\") \\/ (~(InvSet[VARI])))"
+    ],
+    [
+      "Inv39_7204_R20_0_I1",
+      "\\A VARI \\in NODE : (ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+      "(ShrSet[VARI]) \\/ (~(Chan2[VARI].Cmd = \"Inv\"))"
+    ],
+    [
+      "Inv1057_089e_R21_0_I3",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd) \\/ (~(VARI # VARJ))) \\/ ((Chan3[VARJ].Cmd = \"Empty\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd) \\/ (~(VARI # VARJ))) \\/ ((Chan3[VARJ].Cmd = \"Empty\"))"
+    ],
+    [
+      "Inv2458_2a15_R21_1_I2",
+      "\\A VARI \\in NODE : (CurCmd = \"ReqE\") \\/ (~(Chan2[VARI].Cmd = \"Inv\")) \\/ ((ExGntd))",
+      "(CurCmd = \"ReqE\") \\/ (~(Chan2[VARI].Cmd = \"Inv\")) \\/ ((ExGntd))"
+    ],
+    [
+      "Inv4043_dbee_R22_0_I2",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((CurCmd = \"ReqS\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ ((CurCmd = \"ReqE\")) \\/ ((CurCmd = \"ReqS\"))"
+    ],
+    [
+      "Inv76_d564_R22_2_I1",
+      "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI]))",
+      "~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI]))"
+    ],
+    [
+      "Inv1103_d53b_R25_0_I4",
+      "\\A VARJ \\in NODE : (CurCmd = \"ReqE\") \\/ ((InvSet[VARJ])) \\/ (~(Chan2[VARJ].Cmd = \"Empty\")) \\/ (~(Cache[VARJ].State = \"I\")) \\/ ((CurCmd = \"ReqS\")) \\/ (~(ShrSet[VARJ]))",
+      "(CurCmd = \"ReqE\") \\/ ((InvSet[VARJ])) \\/ (~(Chan2[VARJ].Cmd = \"Empty\")) \\/ (~(Cache[VARJ].State = \"I\")) \\/ ((CurCmd = \"ReqS\")) \\/ (~(ShrSet[VARJ]))"
+    ],
+    [
+      "Inv20_5035_R26_0_I1",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(Chan2[VARI].Cmd = \"Inv\"))"
+    ],
+    [
+      "Inv13_812b_R27_1_I1",
+      "\\A VARI \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"InvAck\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ ((Chan3[VARI].Cmd = \"InvAck\"))"
+    ],
+    [
+      "Inv50_ba79_R27_1_I1",
+      "\\A VARI \\in NODE : ~(Cache[VARI].State = \"S\") \\/ (~(ExGntd))",
+      "~(Cache[VARI].State = \"S\") \\/ (~(ExGntd))"
+    ],
+    [
+      "Inv2146_6e63_R28_0_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(Chan2[VARJ].Cmd = \"Inv\"))"
+    ],
+    [
+      "Inv1149_870b_R29_2_I2",
+      "\\A VARJ \\in NODE : (CurCmd = \"ReqE\") \\/ ((CurCmd = \"ReqS\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\")))",
+      "(CurCmd = \"ReqE\") \\/ ((CurCmd = \"ReqS\") \\/ (~(Chan2[VARJ].Cmd = \"Inv\")))"
+    ],
+    [
+      "Inv957_c432_R31_0_I2",
+      "\\A VARI \\in NODE : (ExGntd) \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(CurCmd = \"ReqS\")))",
+      "(ExGntd) \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(CurCmd = \"ReqS\")))"
+    ],
+    [
+      "Inv43_39a8_R34_0_I1",
+      "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"GntS\") \\/ (~(ExGntd))",
+      "~(Chan2[VARI].Cmd = \"GntS\") \\/ (~(ExGntd))"
+    ],
+    [
+      "Inv687_881e_R35_2_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(InvSet[VARJ]))",
+      "(Chan3[VARI].Cmd = \"Empty\") \\/ (~(ExGntd)) \\/ (~(InvSet[VARJ]))"
+    ],
+    [
+      "Inv1942_3576_R37_0_I3",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (Chan3[VARJ].Cmd = \"Empty\") \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd) \\/ (~(VARI # VARJ))))",
+      "(Chan3[VARJ].Cmd = \"Empty\") \\/ ((InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd) \\/ (~(VARI # VARJ))))"
+    ],
+    [
+      "Inv1000_d532_R39_3_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Chan2[VARJ].Cmd = \"Inv\") \\/ (~(InvSet[VARI])) \\/ (~(ExGntd))",
+      "~(Chan2[VARJ].Cmd = \"Inv\") \\/ (~(InvSet[VARI])) \\/ (~(ExGntd))"
+    ],
+    [
+      "Inv111_3e57_R40_1_I2",
+      "\\A VARI \\in NODE : ~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI] = ShrSet[VARI]))",
+      "~(Chan2[VARI].Cmd = \"Inv\") \\/ (~(InvSet[VARI] = ShrSet[VARI]))"
+    ],
+    [
+      "Inv848_bea9_R40_1_I2",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(Cache[VARI].State = \"E\") \\/ (~(ShrSet[VARJ])) \\/ (~(VARI # VARJ))",
+      "~(Cache[VARI].State = \"E\") \\/ (~(ShrSet[VARJ])) \\/ (~(VARI # VARJ))"
+    ],
+    [
+      "Inv23009_51f5_R41_3_I3",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : ~(ExGntd) \\/ (~(InvSet[VARI]) \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ))))",
+      "~(ExGntd) \\/ (~(InvSet[VARI]) \\/ (~(InvSet[VARJ]) \\/ (~(VARI # VARJ))))"
+    ],
+    [
+      "Inv7513_6fbd_R44_0_I3",
+      "\\A VARI \\in NODE : \\A VARJ \\in NODE : (InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd)) \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))",
+      "(InvSet[VARI] = ShrSet[VARI]) \\/ (~(ExGntd)) \\/ (~(VARI # VARJ)) \\/ (~(ShrSet[VARJ]))"
+    ]
+  ],
+  "roundi": 46,
+  "num_rounds": 70,
+  "num_iters": 5,
+  "seed": 7,
+  "stats": {
+    "num_lemma_nodes": 46,
+    "num_failed_lemma_nodes": 0,
+    "state_cache_duration_secs": 1421.302315711975,
+    "invcheck_duration_secs": 4845.272989749908,
+    "ctielimcheck_duration_secs": 1822.133348941803,
+    "total_duration_secs": 15592.394851446152,
+    "num_preds": 38,
+    "date": "2024-09-19 11:26:10"
+  }
+}
