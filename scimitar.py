@@ -5192,8 +5192,11 @@ class InductiveInvGen():
         print("EDGES:", G.number_of_edges())
         print(len(list(G.nodes)))
         print(list(G.nodes))
-        anc = nx.ancestors(G, "Safety_ClientRequestAction")
-        anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
+        anc = []
+        anc2 = []
+        if self.specname == "AsyncRaft" and self.safety == "H_PrimaryHasEntriesItCreated":
+            anc = nx.ancestors(G, "Safety_ClientRequestAction")
+            anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
         # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
         print("Ancestors:", len(anc))
         print(anc)
@@ -5204,7 +5207,10 @@ class InductiveInvGen():
         for c in cycles:
             cycle_nodes += c
 
-        
+        include_detailed_stats = True
+        if not include_detailed_stats:
+            dot.node_attr["fontname"] = "Georgia"
+
 
         def limit_string_list_width(s, max_width=50):
             coi_str = ",".join(s)
