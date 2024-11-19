@@ -5264,60 +5264,110 @@ class InductiveInvGen():
 
                         if "curr_node" in self.proof_graph and self.proof_graph["curr_node"] == n and self.proof_graph["nodes"][n]["ctis_remaining"] > 0:
                             # Mark node.
-                            fillcolor = "yellow"
+                            # fillcolor = "steelblue"
+                            color = "blue"
+                            penwidth="3"
                         if "failed" in node and node["failed"]:
                             # color = "red"
                             fillcolor = "salmon"
                         if len(self.proof_graph["nodes"][n]["coi_vars"]) > 0:
                             coi_vars = sorted(self.proof_graph["nodes"][n]["coi_vars"])
-                            coi_str = coi
                             # if len(coi_str) > 20:
                                 # coi_str_break_ind = coi_str.find(",", len(coi)//2 - 1)
                                 # coi_str = coi_str[:coi_str_break_ind] + "<BR/>" + coi_str[coi_str_break_ind:]
-                            label = "< " + nlabel + "<BR/>" + "<FONT POINT-SIZE='10'>" + str(coi) + "<BR/>" + " (" + str(len(coi_vars)) + "/" + str(len(self.state_vars)) + " vars) </FONT>"
-                            if "num_grammar_preds" in self.proof_graph["nodes"][n]:
-                                label += "<FONT POINT-SIZE='10'>|preds|=" + str(self.proof_graph["nodes"][n]["num_grammar_preds"]) + "/" + str(len(self.preds)) + "</FONT>"
-                            if "latest_elimination_iter" in node:
-                                latest_iter = self.proof_graph["nodes"][n]["latest_elimination_iter"]
-                                label += f"<FONT POINT-SIZE='10'> (iters={latest_iter}) </FONT>"
-                            label += "<BR/>"
-                            if "ctis_remaining" in node:
-                                total_ctis_str = ""
-                                if "total_initial_ctis" in self.proof_graph["nodes"][n]:
-                                    total_ctis_str = "/" + str(self.proof_graph["nodes"][n]["total_initial_ctis"])
-                                label += f"<FONT POINT-SIZE='10'> (ctis={num_ctis_left}{total_ctis_str}) </FONT>"
-                            if "num_invs_generated_per_iter" in node:
-                                num_invs_generated = node["num_invs_generated_per_iter"]
-                                total = sum([num_invs_generated[i] for i in num_invs_generated])
-                                label += f"<FONT POINT-SIZE='10'>(invs={total})</FONT>"
-                            if "time_spent" in node:
-                                label += "<FONT POINT-SIZE='10'> (" + "{0:.2f}".format(self.proof_graph["nodes"][n]["time_spent"]) + "s) </FONT>"
+                            # label = "< " + nlabel + "<BR/>" + "<FONT POINT-SIZE='10'>" + str(coi) + "<BR/>" + " (" + str(len(coi_vars)) + "/" + str(len(self.state_vars)) + " vars) </FONT>"
+                            label = "< " + "<FONT POINT-SIZE='12'>" + nlabel + "</FONT>" + "<BR/>" + "<FONT POINT-SIZE='8'>" + str(coi)
+                            if include_detailed_stats:
+                                label += "<BR/>" + " (" + str(len(coi_vars)) + "/" + str(len(self.state_vars)) + " vars)"
+                            label += "</FONT>"
+                            if include_detailed_stats:
+                                if "num_grammar_preds" in self.proof_graph["nodes"][n]:
+                                    label += "<FONT POINT-SIZE='10'>|preds|=" + str(self.proof_graph["nodes"][n]["num_grammar_preds"]) + "/" + str(len(self.preds)) + "</FONT>"
+                                if "latest_elimination_iter" in node:
+                                    latest_iter = self.proof_graph["nodes"][n]["latest_elimination_iter"]
+                                    label += f"<FONT POINT-SIZE='10'> (iters={latest_iter}) </FONT>"
+                                label += "<BR/>"
+                                if "ctis_remaining" in node:
+                                    total_ctis_str = ""
+                                    if "total_initial_ctis" in self.proof_graph["nodes"][n]:
+                                        total_ctis_str = "/" + str(self.proof_graph["nodes"][n]["total_initial_ctis"])
+                                    label += f"<FONT POINT-SIZE='10'> (ctis={num_ctis_left}{total_ctis_str}) </FONT>"
+                                if "num_invs_generated_per_iter" in node:
+                                    num_invs_generated = node["num_invs_generated_per_iter"]
+                                    total = sum([num_invs_generated[i] for i in num_invs_generated])
+                                    label += f"<FONT POINT-SIZE='10'>(invs={total})</FONT>"
+                                if "time_spent" in node:
+                                    label += "<FONT POINT-SIZE='10'> (" + "{0:.2f}".format(self.proof_graph["nodes"][n]["time_spent"]) + "s) </FONT>"
                             label += ">"
-                            fontsize="14pt"
+                            fontsize="12pt"
+                            parent_node_name = "_".join(n.split("_")[:-1])
+                            # if parent_node_name in anc:
+                                # print("ElectionSafety slice_vars:", tuple(self.proof_graph["nodes"][n]["coi_vars"]))
+                                
                     if "is_lemma" in node:
                         # Split something like 'Inv249_R3_2_I2_0'.
                         name_parts = n.partition("_")
-                        label = "< " + name_parts[0]
+                        fontpt = 16
+                        if n == "Safety":
+                            fontpt = 36
+                        label = "< " + f"<FONT POINT-SIZE='{fontpt}'>" + str(name_parts[0]) + "</FONT>" 
+                        # label = "< " + str(name_parts[0])
                         depth_str = ""
-                        if len(name_parts[2]) > 0:
-                            label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>"
-                        if "depth" in node:
-                            depth_str = ",d=" + str(node["depth"])
-                        if "order" in node:
-                            # label += "<BR/>"
-                            label += " <BR/> <FONT POINT-SIZE='12'>(" + str(node["order"]) + depth_str + ") </FONT>"
+                        if include_detailed_stats:
+                            if len(name_parts[2]) > 0:
+                                label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>"
+                            if "depth" in node:
+                                depth_str = ",d=" + str(node["depth"])
+                            if "order" in node:
+                                # label += "<BR/>"
+                                label += " <BR/> <FONT POINT-SIZE='12'>(" + str(node["order"]) + depth_str + ") </FONT>"
                         label += " >"
                         penwidth="3"
                         if node["discharged"]:
-                            fillcolor = "green"
+                            fillcolor = "lightgreen"
                         else:
                             fillcolor = "orange"
                         if "failed" in node:
                             # color = "red"
                             fillcolor = "salmon"
                         rounded=",rounded"
-                        if n in anc:
+
+
+                        # ElectionSafety ancestors.
+                        if self.specname == "AsyncRaft" and n in anc:
                             fillcolor="lightblue"
+
+
+
+                        # Special logic for measuring AsyncRaft TLAPS proof progress.
+                        proven = [
+                            "Inv11_d848_R2_1_I0",
+                            "Inv8_8e53_R5_0_I0",
+                            "Inv9_42ac_R5_1_I2",
+                            "Inv13_3715_R21_0_I0",
+                            "Inv14_f533_R11_2_I0",
+                            "Inv0_2c32_R8_1_I1",
+                            "Inv127_0bd2_R5_1_I2",
+                            "Inv2513_1e2e_R6_3_I1",
+                            "Inv12_9e78_R16_0_I0",
+                            "Inv9072_27f5_R5_1_I2",
+                            "Inv1281_1f30_R6_2_I1",
+                            "Inv15_7bad_R0_2_I0",
+                            "Inv61_fe26_R9_0_I1",
+                            "Inv10_82b3_R11_1_I0",
+                            "Inv40_6261_R15_1_I1",
+                            "Inv82_3acc_R6_1_I1",
+                            "Inv363_d176_R15_2_I1",
+                            "Inv789_4aa6_R6_2_I1",
+                            "Inv166_e30e_R11_0_I1",
+                            "Inv11_afc0_R17_0_I0"
+                        ]
+                        if self.specname == "AsyncRaft" and n in proven:
+                            # label += "<FONT POINT-SIZE='10'>PROVEN</FONT>"
+                            # penwidth="8"
+                            pass
+                        if n == "Safety":
+                            fillcolor="yellow"
                         # if n in anc2 and n not in anc:
                         #     fillcolor="yellow"
                         # if n in cycle_nodes:
@@ -5381,10 +5431,11 @@ class InductiveInvGen():
                 "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[0],
             ]
             attrs = {}
+            color_cycles = False
             if any(conds):
                 style += ",blue,line width=1.0mm"
-            if e[0] in cycle_nodes and e[1] in cycle_nodes:
-                attrs = {"color": "red"}
+            if color_cycles and e[0] in cycle_nodes and e[1] in cycle_nodes:
+                attrs = {"color": "darkred", "penwidth": "3"}
             dot.edge(e[0], e[1], style=style, **attrs)
 
         logging.info(f"Rendering proof graph ({len(self.proof_graph['edges'])} edges)")
