@@ -4111,23 +4111,23 @@ class InductiveInvGen():
         logging.info("Checking simulation bound for all invariants.")
         use_pred_identifiers = self.use_fast_pred_eval
         boolean_style = "tla"
-        ninvs = 2000
+        NTERMS = 3
+        ninvs = 3000
         logging.info("Generating %d candidate invariants." % ninvs)
         all_invs = mc.generate_invs(
-            self.preds, ninvs, min_num_conjuncts=3, max_num_conjuncts=3,quant_vars=self.quant_vars, 
+            self.preds, ninvs, min_num_conjuncts=NTERMS, max_num_conjuncts=NTERMS,quant_vars=self.quant_vars, 
             boolean_style = boolean_style,
             use_pred_identifiers=use_pred_identifiers)
         invs = all_invs["raw_invs"]
         sat_inv_table = []
         logging.info("\n---- Checking simulation invariant bounds\n" + "-"*70)
-        # nums = [10,100,200,1000,2000,8000]
-        # state_nums = [1000,2000,5000,7500,10000,15000,25000,30000,40000,50000,75000,90000]
-        depths = [5,10,15,20,25,30,35,40,50,60]
+        
+        depths = [5,10,20,30,40,50,60]
+        state_nums = [1000,10000,50000,100000,300000]
+
         # depths = [5,10]
-        # depths = [5]
-        # state_nums = [10000,50000,100000,200000]
-        state_nums = [1000,10000,50000,100000]
-        # state_nums = [1000]
+        # state_nums = [1000,5000,10000]
+
         params_to_check = list(itertools.product(depths, state_nums))
         logging.info(f"Will check total of {len(params_to_check)} parameter vals.")
         data = []
@@ -4157,13 +4157,20 @@ class InductiveInvGen():
             xdata = [d[0] for d in data if d[1] == num]
             ydata = [d[2] for d in data if d[1] == num]
             plt.plot(xdata, ydata, markersize=4, marker='o', linestyle='-', label=f'States = {num}')
+            # For the largest state_num, add y-value labels to each point
+            for x, y in zip(xdata, ydata):
+                if num == max(state_nums):
+                    plt.text(x, y, str(y), verticalalignment='bottom', fontsize=8)
+        
         plt.plot([0,max(depths)], [true_num_invs, true_num_invs], markersize=4, marker='o', linestyle='-', label=f'Full states')
+        plt.text(0, true_num_invs, f'{true_num_invs}', verticalalignment='bottom')
+        # plt.text(max(depths), true_num_invs, f'{true_num_invs}', verticalalignment='bottom')
         plt.xlabel("Depth")
         plt.ylabel("Number of Satisfied Invariants (sat_invs)")
         plt.title("Sat Invariants vs Depth")
         plt.grid(True)
         plt.legend()
-        plt.savefig(f"simulation_inv_bounds_{self.specname}.pdf")
+        plt.savefig(f"simulation_inv_bounds_{self.specname}_{NTERMS}_terms.pdf")
 
     def reparse_spec_with_proof_graph_defs(self):
         """ Re-parse the main spec but include any new lemma definitions that now exist in the generated proof graph."""
