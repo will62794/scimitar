@@ -26,6 +26,11 @@ LEMMA EmptyIntersectionImpliesNotBothQuorums ==
 
 LEMMA StaticQuorumsOverlap == \A Q1,Q2 \in Quorum : Q1 \cap Q2 # {}
 
+LEMMA ServerStateType == 
+    \A s \in Server : 
+        /\ state[s] \in {Leader, Candidate, Follower}
+        /\ state[s] # Follower <=> state[s] \in {Leader, Candidate}
+
 
 
 \* Proof Graph Stats
@@ -79,7 +84,8 @@ ASSUME A5 == Quorum \subseteq SUBSET Server /\ {} \notin Quorum /\ Quorum # {} /
 ASSUME A6 == MaxLogLen \in Nat
 ASSUME A7 == MaxTerm \in Nat
 
-USE StaticQuorumsOverlap, QuorumsExistForNonEmptySets, AddingToQuorumRemainsQuorum, EmptyIntersectionImpliesNotBothQuorums, FS_Subset, FS_Difference, FS_Singleton, FS_EmptySet
+USE ServerStateType, StaticQuorumsOverlap, QuorumsExistForNonEmptySets, AddingToQuorumRemainsQuorum, EmptyIntersectionImpliesNotBothQuorums, 
+    FS_Subset, FS_Difference, FS_Singleton, FS_EmptySet
 
 \*** TypeOK
 THEOREM L_0 == TypeOK /\ TypeOK /\ Next => TypeOK'
@@ -250,83 +256,45 @@ THEOREM L_4 == TypeOK /\ Inv12_f533_R5_2_I0 /\ Inv10_e30e_R5_0_I1 /\ Inv9_82b3_R
 <1>10. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9 DEF Next
 
 
+
+\*Inv1566_R0_1_I1 == \A VARI \in Server : \A VARJ \in Server : ~((currentTerm[VARI] > currentTerm[VARJ])) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARJ \in votesGranted[VARI])))
+\*Inv7_R1_0_I0 == (\A s \in Server : state[s] \in {Candidate,Leader} =>  (\A t \in votesGranted[s] :  /\ currentTerm[t] = currentTerm[s] => votedFor[t] = s ))
+
+\* Inv0_2c32_R2_1_I1_alt == \A VARI \in Server : \A VARJ \in Server : ((currentTerm[VARI] <= currentTerm[VARJ])) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARJ \in votesGranted[VARI])))
+\* Inv10_e30e_R5_0_I1_alt == \A VARI \in Server :  (((state[VARI] # Follower))) => ((\A t \in votesGranted[VARI] : /\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI ))
+\* Inv10_e30e_R5_0_I1_alt == \A VARI \in Server :  (((state[VARI] \in {Candidate,Leader}))) => ((\A t \in votesGranted[VARI] : /\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI ))
+\*
+\*THEOREM TypeOK /\ Inv1566_R0_1_I1 /\ Inv7_R1_0_I0 /\ RequestVoteAction => Inv7_R1_0_I0' 
+\*    BY DEF TypeOK,Inv0_2c32_R2_1_I1,LastTerm,RequestVoteAction,RequestVote,Inv7_R1_0_I0,Inv1566_R0_1_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+\*
+\*THEOREM TypeOK /\ Inv0_2c32_R2_1_I1_alt /\ Inv10_e30e_R5_0_I1_alt /\ RequestVoteAction => Inv10_e30e_R5_0_I1_alt' 
+\*    BY DEF TypeOK,Inv0_2c32_R2_1_I1_alt,LastTerm,RequestVoteAction,RequestVote,Inv7_R1_0_I0,Inv10_e30e_R5_0_I1_alt,
+\*    RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+
+
+\*THEOREM Inv7_R1_0_I0 => Inv10_e30e_R5_0_I1
+\*    <1> QED 
+\*      <2> SUFFICES ASSUME Inv7_R1_0_I0,
+\*                          NEW VARI \in Server,
+\*                          state[VARI] # Follower,
+\*                          NEW t \in votesGranted[VARI]
+\*                   PROVE  /\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI
+\*        BY DEF Inv10_e30e_R5_0_I1
+\*      <2>1. currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI
+\*        BY DEF TypeOK,Inv0_2c32_R2_1_I1,Inv10_e30e_R5_0_I1,LastTerm,RequestVoteAction,RequestVote,Inv7_R1_0_I0,Inv1566_R0_1_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+\*      <2>2. QED
+\*        BY <2>1
+
 \*** Inv10_e30e_R5_0_I1
 THEOREM L_5 == TypeOK /\ Inv0_2c32_R2_1_I1 /\ Inv0_2c32_R2_1_I1 /\ Inv9_3715_R8_0_I0 /\ Inv10_e30e_R5_0_I1 /\ Next => Inv10_e30e_R5_0_I1'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (Inv10_e30e_R5_0_I1,RequestVoteAction)
   <1>1. TypeOK /\ Inv0_2c32_R2_1_I1 /\ Inv10_e30e_R5_0_I1 /\ RequestVoteAction => Inv10_e30e_R5_0_I1' 
-    <2> SUFFICES ASSUME TypeOK,
-                        Inv0_2c32_R2_1_I1,
-                        Inv10_e30e_R5_0_I1,
-                        TRUE,
-                        NEW i \in Server,
-                        RequestVote(i),
-                        NEW VARI \in Server',
-                        (state[VARI] # Follower)',
-                        NEW t \in (votesGranted[VARI])'
-                 PROVE  (/\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
-      BY DEF Inv10_e30e_R5_0_I1, RequestVoteAction
-    <2>1. (currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
-          <3>1 CASE VARI = t
-                BY <3>1 DEF TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-           <3>2 CASE VARI # t /\ currentTerm[VARI] <= currentTerm[t]
-             <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
-                          PROVE  (votedFor[t] = VARI)'
-               OBVIOUS
-             <4> QED
-               BY <3>2 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-           <3>3 CASE VARI # t /\ currentTerm[VARI] > currentTerm[t] + 1
-             <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
-                          PROVE  (votedFor[t] = VARI)'
-               OBVIOUS
-             <4> QED
-               BY <3>3 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-           <3>4 CASE VARI # t /\ currentTerm[VARI] = currentTerm[t] + 1
-             <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
-                          PROVE  (votedFor[t] = VARI)'
-               OBVIOUS
-             <4> QED
-               BY <3>4 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-                      
-           <3> QED BY <3>1, <3>2 DEF TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-    <2>2. QED
-      BY <2>1
+    BY DEF TypeOK,Inv0_2c32_R2_1_I1,LastTerm,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
     
   \* (Inv10_e30e_R5_0_I1,UpdateTermAction)
   <1>2. TypeOK /\ Inv0_2c32_R2_1_I1 /\ Inv10_e30e_R5_0_I1 /\ UpdateTermAction => Inv10_e30e_R5_0_I1' 
-    <2> SUFFICES ASSUME TypeOK,
-                        Inv0_2c32_R2_1_I1,
-                        Inv10_e30e_R5_0_I1,
-                        TRUE,
-                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
-                        UpdateTerm(m, m.mterm, m.mdest),
-                        NEW VARI \in Server',
-                        (state[VARI] # Follower)',
-                        NEW t \in (votesGranted[VARI])'
-                 PROVE  (/\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
-      BY DEF Inv10_e30e_R5_0_I1, UpdateTermAction
-   <2>1 CASE VARI = t
-      BY <2>1 DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-   <2>2 CASE VARI # t /\ m.mdest # t 
-      BY <2>2, FS_Singleton DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType    
-    <2>3 CASE VARI # t /\ m.mdest = t /\ currentTerm[t] = currentTerm[VARI]
-      BY <2>3, FS_Singleton DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType    
-    <2>4 CASE VARI # t /\ m.mdest = t /\ currentTerm[t] > currentTerm[VARI]
-      BY <2>4, FS_Singleton DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType    
-    <2>5 CASE VARI # t /\ m.mdest = t /\ currentTerm[t] < currentTerm[VARI]
-      <3>1. (currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
-        <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
-                     PROVE  (votedFor[t] = VARI)'
-          OBVIOUS
-        <4> QED
-          BY <2>5, FS_Singleton DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-        
-      <3>2. QED
-        BY <3>1
-          
-                
-    <2> QED
-      BY <2>1,<2>2,<2>3,<2>4,<2>5 DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    BY DEF TypeOK,Inv0_2c32_R2_1_I1,UpdateTermAction,UpdateTerm,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
     
   \* (Inv10_e30e_R5_0_I1,BecomeLeaderAction)
   <1>3. TypeOK /\ Inv10_e30e_R5_0_I1 /\ BecomeLeaderAction => Inv10_e30e_R5_0_I1' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv10_e30e_R5_0_I1
@@ -349,7 +317,23 @@ THEOREM L_5 == TypeOK /\ Inv0_2c32_R2_1_I1 /\ Inv0_2c32_R2_1_I1 /\ Inv9_3715_R8_
                  PROVE  (/\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
       BY DEF HandleRequestVoteResponseAction, Inv10_e30e_R5_0_I1
     <2>1. (currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
-      BY DEF TypeOK,Inv9_3715_R8_0_I0,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv10_e30e_R5_0_I1,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+      <3> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
+                   PROVE  (votedFor[t] = VARI)'
+        OBVIOUS
+      <3>1. CASE m.mvoteGranted /\ m.mdest # VARI
+              BY <3>1, FS_Singleton, FS_Difference, FS_Subset, FS_Union, StaticQuorumsOverlap DEF TypeOK,Inv9_3715_R8_0_I0,Inv10_e30e_R5_0_I1,HandleRequestVoteResponseAction,HandleRequestVoteResponse,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+      <3>2. CASE m.mvoteGranted /\ m.mdest = VARI
+        <4>1. votedFor[t] = m.mdest
+              BY <3>2, FS_Singleton, FS_Difference, FS_Subset, FS_Union, StaticQuorumsOverlap DEF TypeOK,Inv9_3715_R8_0_I0,Inv10_e30e_R5_0_I1,HandleRequestVoteResponseAction,HandleRequestVoteResponse,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+        <4>2. QED 
+                BY <3>2,<4>1, FS_Singleton, FS_Difference, FS_Subset, FS_Union, StaticQuorumsOverlap DEF TypeOK,Inv9_3715_R8_0_I0,Inv10_e30e_R5_0_I1,HandleRequestVoteResponseAction,HandleRequestVoteResponse,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+        
+      <3>3. CASE ~m.mvoteGranted
+              BY <3>2, FS_Singleton, FS_Difference, FS_Subset, FS_Union, StaticQuorumsOverlap DEF TypeOK,Inv9_3715_R8_0_I0,Inv10_e30e_R5_0_I1,HandleRequestVoteResponseAction,HandleRequestVoteResponse,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+            
+      <3> QED
+        BY <3>1,<3>2,<3>3,FS_Singleton, FS_Difference, FS_Subset, FS_Union, StaticQuorumsOverlap DEF TypeOK,Inv9_3715_R8_0_I0,Inv10_e30e_R5_0_I1,HandleRequestVoteResponseAction,HandleRequestVoteResponse,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+      
     <2>2. QED
       BY <2>1
   \* (Inv10_e30e_R5_0_I1,AcceptAppendEntriesRequestAppendAction)
