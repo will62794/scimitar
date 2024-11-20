@@ -4486,7 +4486,8 @@ class InductiveInvGen():
         # Initial rendering.
         if self.save_dot and len(self.proof_graph["edges"]) > 0:
             self.render_proof_graph()
-            # self.render_proof_graph(save_tex=True)
+            if self.all_args["save_tex"]:
+                self.render_proof_graph(save_tex=True)
 
         if self.persistent_proof_tree_mode and self.reprove_failed_nodes:
             logging.info("Attempting to re-prove failed nodes after loading proof graph.")
@@ -5843,6 +5844,7 @@ if __name__ == "__main__":
     parser.add_argument('--target_sample_states', help='Target # initial states to sample. (EXPERIMENTAL).', default=10000, type=int, required=False)
     parser.add_argument('--target_sample_time_limit_ms', help='Target initial state sampling time (EXPERIMENTAL).', default=10000, type=int, required=False)
     parser.add_argument('--save_dot', help='Save proof graphs in DOT and TeX info.', default=False, action='store_true')
+    parser.add_argument('--save_tex', help='Save proof graphs in TeX info.', default=False, action='store_true')
     parser.add_argument('--enable_partitioned_state_caching', help='Enable finer grained partitioned variable subset based state caching.', default=False, action='store_true')
     parser.add_argument('--enable_cti_slice_projection', help='Enable slicing of CTI sets.', default=False, action='store_true')
     parser.add_argument('--action_filter', help='CTI action filter.', required=False, default=None, type=str)
