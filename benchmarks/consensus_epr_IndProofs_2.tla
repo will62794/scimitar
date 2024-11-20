@@ -46,7 +46,7 @@ LEMMA EmptyIntersectionImpliesNotBothQuorums ==
     \A s2 \in SUBSET Node :
         (s1 \cap s2 = {}) => ~(s1 \in Quorum /\ s2 \in Quorum)
 
-USE Fin, FS_Subset, EmptyIntersectionImpliesNotBothQuorums, AddingToQuorumRemainsQuorum, QuorumsAreNodePowersets, EmptyNotInQuorums, QuorumsOverlap, NodeNonEmpty, QuorumsNonEmpty, NodeQuorumType, Node = {0,1} DEF NodesEq
+USE Fin, FS_Subset, EmptyIntersectionImpliesNotBothQuorums, AddingToQuorumRemainsQuorum, QuorumsAreNodePowersets, EmptyNotInQuorums, QuorumsOverlap, NodeNonEmpty, QuorumsNonEmpty, NodeQuorumType DEF NodesEq
 
 
 \* mean in-degree: 1.2
@@ -269,7 +269,7 @@ THEOREM L_9 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Next => Inv3_c551_R3_0_I1'
                  PROVE  (\E VARQJ \in Quorum : (VARQJ = votes[VARI]) \/ (~(leader[VARI])))'
       BY DEF BecomeLeaderAction, Inv3_c551_R3_0_I1
     <2> QED
-      BY SMTT(60) DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
+      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
   \* (Inv3_c551_R3_0_I1,DecideAction)
   <1>5. TypeOK /\ Inv3_c551_R3_0_I1 /\ DecideAction => Inv3_c551_R3_0_I1' BY DEF TypeOK,DecideAction,Decide,Inv3_c551_R3_0_I1
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
