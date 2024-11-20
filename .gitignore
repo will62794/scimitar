@@ -86,3 +86,4 @@ discovery_data/
 *ind-proof-tree
 benchmarks/*_incremental/
 simulation_inv_bounds*
+*.DS_Store
