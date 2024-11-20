@@ -44,7 +44,7 @@ Inv18_09bb_R3_0_I1 == \A VARI \in Server : \A VARREQVRES \in requestVoteResponse
 Inv10_e30e_R5_0_I1 == \A VARI \in Server :  (((state[VARI] # Follower))) => ((\A t \in votesGranted[VARI] : /\ currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI ))
 Inv9_82b3_R5_1_I0 == (\A mi,mj \in requestVoteResponseMsgs : (/\ mi.mterm = mj.mterm /\ mi.msource = mj.msource /\ mi.mvoteGranted /\ mj.mvoteGranted) => mi.mdest = mj.mdest)
 Inv12_f533_R5_2_I0 == \A VARREQVRES \in requestVoteResponseMsgs : (currentTerm[VARREQVRES.msource] >= VARREQVRES.mterm)
-Inv2349_f747_R7_0_I1 == \A VARJ \in Server : \A VARREQVM \in requestVoteRequestMsgs : ~(VARREQVM.msource = VARJ) \/ (~(votesGranted[VARJ] = {}))
+Inv2349_f747_R7_0_I1 == \A VARJ \in Server : \A VARREQVM \in requestVoteRequestMsgs : (VARREQVM.msource = VARJ) => ((votesGranted[VARJ] # {}))
 Inv9_3715_R8_0_I0 == (\A m \in requestVoteResponseMsgs : m.mtype = RequestVoteResponse =>  /\ (m.mvoteGranted /\ (currentTerm[m.msource] = m.mterm)) => votedFor[m.msource] = m.mdest)
 
 IndGlobal == 
@@ -426,7 +426,7 @@ THEOREM L_9 == TypeOK /\ Inv9_3715_R8_0_I0 /\ Inv9_82b3_R5_1_I0 /\ Next => Inv9_
                  PROVE  (mi.mdest = mj.mdest)'
       BY DEF HandleRequestVoteRequestAction, Inv9_82b3_R5_1_I0
     <2> QED
-      BY SMTT(60) DEF TypeOK,Inv9_3715_R8_0_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv9_82b3_R5_1_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+      BY DEF TypeOK,Inv9_3715_R8_0_I0,HandleRequestVoteRequestAction,HandleRequestVoteRequest,Inv9_82b3_R5_1_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv9_82b3_R5_1_I0,HandleRequestVoteResponseAction)
   <1>7. TypeOK /\ Inv9_82b3_R5_1_I0 /\ HandleRequestVoteResponseAction => Inv9_82b3_R5_1_I0' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,Inv9_82b3_R5_1_I0,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (Inv9_82b3_R5_1_I0,AcceptAppendEntriesRequestAppendAction)
@@ -506,11 +506,17 @@ THEOREM L_12 == TypeOK /\ Inv2349_f747_R7_0_I1 /\ Next => Inv2349_f747_R7_0_I1'
                         NEW i \in Server,
                         RequestVote(i),
                         NEW VARJ \in Server',
-                        NEW VARREQVM \in requestVoteRequestMsgs'
-                 PROVE  (~(VARREQVM.msource = VARJ) \/ (~(votesGranted[VARJ] = {})))'
+                        NEW VARREQVM \in requestVoteRequestMsgs',
+                        (VARREQVM.msource = VARJ)'
+                 PROVE  (votesGranted[VARJ] # {})'
       BY DEF Inv2349_f747_R7_0_I1, RequestVoteAction
+    <2>1. CASE VARJ = i
+          BY <2>1, FS_Singleton, FS_EmptySet DEF TypeOK,RequestVoteAction,RequestVote,Inv2349_f747_R7_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LastTerm,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    <2>2. CASE VARJ # i
+          BY <2>2, FS_Singleton, FS_EmptySet DEF TypeOK,RequestVoteAction,RequestVote,Inv2349_f747_R7_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LastTerm,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType  
     <2> QED
-      BY DEF TypeOK,RequestVoteAction,RequestVote,Inv2349_f747_R7_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LastTerm,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+      BY <2>1, <2>2, FS_Singleton, FS_EmptySet DEF TypeOK,RequestVoteAction,RequestVote,Inv2349_f747_R7_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LastTerm,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    
   \* (Inv2349_f747_R7_0_I1,UpdateTermAction)
   <1>2. TypeOK /\ Inv2349_f747_R7_0_I1 /\ UpdateTermAction => Inv2349_f747_R7_0_I1' BY DEF TypeOK,UpdateTermAction,UpdateTerm,Inv2349_f747_R7_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (Inv2349_f747_R7_0_I1,BecomeLeaderAction)
