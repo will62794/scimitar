@@ -27,9 +27,17 @@ import tlaps
 
 try:
     import matplotlib.pyplot as plt
+    logging.getLogger('matplotlib.font_manager').disabled = True
 except ImportError: 
     print("matplotlib not installed, skipping plotting.")
     plt = None
+    np = None
+
+try:
+    import numpy as np
+except ImportError: 
+    print("numpy not installed, skipping plotting.")
+    np = None
 
 
 DEBUG = False
@@ -5324,7 +5332,7 @@ class InductiveInvGen():
                         label += " >"
                         penwidth="3"
                         if node["discharged"]:
-                            fillcolor = "lightgreen"
+                            fillcolor = lightgreen
                         else:
                             fillcolor = "orange"
                         if "failed" in node:
