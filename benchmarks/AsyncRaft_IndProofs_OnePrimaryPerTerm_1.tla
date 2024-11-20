@@ -269,13 +269,25 @@ THEOREM L_5 == TypeOK /\ Inv0_2c32_R2_1_I1 /\ Inv0_2c32_R2_1_I1 /\ Inv9_3715_R8_
     <2>1. (currentTerm[t] = currentTerm[VARI] => votedFor[t] = VARI)'
           <3>1 CASE VARI = t
                 BY <3>1 DEF TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-           <3>2 CASE VARI # t
+           <3>2 CASE VARI # t /\ currentTerm[VARI] <= currentTerm[t]
              <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
                           PROVE  (votedFor[t] = VARI)'
                OBVIOUS
              <4> QED
-               BY <3>2 DEF TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
-                
+               BY <3>2 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+           <3>3 CASE VARI # t /\ currentTerm[VARI] > currentTerm[t] + 1
+             <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
+                          PROVE  (votedFor[t] = VARI)'
+               OBVIOUS
+             <4> QED
+               BY <3>3 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+           <3>4 CASE VARI # t /\ currentTerm[VARI] = currentTerm[t] + 1
+             <4> SUFFICES ASSUME (currentTerm[t] = currentTerm[VARI])'
+                          PROVE  (votedFor[t] = VARI)'
+               OBVIOUS
+             <4> QED
+               BY <3>4 DEF LastTerm,TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+                      
            <3> QED BY <3>1, <3>2 DEF TypeOK,Inv0_2c32_R2_1_I1,RequestVoteAction,RequestVote,Inv10_e30e_R5_0_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
     <2>2. QED
       BY <2>1
