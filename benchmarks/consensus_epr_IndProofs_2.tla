@@ -33,12 +33,20 @@ IndGlobal ==
 ASSUME QuorumsAreNodePowersets == Quorum \subseteq SUBSET Node
 ASSUME EmptyNotInQuorums == {} \notin Quorum \* because quorums are majority sets
 ASSUME QuorumsOverlap == \A Q1,Q2 \in Quorum : Q1 \cap Q2 # {}
-ASSUME Fin == IsFiniteSet(Node)
+ASSUME Fin == IsFiniteSet(Node) /\ IsFiniteSet(Value)
 ASSUME NodeNonEmpty == Node # {}
 ASSUME QuorumsNonEmpty == Quorum # {}
 ASSUME NodeQuorumType == Fin /\ NodeNonEmpty /\ QuorumsAreNodePowersets /\ EmptyNotInQuorums /\ QuorumsNonEmpty
 
-USE Fin, QuorumsAreNodePowersets, EmptyNotInQuorums, QuorumsOverlap, NodeNonEmpty, QuorumsNonEmpty, NodeQuorumType DEF NodesEq
+LEMMA AddingToQuorumRemainsQuorum == \A Q \in Quorum : \A s \in Node : Q \in Quorum => Q \cup {s} \in Quorum
+
+\* If the intersection of two server sets is empty, then they can't both be quorums.
+LEMMA EmptyIntersectionImpliesNotBothQuorums == 
+    \A s1 \in SUBSET Node :
+    \A s2 \in SUBSET Node :
+        (s1 \cap s2 = {}) => ~(s1 \in Quorum /\ s2 \in Quorum)
+
+USE Fin, FS_Subset, EmptyIntersectionImpliesNotBothQuorums, AddingToQuorumRemainsQuorum, QuorumsAreNodePowersets, EmptyNotInQuorums, QuorumsOverlap, NodeNonEmpty, QuorumsNonEmpty, NodeQuorumType, Node = {0,1} DEF NodesEq
 
 
 \* mean in-degree: 1.2
@@ -261,7 +269,7 @@ THEOREM L_9 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Next => Inv3_c551_R3_0_I1'
                  PROVE  (\E VARQJ \in Quorum : (VARQJ = votes[VARI]) \/ (~(leader[VARI])))'
       BY DEF BecomeLeaderAction, Inv3_c551_R3_0_I1
     <2> QED
-      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
+      BY SMTT(60) DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
   \* (Inv3_c551_R3_0_I1,DecideAction)
   <1>5. TypeOK /\ Inv3_c551_R3_0_I1 /\ DecideAction => Inv3_c551_R3_0_I1' BY DEF TypeOK,DecideAction,Decide,Inv3_c551_R3_0_I1
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
