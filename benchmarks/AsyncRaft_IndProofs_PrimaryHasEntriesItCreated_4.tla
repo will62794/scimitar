@@ -28,13 +28,29 @@ LEMMA StaticQuorumsOverlap == \A Q1,Q2 \in Quorum : Q1 \cap Q2 # {}
 
 LEMMA ExistsMax == \A S \in SUBSET Nat : S # {} => \E m \in S : m = Max(S)
 
+LEMMA ServerStateType == 
+    \A s \in Server : 
+        /\ state[s] \in {Leader, Candidate, Follower}
+        /\ state[s] # Follower <=> state[s] \in {Leader, Candidate}
+
 \* Proof Graph Stats
 \* ==================
 \* seed: 4
 \* num proof graph nodes: 31
 \* num proof obligations: 279
-Safety == H_PrimaryHasEntriesItCreated
-Inv0_33b0_R0_0_I0 == \A VARI \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : \A VARLOGINDI \in LogIndices : ((VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \/ (~(VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\ state[VARI] = Leader)) \/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))
+
+
+\*H_PrimaryHasEntriesItCreated
+Safety == 
+    \A i,j \in Server :
+    (state[i] = Leader) => 
+    \* Can't be that another node has an entry in this primary's term
+    \* but the primary doesn't have it.
+        ~(\E k \in DOMAIN log[j] :
+            /\ log[j][k] = currentTerm[i]
+            /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k]))
+            
+Inv0_33b0_R0_0_I0 == \A VARI \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : ( (((VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\ state[VARI] = Leader)) ) => ((VARMAEREQ.mprevLogIndex + 1) \in DOMAIN log[VARI] /\ log[VARI][VARMAEREQ.mprevLogIndex + 1] = currentTerm[VARI]) )
 Inv24_ed8d_R0_1_I0 == \A VARI \in Server : \A VARJ \in Server : (~((state[VARI] = Candidate /\ VARI # VARJ)) \/ (~(votesGranted[VARI] \in Quorum)) \/ (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])))
 Inv15_7bad_R0_2_I0 == \A VARI \in Server : \A VARJ \in Server : (~((state[VARI] = Leader /\ VARI # VARJ /\ currentTerm[VARI] = currentTerm[VARJ])) \/ (~((state[VARJ] = Leader))))
 Inv12_e9c6_R1_1_I0 == \A VARI \in Server : \A VARJ \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : (~((state[VARI] = Candidate /\ VARI # VARJ)) \/ (~(VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI])) \/ (~(votesGranted[VARI] \in Quorum)))
@@ -112,10 +128,10 @@ ASSUME A2 == (Leader # Follower) /\ (Leader # Candidate)
 ASSUME A3 == (Follower # Candidate)
 ASSUME A4 == Server = Server
 ASSUME A5 == Quorum \subseteq SUBSET Server /\ {} \notin Quorum /\ Quorum # {} /\ \A s \in Server : {s} \notin Quorum
-ASSUME A6 == MaxLogLen \in Nat
-ASSUME A7 == MaxTerm \in Nat
+ASSUME A6 == MaxLogLen \in Nat /\ MaxLogLen >= 1
+ASSUME A7 == MaxTerm \in Nat /\ MaxTerm >= 1
 
-USE AddingToQuorumRemainsQuorum,StaticQuorumsOverlap, FS_Union, FS_Singleton, FS_EmptySet,FS_Subset,ExistsMax DEF LastTerm
+USE AddingToQuorumRemainsQuorum,StaticQuorumsOverlap, FS_Union, FS_Singleton, FS_EmptySet,FS_Subset,ExistsMax,ServerStateType DEF LastTerm
 
 \* Helper finitized assumption on Server as check for some harder TLAPS proof obligations.
 ASSUME TWO_SERVERS_Assumption == Server = {1,2}
@@ -310,7 +326,7 @@ THEOREM L_0 == TypeOK /\ TypeOK /\ Next => TypeOK'
 \* (ROOT SAFETY PROP)
 \*** Safety
 THEOREM L_1 == TypeOK /\ Inv24_ed8d_R0_1_I0 /\ Inv15_7bad_R0_2_I0 /\ Inv0_33b0_R0_0_I0 /\ Safety /\ Next => Safety'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7 DEF Safety
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7 DEF Safety, Inv0_33b0_R0_0_I0
   \* (Safety,RequestVoteAction)
   <1>1. TypeOK /\ Safety /\ RequestVoteAction => Safety' BY DEF TypeOK,RequestVoteAction,RequestVote,Safety,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated
   \* (Safety,UpdateTermAction)
@@ -322,11 +338,16 @@ THEOREM L_1 == TypeOK /\ Inv24_ed8d_R0_1_I0 /\ Inv15_7bad_R0_2_I0 /\ Inv0_33b0_R
                         Safety,
                         TRUE,
                         NEW i \in Server,
-                        BecomeLeader(i)
-                 PROVE  Safety'
-      BY DEF BecomeLeaderAction
+                        BecomeLeader(i),
+                        NEW i_1 \in Server', NEW j \in Server',
+                        (state[i_1] = Leader)'
+                 PROVE  (~(\E k \in DOMAIN log[j] :
+                             /\ log[j][k] = currentTerm[i_1]
+                             /\ ~\E ind \in DOMAIN log[i_1] : (ind = k /\ log[i_1][k] = log[j][k])))'
+      BY DEF BecomeLeaderAction, Safety
     <2> QED
-      BY SMTT(300),FIVE_SERVERS_Assumption DEF TypeOK,Inv24_ed8d_R0_1_I0,BecomeLeaderAction,BecomeLeader,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated
+      BY SMTT(300), FIVE_SERVERS_Assumption DEF TypeOK,Inv24_ed8d_R0_1_I0,BecomeLeaderAction,BecomeLeader,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated
+    
   \* (Safety,ClientRequestAction)
   <1>4. TypeOK /\ Inv15_7bad_R0_2_I0 /\ Safety /\ ClientRequestAction => Safety' BY DEF TypeOK,Inv15_7bad_R0_2_I0,ClientRequestAction,ClientRequest,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated
   \* (Safety,AppendEntriesAction)
@@ -342,46 +363,24 @@ THEOREM L_1 == TypeOK /\ Inv24_ed8d_R0_1_I0 /\ Inv15_7bad_R0_2_I0 /\ Inv0_33b0_R
                         Safety,
                         NEW m \in appendEntriesRequestMsgs,
                         AcceptAppendEntriesRequestAppend(m)
-                 PROVE  H_PrimaryHasEntriesItCreated'
+                 PROVE  Safety'
       BY DEF AcceptAppendEntriesRequestAppendAction
+      
     <2> QED
+      <3> USE SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties 
+            DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
       <3> SUFFICES ASSUME NEW i \in Server', NEW j \in Server',
                           (state[i] = Leader)'
                    PROVE  (~(\E k \in DOMAIN log[j] :
                                /\ log[j][k] = currentTerm[i]
-                               /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k]) 
-                               ))'
-        BY DEF H_PrimaryHasEntriesItCreated
-      <3>1. ((\A k \in DOMAIN log[j] :
-                               ~(/\ log[j][k] = currentTerm[i]
-                               /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k])) 
-                      
-                               ))'
-        <4> SUFFICES ASSUME NEW k \in (DOMAIN log[j])'
-                     PROVE  (~(/\ log[j][k] = currentTerm[i]
-                             /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k])))'
-          OBVIOUS
-        <4> log'[m.mdest] = Append(log[m.mdest], (m.mentries)[1])
-\*        <4> log'[Len(log'[m.mdest])] = Append(log'[m.mdest], (m.mentries)[1])
-           BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,SMTT(3000),TWO_SERVERS_Assumption 
-                 DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
-         <4> Len(log'[m.mdest]) = Len(log[m.mdest]) + 1
-             BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,SMTT(3000),TWO_SERVERS_Assumption 
-         <4> Append(log[m.mdest], m.mentries[1])[Len(log[m.mdest])+1] = m.mentries[1]
-          BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,TWO_SERVERS_Assumption 
-           DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
-         <4> log'[m.mdest][Len(log[m.mdest])+1] = (m.mentries)[1]
-           BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,AppendIsConcat,TWO_SERVERS_Assumption 
-           DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
-        <4> QED
-                 BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,SMTT(3000),TWO_SERVERS_Assumption 
-                 DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
-                               
-               
-      
-      <3> QED
-        BY SubSeqProperties,EmptySeq,LenProperties,ElementOfSeq,AppendProperties,SMTT(3000),TWO_SERVERS_Assumption 
-        DEF LogOk,CanAppend,TypeOK,Inv0_33b0_R0_0_I0,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,LogIndices,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated,AppendEntriesRequestType
+                               /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k])))'
+        BY DEF Safety
+      <3>1. CASE m.mdest # j BY <3>1
+      <3>2. CASE m.mdest = j /\ state[i] # Leader BY <3>2
+      <3>3. CASE m.mdest = j /\ state[i] = Leader /\ m.mentries[1] = currentTerm[i]
+        <4>1. m.mprevLogIndex + 1 \in DOMAIN log[i] BY <3>3
+        <4>2. QED BY <4>1
+      <3> QED BY <3>1,<3>2, <3>3
       
   \* (Safety,HandleAppendEntriesResponseAction)
   <1>9. TypeOK /\ Safety /\ HandleAppendEntriesResponseAction => Safety' BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,Safety,H_OnePrimaryPerTerm,H_PrimaryHasEntriesItCreated
@@ -1269,7 +1268,7 @@ THEOREM L_22 == TypeOK /\ Inv166_e30e_R11_0_I1 /\ Inv40_6261_R15_1_I1 /\ Inv82_3
                                    /\ currentTerm[n] = log[s][i_1] => (votedFor[n] = u))'
         BY DEF H_LogEntryInTermImpliesSafeAtTerm
       <3> QED
-        BY SMTT(3000),TWO_SERVERS_Assumption DEF TypeOK,RequestVoteAction,RequestVote,Inv4_c57a_R6_2_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+        BY TWO_SERVERS_Assumption DEF TypeOK,RequestVoteAction,RequestVote,Inv4_c57a_R6_2_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
       
     <2>2. (currentTerm = currentTerm)'
       BY DEF TypeOK,RequestVoteAction,RequestVote,Inv4_c57a_R6_2_I1,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
