@@ -5422,7 +5422,8 @@ class InductiveInvGen():
                                     if x in n:
                                         label = key_lemmas[x]
                                         style+=",keylemmanode"
-                                for x in set(es_support).union(set(anc)):
+                                # for x in set(es_support).union(set(anc)):
+                                for x in (set(anc)):
                                     if x in n:
                                         style += ",es_support"
                                 
