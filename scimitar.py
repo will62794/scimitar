@@ -2462,7 +2462,7 @@ class InductiveInvGen():
                         if c[0] == "Safety":
                             defname = c[1]
                         if defname in defs:
-                            conjunct_vars = set(self.spec_obj_with_lemmas.get_vars_in_def(defname)[0])
+                            conjunct_vars = set(self.spec_obj_with_lemmas.get_vars_in_def(defname, ignore_unchanged=False)[0])
                             var_slice_set = set(var_slice)
                             if c[0] == "Safety":
                                 safety_conjunct_vars = conjunct_vars
@@ -4780,7 +4780,7 @@ class InductiveInvGen():
                 print("action updated vars:", action_updated_vars)
                 vars_in_action_non_updated,_ = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_action_opname, ignore_update_expressions=True)
                 logging.info(f"Getting variables in lemma definition: {k_cti_lemma}")
-                vars_in_lemma_defs = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_lemma)[0]
+                vars_in_lemma_defs = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_lemma, ignore_unchanged=False)[0]
 
                 lemma_action_coi = self.spec_obj_with_lemmas.compute_coi(None, None, None,action_updated_vars, vars_in_action_non_updated, vars_in_lemma_defs)
                 print("Lemma-action COI")
