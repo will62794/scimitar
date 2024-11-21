@@ -5223,7 +5223,8 @@ class InductiveInvGen():
             anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
         # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
         print("Ancestors:", len(anc))
-        print(anc)
+        if len(anc) > 0:
+            print(anc)
 
         cycles = nx.recursive_simple_cycles(G)
         print("Cycles:", len(cycles))
