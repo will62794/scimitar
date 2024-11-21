@@ -5441,10 +5441,10 @@ class InductiveInvGen():
                 "Safety_AcceptAppendEntriesRequestAppendAction" in e[1],
                 "Inv0_33b0_R0_0_I0_AppendEntriesAction" in e[1],
                 "Inv0_33b0_R0_0_I0_AppendEntriesAction" in e[0],
-                "Inv10423_6a6e_R0_1_I2_AcceptAppendEntriesRequestAppendAction" in e[1],
-                "Inv10423_6a6e_R0_1_I2_AcceptAppendEntriesRequestAppendAction" in e[0],
-                "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[1],
-                "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[0],
+                "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction" in e[1],
+                "Inv24_ed8d_R0_1_I0_AcceptAppendEntriesRequestAppendAction" in e[0],
+                "Inv12_e9c6_R1_1_I0_AppendEntriesAction" in e[1],
+                "Inv12_e9c6_R1_1_I0_AppendEntriesAction" in e[0],
             ]
             attrs = {}
             color_cycles = False
