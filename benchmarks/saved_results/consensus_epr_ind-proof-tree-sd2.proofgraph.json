@@ -1,0 +1,498 @@
+{
+  "proof_graph": {
+    "edges": [
+      [
+        "Safety_DecideAction",
+        "Safety"
+      ],
+      [
+        "Safety_DecideAction",
+        "Safety"
+      ],
+      [
+        "Safety_DecideAction",
+        "Safety"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2",
+        "Safety_DecideAction"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_DecideAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv1800_bd46_R1_0_I2",
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv302_e68b_R1_0_I2",
+        "Inv669_8c67_R0_0_I2_BecomeLeaderAction"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_DecideAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv669_8c67_R0_0_I2_DecideAction",
+        "Inv669_8c67_R0_0_I2"
+      ],
+      [
+        "Inv0_743a_R1_1_I2",
+        "Inv669_8c67_R0_0_I2_DecideAction"
+      ],
+      [
+        "Inv1800_bd46_R1_0_I2_RecvVoteAction",
+        "Inv1800_bd46_R1_0_I2"
+      ],
+      [
+        "Inv1800_bd46_R1_0_I2_RecvVoteAction",
+        "Inv1800_bd46_R1_0_I2"
+      ],
+      [
+        "Inv1800_bd46_R1_0_I2_RecvVoteAction",
+        "Inv1800_bd46_R1_0_I2"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2",
+        "Inv1800_bd46_R1_0_I2_RecvVoteAction"
+      ],
+      [
+        "Inv302_e68b_R1_0_I2_DecideAction",
+        "Inv302_e68b_R1_0_I2"
+      ],
+      [
+        "Inv302_e68b_R1_0_I2_DecideAction",
+        "Inv302_e68b_R1_0_I2"
+      ],
+      [
+        "Inv302_e68b_R1_0_I2_DecideAction",
+        "Inv302_e68b_R1_0_I2"
+      ],
+      [
+        "Inv3_c551_R3_0_I1",
+        "Inv302_e68b_R1_0_I2_DecideAction"
+      ],
+      [
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction",
+        "Inv0_743a_R1_1_I2"
+      ],
+      [
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction",
+        "Inv0_743a_R1_1_I2"
+      ],
+      [
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction",
+        "Inv0_743a_R1_1_I2"
+      ],
+      [
+        "Inv1800_bd46_R1_0_I2",
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction"
+      ],
+      [
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction",
+        "Inv0_743a_R1_1_I2"
+      ],
+      [
+        "Inv3_c551_R3_0_I1",
+        "Inv0_743a_R1_1_I2_BecomeLeaderAction"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_RecvVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_SendVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_RecvVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_RecvVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv159_c18c_R5_0_I2",
+        "Inv2322_7d97_R2_0_I2_RecvVoteAction"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_SendVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv2322_7d97_R2_0_I2_SendVoteAction",
+        "Inv2322_7d97_R2_0_I2"
+      ],
+      [
+        "Inv115_c08e_R5_1_I1",
+        "Inv2322_7d97_R2_0_I2_SendVoteAction"
+      ],
+      [
+        "Inv159_c18c_R5_0_I2_SendVoteAction",
+        "Inv159_c18c_R5_0_I2"
+      ],
+      [
+        "Inv159_c18c_R5_0_I2_SendVoteAction",
+        "Inv159_c18c_R5_0_I2"
+      ],
+      [
+        "Inv159_c18c_R5_0_I2_SendVoteAction",
+        "Inv159_c18c_R5_0_I2"
+      ],
+      [
+        "Inv6_4a42_R7_0_I1",
+        "Inv159_c18c_R5_0_I2_SendVoteAction"
+      ],
+      [
+        "Inv115_c08e_R5_1_I1_RecvVoteAction",
+        "Inv115_c08e_R5_1_I1"
+      ],
+      [
+        "Inv115_c08e_R5_1_I1_RecvVoteAction",
+        "Inv115_c08e_R5_1_I1"
+      ],
+      [
+        "Inv115_c08e_R5_1_I1_RecvVoteAction",
+        "Inv115_c08e_R5_1_I1"
+      ],
+      [
+        "Inv6_4a42_R7_0_I1",
+        "Inv115_c08e_R5_1_I1_RecvVoteAction"
+      ]
+    ],
+    "nodes": {
+      "Safety": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "H_NoConflictingValues",
+        "order": 1,
+        "depth": 0,
+        "is_root": true
+      },
+      "Safety_DecideAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 68,
+        "coi_vars": [
+          "leader",
+          "decided"
+        ],
+        "num_grammar_preds": 8,
+        "num_invs_generated_per_iter": {
+          "1": 18,
+          "2": 114,
+          "3": 1096
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 75.25627493858337,
+        "latest_elimination_iter": 3
+      },
+      "Inv669_8c67_R0_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : (decided[VARI] = {}) \\/ (~(decided[VARJ] = {}) \\/ (~(leader[VARJ])))",
+        "order": 2,
+        "depth": 1
+      },
+      "Inv669_8c67_R0_0_I2_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 848,
+        "coi_vars": [
+          "votes",
+          "leader",
+          "decided"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 26,
+          "2": 507,
+          "3": 11170
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 198.61480855941772,
+        "latest_elimination_iter": 3
+      },
+      "Inv669_8c67_R0_0_I2_DecideAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 5,
+        "coi_vars": [
+          "leader",
+          "decided"
+        ],
+        "num_grammar_preds": 8,
+        "num_invs_generated_per_iter": {
+          "1": 2,
+          "2": 4,
+          "3": 5
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 95.15167164802551,
+        "latest_elimination_iter": 3
+      },
+      "Inv1800_bd46_R1_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARI, VARK)) \\/ (~(VARJ \\in votes[VARK])) \\/ (~(VARJ \\in votes[VARI]))",
+        "order": 3,
+        "depth": 2
+      },
+      "Inv302_e68b_R1_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\E VARQJ \\in Quorum : (VARQJ = votes[VARI]) \\/ ((decided[VARI] = {}))",
+        "order": 4,
+        "depth": 2
+      },
+      "Inv0_743a_R1_1_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : (VARI = VARJ /\\ leader = leader) \\/ (~(leader[VARI]) \\/ (~(leader[VARJ])))",
+        "order": 5,
+        "depth": 2
+      },
+      "Inv1800_bd46_R1_0_I2_RecvVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 880,
+        "coi_vars": [
+          "vote_msg",
+          "votes"
+        ],
+        "num_grammar_preds": 14,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 185,
+          "3": 4467
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 144.56265377998352,
+        "latest_elimination_iter": 3
+      },
+      "Inv2322_7d97_R2_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARI, VARK)) \\/ (~(<<VARJ,VARI>> \\in vote_msg) \\/ (~(VARJ \\in votes[VARK])))",
+        "order": 6,
+        "depth": 3
+      },
+      "Inv302_e68b_R1_0_I2_DecideAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 875,
+        "coi_vars": [
+          "votes",
+          "leader",
+          "decided"
+        ],
+        "num_grammar_preds": 19,
+        "num_invs_generated_per_iter": {
+          "1": 12,
+          "2": 7
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 62.4247727394104,
+        "latest_elimination_iter": 2
+      },
+      "Inv3_c551_R3_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\E VARQJ \\in Quorum : (VARQJ = votes[VARI]) \\/ (~(leader[VARI]))",
+        "order": 7,
+        "depth": 3
+      },
+      "Inv0_743a_R1_1_I2_BecomeLeaderAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 808,
+        "coi_vars": [
+          "votes",
+          "leader"
+        ],
+        "num_grammar_preds": 15,
+        "num_invs_generated_per_iter": {
+          "1": 5
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 91.01930522918701,
+        "latest_elimination_iter": 1
+      },
+      "Inv2322_7d97_R2_0_I2_RecvVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 817,
+        "coi_vars": [
+          "vote_msg",
+          "votes"
+        ],
+        "num_grammar_preds": 14,
+        "num_invs_generated_per_iter": {
+          "1": 6,
+          "2": 58,
+          "3": 268
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 200.53906750679016,
+        "latest_elimination_iter": 3
+      },
+      "Inv2322_7d97_R2_0_I2_SendVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "vote_request_msg",
+          "voted",
+          "vote_msg",
+          "votes"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 14,
+          "2": 174
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 187.82965302467346,
+        "latest_elimination_iter": 2
+      },
+      "Inv159_c18c_R5_0_I2": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARJ, VARK)) \\/ (~(<<VARI,VARJ>> \\in vote_msg) \\/ (~(<<VARI,VARK>> \\in vote_msg)))",
+        "order": 8,
+        "depth": 4
+      },
+      "Inv115_c08e_R5_1_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : (voted[VARJ]) \\/ (~(VARJ \\in votes[VARI]))",
+        "order": 9,
+        "depth": 4
+      },
+      "Inv159_c18c_R5_0_I2_SendVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 1600,
+        "coi_vars": [
+          "vote_request_msg",
+          "voted",
+          "vote_msg",
+          "votes"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 10,
+          "2": 10
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 104.26763486862183,
+        "latest_elimination_iter": 2
+      },
+      "Inv6_4a42_R7_0_I1": {
+        "discharged": true,
+        "is_lemma": true,
+        "expr": "\\A VARI \\in Node : \\A VARJ \\in Node : (voted[VARI]) \\/ (~(<<VARI,VARJ>> \\in vote_msg))",
+        "order": 10,
+        "depth": 5
+      },
+      "Inv115_c08e_R5_1_I1_RecvVoteAction": {
+        "ctis_remaining": 0,
+        "total_initial_ctis": 911,
+        "coi_vars": [
+          "voted",
+          "vote_msg",
+          "votes"
+        ],
+        "num_grammar_preds": 17,
+        "num_invs_generated_per_iter": {
+          "1": 7
+        },
+        "is_action": true,
+        "discharged": true,
+        "time_spent": 53.248100996017456,
+        "latest_elimination_iter": 1
+      }
+    },
+    "safety": "H_NoConflictingValues",
+    "curr_node": "Inv115_c08e_R5_1_I1_RecvVoteAction"
+  },
+  "strengthening_conjuncts": [
+    [
+      "Inv669_8c67_R0_0_I2",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : (decided[VARI] = {}) \\/ (~(decided[VARJ] = {}) \\/ (~(leader[VARJ])))",
+      "(decided[VARI] = {}) \\/ (~(decided[VARJ] = {}) \\/ (~(leader[VARJ])))"
+    ],
+    [
+      "Inv1800_bd46_R1_0_I2",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARI, VARK)) \\/ (~(VARJ \\in votes[VARK])) \\/ (~(VARJ \\in votes[VARI]))",
+      "(NodesEq(VARI, VARK)) \\/ (~(VARJ \\in votes[VARK])) \\/ (~(VARJ \\in votes[VARI]))"
+    ],
+    [
+      "Inv302_e68b_R1_0_I2",
+      "\\A VARI \\in Node : \\E VARQJ \\in Quorum : (VARQJ = votes[VARI]) \\/ ((decided[VARI] = {}))",
+      "(VARQJ = votes[VARI]) \\/ ((decided[VARI] = {}))"
+    ],
+    [
+      "Inv0_743a_R1_1_I2",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : (VARI = VARJ /\\ leader = leader) \\/ (~(leader[VARI]) \\/ (~(leader[VARJ])))",
+      "(VARI = VARJ /\\ leader = leader) \\/ (~(leader[VARI]) \\/ (~(leader[VARJ])))"
+    ],
+    [
+      "Inv2322_7d97_R2_0_I2",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARI, VARK)) \\/ (~(<<VARJ,VARI>> \\in vote_msg) \\/ (~(VARJ \\in votes[VARK])))",
+      "(NodesEq(VARI, VARK)) \\/ (~(<<VARJ,VARI>> \\in vote_msg) \\/ (~(VARJ \\in votes[VARK])))"
+    ],
+    [
+      "Inv3_c551_R3_0_I1",
+      "\\A VARI \\in Node : \\E VARQJ \\in Quorum : (VARQJ = votes[VARI]) \\/ (~(leader[VARI]))",
+      "(VARQJ = votes[VARI]) \\/ (~(leader[VARI]))"
+    ],
+    [
+      "Inv159_c18c_R5_0_I2",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : (NodesEq(VARJ, VARK)) \\/ (~(<<VARI,VARJ>> \\in vote_msg) \\/ (~(<<VARI,VARK>> \\in vote_msg)))",
+      "(NodesEq(VARJ, VARK)) \\/ (~(<<VARI,VARJ>> \\in vote_msg) \\/ (~(<<VARI,VARK>> \\in vote_msg)))"
+    ],
+    [
+      "Inv115_c08e_R5_1_I1",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : (voted[VARJ]) \\/ (~(VARJ \\in votes[VARI]))",
+      "(voted[VARJ]) \\/ (~(VARJ \\in votes[VARI]))"
+    ],
+    [
+      "Inv6_4a42_R7_0_I1",
+      "\\A VARI \\in Node : \\A VARJ \\in Node : (voted[VARI]) \\/ (~(<<VARI,VARJ>> \\in vote_msg))",
+      "(voted[VARI]) \\/ (~(<<VARI,VARJ>> \\in vote_msg))"
+    ]
+  ],
+  "roundi": 0,
+  "num_rounds": 45,
+  "num_iters": 5,
+  "seed": 2,
+  "stats": {
+    "num_lemma_nodes": 10,
+    "num_failed_lemma_nodes": 0,
+    "state_cache_duration_secs": 0,
+    "invcheck_duration_secs": 0,
+    "ctielimcheck_duration_secs": 0,
+    "total_duration_secs": 2.359153985977173,
+    "num_preds": 25,
+    "date": "2024-11-19 23:38:33"
+  }
+}
