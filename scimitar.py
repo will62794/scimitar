@@ -5422,7 +5422,7 @@ class InductiveInvGen():
                                     if x in n:
                                         label = key_lemmas[x]
                                         style+=",keylemmanode"
-                                for x in es_support or x in anc:
+                                for x in set(es_support).union(set(anc)):
                                     if x in n:
                                         style += ",es_support"
                                 
@@ -5438,8 +5438,8 @@ class InductiveInvGen():
             conds = [
                 "Safety_AcceptAppendEntriesRequestAppendAction" in e[0],
                 "Safety_AcceptAppendEntriesRequestAppendAction" in e[1],
-                "Inv7970_d881_R0_0_I2_AppendEntriesAction" in e[1],
-                "Inv7970_d881_R0_0_I2_AppendEntriesAction" in e[0],
+                "Inv0_33b0_R0_0_I0_AppendEntriesAction" in e[1],
+                "Inv0_33b0_R0_0_I0_AppendEntriesAction" in e[0],
                 "Inv10423_6a6e_R0_1_I2_AcceptAppendEntriesRequestAppendAction" in e[1],
                 "Inv10423_6a6e_R0_1_I2_AcceptAppendEntriesRequestAppendAction" in e[0],
                 "Inv13260_979f_R1_1_I2_AppendEntriesAction" in e[1],
