@@ -5403,6 +5403,9 @@ class InductiveInvGen():
                         else:
                             if n != "Safety" and self.specname == "AsyncRaft":
                                 style="lemmanode_detailed_raft"
+                            if n != "Safety" and self.specname != "AsyncRaft":
+                                style="lemmanode_detailed"
+
                             key_lemmas = {"441b": "QuorumsSafeAtTerms", "404d":"ElectionSafety","6a6e": "CandidateElectImpliesNoLogsInTerm"}
                             es_support = ["d76d", "8e53", "42ac", "2168", "3acc", "928b", "fe26", "09bb", "82b3", "2c32", "f533", "3715"]
                             if self.specname == "AsyncRaft":
