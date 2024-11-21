@@ -48,6 +48,7 @@ LEMMA EmptyIntersectionImpliesNotBothQuorums ==
 
 USE Fin, FS_Subset, EmptyIntersectionImpliesNotBothQuorums, AddingToQuorumRemainsQuorum, QuorumsAreNodePowersets, EmptyNotInQuorums, QuorumsOverlap, NodeNonEmpty, QuorumsNonEmpty, NodeQuorumType DEF NodesEq
 
+ASSUME FIVE_SERVERS_Assumption == Node = {1,2,3,4,5}
 
 \* mean in-degree: 1.2
 \* median in-degree: 1
@@ -97,6 +98,7 @@ THEOREM L_2 == TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv302_e68b_R1_0_I2 /\ Inv0_743
   <1>3. TypeOK /\ Inv669_8c67_R0_0_I2 /\ RecvVoteAction => Inv669_8c67_R0_0_I2' BY DEF TypeOK,RecvVoteAction,RecvVote,Inv669_8c67_R0_0_I2
   \* (Inv669_8c67_R0_0_I2,BecomeLeaderAction)
   <1>4. TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv302_e68b_R1_0_I2 /\ Inv669_8c67_R0_0_I2 /\ BecomeLeaderAction => Inv669_8c67_R0_0_I2' 
+    <2> USE FIVE_SERVERS_Assumption
     <2> SUFFICES ASSUME TypeOK,
                         Inv1800_bd46_R1_0_I2,
                         Inv302_e68b_R1_0_I2,
@@ -109,7 +111,7 @@ THEOREM L_2 == TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv302_e68b_R1_0_I2 /\ Inv0_743
                  PROVE  ((decided[VARI] = {}) \/ (~(decided[VARJ] = {}) \/ (~(leader[VARJ]))))'
       BY DEF BecomeLeaderAction, Inv669_8c67_R0_0_I2
     <2> QED
-      BY FS_EmptySet, FS_Subset DEF NodesEq,TypeOK,Inv1800_bd46_R1_0_I2,Inv302_e68b_R1_0_I2,BecomeLeaderAction,BecomeLeader,Inv669_8c67_R0_0_I2
+      BY SMTT(35), FS_EmptySet, FS_Subset DEF NodesEq,TypeOK,Inv1800_bd46_R1_0_I2,Inv302_e68b_R1_0_I2,BecomeLeaderAction,BecomeLeader,Inv669_8c67_R0_0_I2
   \* (Inv669_8c67_R0_0_I2,DecideAction)
   <1>5. TypeOK /\ Inv0_743a_R1_1_I2 /\ Inv669_8c67_R0_0_I2 /\ DecideAction => Inv669_8c67_R0_0_I2' BY DEF TypeOK,Inv0_743a_R1_1_I2,DecideAction,Decide,Inv669_8c67_R0_0_I2
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
@@ -239,6 +241,12 @@ THEOREM L_8 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Inv302_e68b_R1_0_I2 /\ Next => Inv
       BY DEF TypeOK,Inv3_c551_R3_0_I1,DecideAction,Decide,Inv302_e68b_R1_0_I2
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
 
+\* Should hold for majority quorums.
+LEMMA SupersetOfQuorumIsAQuorum == 
+    \A S \in SUBSET Node : 
+    \A Q \in Quorum : 
+        (Q \subseteq S /\ (Q # S)) => 
+            (S \in Quorum /\ \E QK \in Quorum : QK = S)
 
 \*** Inv3_c551_R3_0_I1
 THEOREM L_9 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Next => Inv3_c551_R3_0_I1'
@@ -259,7 +267,7 @@ THEOREM L_9 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Next => Inv3_c551_R3_0_I1'
     <2> QED
       BY FS_Subset, FS_Union DEF TypeOK,RecvVoteAction,RecvVote,Inv3_c551_R3_0_I1
   \* (Inv3_c551_R3_0_I1,BecomeLeaderAction)
-  <1>4. TypeOK /\ Inv3_c551_R3_0_I1 /\ BecomeLeaderAction => Inv3_c551_R3_0_I1' 
+  <1>4. TypeOK /\ Inv3_c551_R3_0_I1 /\ BecomeLeaderAction => Inv3_c551_R3_0_I1'
     <2> SUFFICES ASSUME TypeOK,
                         Inv3_c551_R3_0_I1,
                         TRUE,
@@ -269,7 +277,8 @@ THEOREM L_9 == TypeOK /\ Inv3_c551_R3_0_I1 /\ Next => Inv3_c551_R3_0_I1'
                  PROVE  (\E VARQJ \in Quorum : (VARQJ = votes[VARI]) \/ (~(leader[VARI])))'
       BY DEF BecomeLeaderAction, Inv3_c551_R3_0_I1
     <2> QED
-      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
+      BY SupersetOfQuorumIsAQuorum DEF TypeOK,BecomeLeaderAction,BecomeLeader,Inv3_c551_R3_0_I1
+    
   \* (Inv3_c551_R3_0_I1,DecideAction)
   <1>5. TypeOK /\ Inv3_c551_R3_0_I1 /\ DecideAction => Inv3_c551_R3_0_I1' BY DEF TypeOK,DecideAction,Decide,Inv3_c551_R3_0_I1
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
@@ -285,6 +294,7 @@ THEOREM L_10 == TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv3_c551_R3_0_I1 /\ Inv0_743a
   <1>3. TypeOK /\ Inv0_743a_R1_1_I2 /\ RecvVoteAction => Inv0_743a_R1_1_I2' BY DEF TypeOK,RecvVoteAction,RecvVote,Inv0_743a_R1_1_I2
   \* (Inv0_743a_R1_1_I2,BecomeLeaderAction)
   <1>4. TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv3_c551_R3_0_I1 /\ Inv0_743a_R1_1_I2 /\ BecomeLeaderAction => Inv0_743a_R1_1_I2' 
+    <2> USE FIVE_SERVERS_Assumption
     <2> SUFFICES ASSUME TypeOK,
                         Inv1800_bd46_R1_0_I2,
                         Inv3_c551_R3_0_I1,
@@ -297,7 +307,7 @@ THEOREM L_10 == TypeOK /\ Inv1800_bd46_R1_0_I2 /\ Inv3_c551_R3_0_I1 /\ Inv0_743a
                  PROVE  ((VARI = VARJ /\ leader = leader) \/ (~(leader[VARI]) \/ (~(leader[VARJ]))))'
       BY DEF BecomeLeaderAction, Inv0_743a_R1_1_I2
     <2> QED
-      BY DEF TypeOK,Inv1800_bd46_R1_0_I2,Inv3_c551_R3_0_I1,BecomeLeaderAction,BecomeLeader,Inv0_743a_R1_1_I2
+      BY SMTT(35) DEF TypeOK,Inv1800_bd46_R1_0_I2,Inv3_c551_R3_0_I1,BecomeLeaderAction,BecomeLeader,Inv0_743a_R1_1_I2
   \* (Inv0_743a_R1_1_I2,DecideAction)
   <1>5. TypeOK /\ Inv0_743a_R1_1_I2 /\ DecideAction => Inv0_743a_R1_1_I2' BY DEF TypeOK,DecideAction,Decide,Inv0_743a_R1_1_I2
 <1>6. QED BY <1>1,<1>2,<1>3,<1>4,<1>5 DEF Next
