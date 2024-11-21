@@ -4057,7 +4057,7 @@ class InductiveInvGen():
         return
     
     def proofgraph_filename(self):
-        fname = f"{self.specdir}/{self.specname}_ind-proof-tree-sd{self.seed}.proofgraph.json"
+        fname = f"{self.specdir}/{self.specname}_{self.safety}_ind-proof-tree-sd{self.seed}.proofgraph.json"
         return fname
 
     def clean_proof_graph(self):
@@ -4100,18 +4100,23 @@ class InductiveInvGen():
         with open(fname, 'w') as f:
             json.dump(proof_graph_object, f, indent=2)
 
-    def load_proof_graph(self):
+    def load_proof_graph(self, graph_filename=None):
         # Try to load the proof graph from disk.
         fname = self.proofgraph_filename()
+        if graph_filename is not None:
+            fname = graph_filename
         try:
             logging.info(f"Trying to load proof graph from '{fname}'")
             with open(fname) as f:
                 proof_obj = json.load(f)
                 self.proof_graph = proof_obj["proof_graph"]
                 self.strengthening_conjuncts = proof_obj["strengthening_conjuncts"]
-                logging.info(f"Reloaded persisted proof graph from '{fname}'")
+                self.safety = self.proof_graph["safety"]
+                self.seed = proof_obj["seed"]
+                logging.info(f"Reloaded persisted proof graph from '{fname}', with safety property '{self.proof_graph['safety']}' and seed '{self.seed}'")
         except Exception as e:
             logging.info(f"No proof graph loaded from '{fname}': {e}")
+            raise Exception(f"No proof graph could be loaded at path '{fname}'")
 
     def auto_check_simulation_bound(self):
         # Prototype of auto-tuning simulation bounds.
@@ -4119,8 +4124,8 @@ class InductiveInvGen():
         logging.info("Checking simulation bound for all invariants.")
         use_pred_identifiers = self.use_fast_pred_eval
         boolean_style = "tla"
-        NTERMS = 3
-        ninvs = 3000
+        NTERMS = 4
+        ninvs = 10000
         logging.info("Generating %d candidate invariants." % ninvs)
         all_invs = mc.generate_invs(
             self.preds, ninvs, min_num_conjuncts=NTERMS, max_num_conjuncts=NTERMS,quant_vars=self.quant_vars, 
@@ -4262,7 +4267,7 @@ class InductiveInvGen():
             print("action updated vars:", action_updated_vars)
             vars_in_action_non_updated,_ = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_action_opname, ignore_update_expressions=True)
             logging.info(f"Getting variables in lemma definition: {k_cti_lemma}")
-            vars_in_lemma_defs = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_lemma)[0]
+            vars_in_lemma_defs = self.spec_obj_with_lemmas.get_vars_in_def(k_cti_lemma, ignore_unchanged=False)[0]
 
             lemma_action_coi = self.spec_obj_with_lemmas.compute_coi(None, None, None,action_updated_vars, vars_in_action_non_updated, vars_in_lemma_defs)
             print("Lemma-action COI")
@@ -4471,7 +4476,10 @@ class InductiveInvGen():
 
 
         if self.persistent_proof_tree_mode:
-            self.load_proof_graph()
+            if type(self.all_args["persistent_mode"]) == str:
+                self.load_proof_graph(graph_filename=self.all_args["persistent_mode"])
+            else:
+                self.load_proof_graph()
             # If we are just re-checking an existing proof graph, check it and then return.
             if self.recheck_proof_graph:
                 self.render_proof_graph()
@@ -5373,7 +5381,7 @@ class InductiveInvGen():
                         ]
                         if self.specname == "AsyncRaft" and n in proven:
                             # label += "<FONT POINT-SIZE='10'>PROVEN</FONT>"
-                            # penwidth="8"
+                            penwidth="8"
                             pass
                         if n == "Safety":
                             fillcolor="yellow"
@@ -5461,16 +5469,16 @@ class InductiveInvGen():
         # dot.attr(rankdir='LR')
 
         if not save_tex:
-            dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True)
+            dot.render(self.specdir + "/" + self.specname + f"_{self.safety}_ind-proof-tree" + suffix, quiet=True)
             include_incremental = False
             if include_incremental:
                 dot.render(self.specdir + "/" + self.specname + suffix + "_incremental/" + self.specname + suffix + f"_ind-proof-tree_round_{self.latest_roundi}_{self.subround}_{self.latest_elimination_iter}", quiet=True, cleanup=True)
-            dot.render(self.specdir + "/" + self.specname + "_ind-proof-tree" + suffix, quiet=True, format="png")
+            dot.render(self.specdir + "/" + self.specname + f"_{self.safety}_ind-proof-tree" + suffix, quiet=True, format="png")
 
         if save_tex:
             old_stdout = sys.stdout # backup current stdout
             sys.stdout = open(os.devnull, "w")
-            tex_out_file = self.specdir + "/" + self.specname + f"_ind-proof-tree-sd{self.seed}.tex"
+            tex_out_file = self.specdir + "/" + self.specname + f"_{self.safety}_ind-proof-tree-sd{self.seed}.tex"
             figpreamble=f"""
             \Large
             """
@@ -5839,7 +5847,7 @@ if __name__ == "__main__":
     
     # Proof tree related commands.
     parser.add_argument('--proof_tree_mode', help='Run in inductive proof tree mode (EXPERIMENTAL).', default=False, action='store_true')
-    parser.add_argument('--persistent_mode', help='Run in inductive proof tree mode with persistent caching/reloading. (EXPERIMENTAL).', default=False, action='store_true')
+    parser.add_argument('--persistent_mode', help='Run in inductive proof tree mode with persistent caching/reloading. (EXPERIMENTAL). Optional string argument specifies cache directory.', default=False, nargs='?', const=True, type=str)
     parser.add_argument('--interactive', help='Run in interactive proof tree mode (EXPERIMENTAL).', default=False, action='store_true')
     parser.add_argument('--max_proof_node_ctis', help='Maximum number of CTIs per proof node.', type=int, default=5000)
     parser.add_argument('--proof_tree_cmd', help='Proof tree command (EXPERIMENTAL).', default=None, type=str, required=False, nargs="+")
