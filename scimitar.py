@@ -5415,23 +5415,17 @@ class InductiveInvGen():
                             if n != "Safety" and self.specname != "AsyncRaft":
                                 style="lemmanode_detailed"
 
-                            key_lemmas = {"441b": "QuorumsSafeAtTerms", "404d":"ElectionSafety","6a6e": "CandidateElectImpliesNoLogsInTerm"}
+                            key_lemmas = {"441b": "QuorumsSafeAtTerms", "7bad":"ElectionSafety","ed8d": "CandidateElectImpliesNoLogsInTerm"}
                             es_support = ["d76d", "8e53", "42ac", "2168", "3acc", "928b", "fe26", "09bb", "82b3", "2c32", "f533", "3715"]
                             if self.specname == "AsyncRaft":
                                 for x in key_lemmas:
                                     if x in n:
                                         label = key_lemmas[x]
                                         style+=",keylemmanode"
-                                for x in es_support:
+                                for x in es_support or x in anc:
                                     if x in n:
                                         style += ",es_support"
                                 
-                                
-                                # start_node = n
-                                # end_node = "Inv5_404d_R0_2_I1"
-                                # print(self.has_path(data, start_node, end_node))  # Output: True or False
-
-
                 else:
                     label = n
                
