@@ -36,7 +36,7 @@ LEMMA ServerStateType ==
 \* Proof Graph Stats
 \* ==================
 \* seed: 4
-\* num proof graph nodes: 31
+\* num proof graph nodes: 30
 \* num proof obligations: 279
 
 
