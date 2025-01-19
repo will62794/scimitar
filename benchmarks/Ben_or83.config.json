@@ -1,0 +1,51 @@
+{
+    "preds"  :  [
+        "value[p1] = v",
+        "value[p2] = v",
+        "decision[p1] = a",
+        "decision[p2] = a",
+        "decision[p1] = NoDecision",
+        "decision[p2] = NoDecision",
+        "step[p1] = 1",
+        "step[p2] = 1",
+        "step[p1] = 2",
+        "step[p2] = 2",
+        "step[p1] = 3",
+        "step[p2] = 3",
+        "type1[r][p1] = a",
+        "type1[r][p2] = a",
+        "type2D[r][p1] = a",
+        "type2D[r][p2] = a",
+        "type2D[r][p1] = NoDecision",
+        "type2D[r][p2] = NoDecision",
+        "type2Q[r][p1] = b",
+        "type2Q[r][p2] = b",
+        "type2Q[r][p1] = TRUE",
+        "type2Q[r][p2] = TRUE"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "AgreementInv",
+    "constants"  :  [
+        "CONSTANTS",
+        "N = 6",
+        "T = 1",
+        "F = 1",
+        "Rounds = { 1, 2, 3 }"
+    ],
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A p1, p2 \\in Correct: \\A r \\in Rounds: \\A v \\in Values: \\A a \\in AllV: \\A b \\in BOOLEAN: ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": ["p1", "p2"],
+    "model_consts"  :  "",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "lemma_def_expands": {
+        },
+        "action_def_expands":{
+        }
+    }
+}
