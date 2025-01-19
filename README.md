@@ -11,6 +11,7 @@ In order to run the tool you will need the following prerequisites:
 - Java version >= 11
 - Python 3 with pip installed
 - Install Python dependencies with `python3 -m pip install -r requirements.txt`
+- TLA+ Proof Manager ([installation instructions](https://github.com/tlaplus/tlapm))
 
 Note that the scimitar tool makes use of a slightly modified version of the TLC model checker, whose source code can be found [here](https://github.com/will62794/tlaplus/tree/ce9e63ab5242a596b8dec15000b5ed5f97f63300). The binary of this modified version of TLC is included in this repo, so there is no need to download and build it manually.
 
