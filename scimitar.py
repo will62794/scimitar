@@ -435,11 +435,11 @@ class InductiveInvGen():
         # Include a TLAPS proof skeleton.
         alldefs = ",".join(([self.typeok, "Init","Next","IndAuto",self.safety] + conj_def_names))
         proof_lines = [
-            "\* TLAPS Proof skeleton.\n"
-            "\* THEOREM Init => IndAuto \n",
-            "\*  BY DEF " + alldefs + "\n",
-            "\* THEOREM IndAuto /\ Next => IndAuto'\n"
-            "\*  BY DEF " + alldefs + "\n",
+            # "\* TLAPS Proof skeleton.\n",
+            # "\* THEOREM Init => IndAuto \n",
+            # "\*  BY DEF " + alldefs + "\n",
+            # "\* THEOREM IndAuto /\ Next => IndAuto'\n",
+            # "\*  BY DEF " + alldefs + "\n",
         ]
         f.writelines(proof_lines)
         f.write(f"====\n")
@@ -592,8 +592,8 @@ class InductiveInvGen():
 
         invcheck_tla += "\n"
 
-        invcheck_tla += "PredInit == Init /\ InvInit\n"
-        invcheck_tla += "PredNext == Next /\ InvNext\n"
+        invcheck_tla += "PredInit == Init /\\ InvInit\n"
+        invcheck_tla += "PredNext == Next /\\ InvNext\n"
 
         # invcheck_tla += "PredInit == Init\n"
         # invcheck_tla += "PredNext == Next\n"
@@ -1652,8 +1652,8 @@ class InductiveInvGen():
         depth_bound = 3
         invcheck_tla_indcheck += "\n"
         invcheck_tla_indcheck += "CTICheckNext_DepthBoundedReachability ==\n"
-        invcheck_tla_indcheck += f'    /\ TLCGet("level") < {depth_bound}\n'
-        invcheck_tla_indcheck += f"    /\ Next\n"
+        invcheck_tla_indcheck += f'    /\\ TLCGet("level") < {depth_bound}\n'
+        invcheck_tla_indcheck += f"    /\\ Next\n"
         for v in aux_vars:
             invcheck_tla_indcheck += f"    /\\ UNCHANGED {v}\n"
         # for inv in sat_invs_group:
