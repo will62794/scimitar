@@ -225,8 +225,7 @@ RequestVote(i) ==
     /\ requestVoteRequestMsgs' = requestVoteRequestMsgs \cup 
             {[  mtype         |-> RequestVoteRequest,
                 mterm         |-> currentTerm[i] + 1,
-                mlastLogTerm  |-> LastTerm(log[i]),
-                mlastLogIndex |-> Len(log[i]),
+                mlog |-> log[i],
                 msource       |-> i,
                 mdest         |-> j] : j \in Server \ {i}}
     /\ UNCHANGED <<nextIndex, matchIndex, log, commitIndex, appendEntriesRequestMsgs, appendEntriesResponseMsgs, requestVoteResponseMsgs>>
@@ -354,9 +353,9 @@ HandleRequestVoteRequest(m) ==
     /\ m.mterm <= currentTerm[m.mdest]
     /\ LET  i     == m.mdest
             j     == m.msource
-            logOk == \/ m.mlastLogTerm > LastTerm(log[i])
-                     \/ /\ m.mlastLogTerm = LastTerm(log[i])
-                        /\ m.mlastLogIndex >= Len(log[i])
+            logOk == \/ LastTerm(m.mlog) > LastTerm(log[i])
+                     \/ /\ LastTerm(m.mlog) = LastTerm(log[i])
+                        /\ Len(m.mlog) >= Len(log[i])
             grant == /\ m.mterm = currentTerm[i]
                      /\ logOk
                      /\ votedFor[i] \in {Nil, j} 
