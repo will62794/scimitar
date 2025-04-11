@@ -28,8 +28,9 @@ EXTENDS AsyncRaft, Randomization
 RequestVoteRequestTypeBounded == [
     mtype         : {RequestVoteRequest},
     mterm         : Terms,
-    mlastLogTerm  : Terms,
-    mlastLogIndex : LogIndicesWithZero,
+    \* mlastLogTerm  : Terms,
+    \* mlastLogIndex : LogIndicesWithZero,
+    mlog          : BoundedSeq(Terms, MaxMEntriesLen),
     msource       : Server,
     mdest         : Server
 ]
