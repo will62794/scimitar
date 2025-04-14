@@ -228,6 +228,7 @@ class InductiveInvGen():
 
         # The set of all generated invariants discovered so far.
         self.all_sat_invs = set()
+        self.all_sat_invs_rechecked = set()
         self.all_violated_invs = set()
         self.all_checked_invs = set()
 
@@ -3017,7 +3018,11 @@ class InductiveInvGen():
                 # # Consider doing one quick re-check of all invariants at larger parameter bound?
                 # # No caching here.
                 # if "simulation_inv_check" in self.spec_config and self.spec_config["simulation_inv_check"] and "large_instance_inv_check_index" in self.spec_config:
-                if "large_instance_inv_check_index" in self.spec_config and len(new_inv_cands) > 0:
+                # print("all sat:", self.all_sat_invs)
+                already_checked = invs[invi] in self.all_sat_invs_rechecked
+                logging.info("local to re-check: " + invs[invi])
+                logging.info("Already re-checked? " + str(already_checked))
+                if "large_instance_inv_check_index" in self.spec_config and len(new_inv_cands) > 0 and not already_checked:
                     logging.info("+ Doing re-checking at extra parameter bound")
                     extra_constants_obj = list(self.get_config_constant_instances())[0]
                     if self.specname == "AsyncRaft":
@@ -3055,6 +3060,8 @@ class InductiveInvGen():
                         # new_inv_cands.remove(top_new_inv_cand)
                         sorted_invs.remove(top_new_inv_cand)
                         continue
+
+                    self.all_sat_invs_rechecked.add(local_invs_to_check[0])
 
                 if len(new_inv_cands) == 0 and len(existing_inv_cands) > 0:
                     chosen_cand = existing_inv_cands[0]
