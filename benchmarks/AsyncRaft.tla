@@ -383,8 +383,8 @@ HandleRequestVoteResponse(m) ==
                                 IF m.mvoteGranted 
                                     THEN votesGranted[m.mdest] \cup {m.msource} 
                                     ELSE votesGranted[m.mdest]]
-    /\ requestVoteResponseMsgs' = requestVoteResponseMsgs \ {m} \* discard the message.
-    /\ UNCHANGED <<currentTerm, state, votedFor, nextIndex, matchIndex, log, commitIndex, appendEntriesRequestMsgs, appendEntriesResponseMsgs, requestVoteRequestMsgs>>
+    \* /\ requestVoteResponseMsgs' = requestVoteResponseMsgs \* \ {m} \* discard the message.
+    /\ UNCHANGED <<currentTerm, state, votedFor, nextIndex, matchIndex, log, commitIndex, appendEntriesRequestMsgs, appendEntriesResponseMsgs, requestVoteRequestMsgs, requestVoteResponseMsgs>>
 
 \* ACTION: RejectAppendEntriesRequest -------------------
 \* Either the term of the message is stale or the message
