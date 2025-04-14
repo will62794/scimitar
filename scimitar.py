@@ -228,7 +228,7 @@ class InductiveInvGen():
 
         # The set of all generated invariants discovered so far.
         self.all_sat_invs = set()
-        self.all_sat_invs_rechecked = set()
+        self.all_sat_invs_rechecked = {}
         self.all_violated_invs = set()
         self.all_checked_invs = set()
 
@@ -3021,7 +3021,14 @@ class InductiveInvGen():
                 # print("all sat:", self.all_sat_invs)
                 already_checked = invs[invi] in self.all_sat_invs_rechecked
                 logging.info("local to re-check: " + invs[invi])
-                logging.info("Already re-checked? " + str(already_checked))
+                status = self.all_sat_invs_rechecked[invs[invi]] if already_checked else ""
+                logging.info("Already re-checked? " + str(already_checked) + status)
+
+                if already_checked and self.all_sat_invs_rechecked[invs[invi]] == "violated":
+                    print("!!!!! ERROR: Already checked and violated.")
+                    sorted_invs.remove(top_new_inv_cand)
+                    continue
+
                 if "large_instance_inv_check_index" in self.spec_config and len(new_inv_cands) > 0 and not already_checked:
                     logging.info("+ Doing re-checking at extra parameter bound")
                     extra_constants_obj = list(self.get_config_constant_instances())[0]
@@ -3035,6 +3042,7 @@ class InductiveInvGen():
                         print("!!!!! ERROR: Some new conjuncts violated at extra bound.")
                         # new_inv_cands.remove(top_new_inv_cand)
                         sorted_invs.remove(top_new_inv_cand)
+                        self.all_sat_invs_rechecked[invs[invi]] = "violated"
                         continue
 
                     logging.info("+ Doing re-checking at larger parameter bound")
@@ -3059,9 +3067,10 @@ class InductiveInvGen():
                         print("!!!!! ERROR: Some new conjuncts violated at larger bound.")
                         # new_inv_cands.remove(top_new_inv_cand)
                         sorted_invs.remove(top_new_inv_cand)
+                        self.all_sat_invs_rechecked[invs[invi]] = "violated"
                         continue
 
-                    self.all_sat_invs_rechecked.add(local_invs_to_check[0])
+                    self.all_sat_invs_rechecked[local_invs_to_check[0]] = "sat"
 
                 if len(new_inv_cands) == 0 and len(existing_inv_cands) > 0:
                     chosen_cand = existing_inv_cands[0]
