@@ -5221,9 +5221,9 @@ class InductiveInvGen():
              # print(e)
             G.add_edge(e[0], e[1])
 
-        print("EDGES:", G.number_of_edges())
-        print(len(list(G.nodes)))
-        print(list(G.nodes))
+        # print("EDGES:", G.number_of_edges())
+        # print(len(list(G.nodes)))
+        # print(list(G.nodes))
         anc = []
         anc2 = []
         if self.specname == "AsyncRaft" and self.safety == "H_PrimaryHasEntriesItCreated":
