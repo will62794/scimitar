@@ -3022,7 +3022,7 @@ class InductiveInvGen():
                 already_checked = invs[invi] in self.all_sat_invs_rechecked
                 logging.info("local to re-check: " + invs[invi])
                 status = self.all_sat_invs_rechecked[invs[invi]] if already_checked else ""
-                logging.info("Already re-checked? " + str(already_checked) + ", " status)
+                logging.info("Already re-checked? " + str(already_checked) + ", " + status)
 
                 if already_checked and self.all_sat_invs_rechecked[invs[invi]] == "violated":
                     print("!!!!! ERROR: Already checked and violated.")
