@@ -4301,20 +4301,41 @@ class InductiveInvGen():
                     pre_props = None
                     if k_cti_action in pre_props_per_action:
                         pre_props = pre_props_per_action[k_cti_action]
-                    k_ctis_action_new, k_cti_traces = self.generate_ctis(props=[obl_pred_tup], 
-                                                                    specname_tag=(obl + "_" + k_cti_action), actions=[k_cti_action], 
-                                                                    ignore_vars=cti_ignore_vars, constants_obj=cobj,
-                                                                    pre_props=pre_props, defs_to_add=defs_to_add)
-                    for c in k_ctis_action_new:
+
+
+                    # Generate in smaller batches until we've surpasssed max number of CTIs we want.
+                    all_new_action_ctis = []
+                    batch_i = 0
+                    num_batches = 3
+                    while len(all_new_action_ctis) < self.MAX_NUM_CTIS_PER_ROUND and batch_i < num_batches:
+                        logging.info(f"Action CTI generation batch {batch_i}, all_new_action_ctis={len(all_new_action_ctis)}, MAX={self.MAX_NUM_CTIS_PER_ROUND}")
+                        batch_i += 1
+
+                        orig_sample_states = self.target_sample_states
+                        orig_sample_time_limit_ms = self.target_sample_time_limit_ms
+
+                        self.target_sample_states = orig_sample_states // num_batches
+                        self.target_sample_time_limit_ms = orig_sample_time_limit_ms // num_batches
+
+                        k_ctis_action_new, k_cti_traces = self.generate_ctis(props=[obl_pred_tup], 
+                                                                        specname_tag=(obl + "_" + k_cti_action), actions=[k_cti_action], 
+                                                                        ignore_vars=cti_ignore_vars, constants_obj=cobj,
+                                                                        pre_props=pre_props, defs_to_add=defs_to_add)
+                        all_new_action_ctis.extend(k_ctis_action_new)
+
+                        self.target_sample_states = orig_sample_states
+                        self.target_sample_time_limit_ms = orig_sample_time_limit_ms
+
+                    for c in all_new_action_ctis:
                         c.constants_obj = cobj
-                    print("Number of new action ctis:", len(k_ctis_action_new))
-                    if len(k_ctis_action_new) > self.MAX_NUM_CTIS_PER_ROUND:
-                        logging.info(f"Limiting num k-CTIs to {self.MAX_NUM_CTIS_PER_ROUND} of {len(k_ctis_action_new)} total found.")
-                        sorted_k_ctis_new = sorted(list(k_ctis_action_new))
+                    print("Number of new action ctis:", len(all_new_action_ctis))
+                    if len(all_new_action_ctis) > self.MAX_NUM_CTIS_PER_ROUND:
+                        logging.info(f"Limiting num k-CTIs to {self.MAX_NUM_CTIS_PER_ROUND} of {len(all_new_action_ctis)} total found.")
+                        sorted_k_ctis_new = sorted(list(all_new_action_ctis))
                         random.shuffle(sorted_k_ctis_new)
                         k_ctis_action += sorted_k_ctis_new[:self.MAX_NUM_CTIS_PER_ROUND]
                     else:
-                        k_ctis_action += k_ctis_action_new 
+                        k_ctis_action += all_new_action_ctis 
             
             k_ctis.update(k_ctis_action)
             logging.info("Number of action k-CTIs found: {}. (took {:.2f} secs)".format(len(k_ctis_action), (time.time()-action_tstart)))
