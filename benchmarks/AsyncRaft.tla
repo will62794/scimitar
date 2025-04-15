@@ -367,7 +367,7 @@ HandleRequestVoteRequest(m) ==
                             mvoteGranted |-> grant,
                             msource      |-> i,
                             mdest        |-> j]}
-            /\ requestVoteRequestMsgs' = requestVoteRequestMsgs \ {m} \* discard the message.
+            /\ requestVoteRequestMsgs' = requestVoteRequestMsgs \* \ {m} \* discard the message.
             /\ UNCHANGED <<state, currentTerm, votesGranted, nextIndex, matchIndex, log, commitIndex, appendEntriesRequestMsgs, appendEntriesResponseMsgs>>
 
 \* ACTION: HandleRequestVoteResponse --------------------------------
