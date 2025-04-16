@@ -1,36 +1,13 @@
 --------------------------------- MODULE AsyncRaft ---------------------------------
-(* NOTES 
 
-Spec of Raft with message passing.
-
-Author: Jack Vanlightly
-This specification is based on (with heavy modification) the original Raft specification 
-by Diego Ongaro which can be found here: https://github.com/ongardie/raft.tla 
-
-This is a model checking optimized fork of original spec.
-
-- Summary of changes:
-    - updated message helpers:
-        - prevent resending the same message multiple times (unless explicity via the duplicate action)
-        - can only receive a message that hasn't been delivered yet
-    - optimized for model checking (reduction in state space)
-        - removed history variables (using simple invariants instead)
-        - decomposed "receive" into separate actions
-        - compressed multi-step append_entries_req processing into one.
-        - compressed timeout and requestvote into single action
-        - server directly votes for itself in an election (it doesn't send itself a vote request)
-    - fixed some bugs
-        - adding the same value over and over again
-        - allowing actions to remain enabled producing odd results
-    
-Notes on action enablement.
- - Send is only enabled if the mesage has not been previously sent.
-   This is leveraged to disable actions once executed, such as sending a specific 
-   AppendEntrieRequest. It won't be sent again, so no need for extra variables to track that. 
-
-Original source: https://github.com/Vanlightly/raft-tlaplus/blob/main/specifications/standard-raft/Raft.tla
-Modified further by Will Schultz for safety proof experiments, August 2023.
-*)
+\* 
+\* 
+\* Specification of Raft with message passing.
+\* 
+\* Original source: https://github.com/Vanlightly/raft-tlaplus/blob/main/specifications/standard-raft/Raft.tla
+\* Modified by Will Schultz for safety proof experiments, August 2023.
+\* 
+\* 
 
 \* EXTENDS Naturals, FiniteSets, FiniteSetsExt, Sequences, Bags, TLC
 EXTENDS Naturals, FiniteSets, Sequences, TLC
@@ -237,21 +214,23 @@ RequestVote(i) ==
 AppendEntries(i, j) ==
     /\ i /= j
     /\ state[i] = Leader
-    /\ LET prevLogIndex == nextIndex[i][j] - 1
-           prevLogTerm == IF (prevLogIndex > 0 /\ prevLogIndex \in DOMAIN log[i])
-                            THEN log[i][prevLogIndex]
-                            ELSE 0
+    /\ LET 
+            \* prevLogIndex == nextIndex[i][j] - 1
+        \*    prevLogTerm == IF (prevLogIndex > 0 /\ prevLogIndex \in DOMAIN log[i])
+                            \* THEN log[i][prevLogIndex]
+                            \* ELSE 0
            \* Send up to 1 entry, constrained by the end of the log.
            \* NOTE: This spec never sends more than one entry at a time currently. (Will S.)
            lastEntry == Min({Len(log[i]), nextIndex[i][j]})
-           entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
+        \*    entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
        IN 
           /\ appendEntriesRequestMsgs' = appendEntriesRequestMsgs \cup {[
                    mtype          |-> AppendEntriesRequest,
                    mterm          |-> currentTerm[i],
-                   mprevLogIndex  |-> prevLogIndex,
-                   mprevLogTerm   |-> prevLogTerm,
-                   mentries       |-> entries,
+                \*    mprevLogIndex  |-> prevLogIndex,
+                \*    mprevLogTerm   |-> prevLogTerm,
+                \*    mentries       |-> entries,
+                   mlog           |-> log[i],
                    mcommitIndex   |-> Min({commitIndex[i], lastEntry}),
                    msource        |-> i,
                    mdest          |-> j]}
@@ -447,19 +426,22 @@ AcceptAppendEntriesRequestAppend(m) ==
     /\ m.mterm = currentTerm[m.mdest]
     /\ LET  i     == m.mdest
             j     == m.msource
-            logOk == LogOk(i, m)
-            index == m.mprevLogIndex + 1
+            \* logOk == LogOk(i, m)
+            \* index == m.mprevLogIndex + 1
         IN 
             /\ state[i] \in { Follower }
-            /\ logOk
-            /\ CanAppend(m, i)
+            \* /\ logOk
+            /\ IsPrefix(log[i], m.mlog)
+            \* /\ CanAppend(m, i)
             \* Only update the logs in this action. commit learning is done in a separate action.
-            /\ log' = [log EXCEPT ![i] = Append(log[i], m.mentries[1])]
+            \* /\ log' = [log EXCEPT ![i] = Append(log[i], m.mentries[1])]
+            /\ log' = [log EXCEPT ![i] = m.mlog]
             /\ appendEntriesResponseMsgs' = appendEntriesResponseMsgs \cup {[
                         mtype           |-> AppendEntriesResponse,
                         mterm           |-> currentTerm[i],
-                        msuccess        |-> TRUE,
-                        mmatchIndex     |-> m.mprevLogIndex + Len(m.mentries),
+                        \* msuccess        |-> TRUE,
+                        mlog            |-> log'[i],
+                        \* mmatchIndex     |-> m.mprevLogIndex + Len(m.mentries),
                         msource         |-> i,
                         mdest           |-> j]}
             /\ UNCHANGED <<state, votesGranted, commitIndex, nextIndex, matchIndex, votedFor, currentTerm, requestVoteRequestMsgs, requestVoteResponseMsgs, appendEntriesRequestMsgs>>
@@ -499,17 +481,19 @@ AcceptAppendEntriesRequestLearnCommit(m) ==
     /\ m.mterm = currentTerm[m.mdest]
     /\ LET  i     == m.mdest
             j     == m.msource
-            logOk == LogOk(i, m)
+            \* logOk == LogOk(i, m)
         IN 
             /\ state[i] \in { Follower }
             \* We can learn a commitIndex as long as the log check passes, and if we could append these log entries.
             \* We will not, however, advance our local commitIndex to a point beyond the end of our log. And,
             \* we don't actually update our log here, only our commitIndex.
 
+            \* /\ CanAppend(m, i)
+            \* /\ logOk
+            \* /\ Len(log[i]) = m.mprevLogIndex
+
             \* PRE (can comment these conditions out to introduce bug)
-            /\ logOk
-            /\ Len(log[i]) = m.mprevLogIndex
-            /\ CanAppend(m, i)
+            /\ IsPrefix(log[i], m.mlog)
 
             /\ m.mcommitIndex > commitIndex[i] \* no need to ever decrement our commitIndex.
             /\ commitIndex' = [commitIndex EXCEPT ![i] = Min({m.mcommitIndex, Len(log[i])})]
@@ -525,36 +509,40 @@ HandleAppendEntriesResponse(m) ==
     /\ m \in appendEntriesResponseMsgs
     /\ m.mtype = AppendEntriesResponse
     /\ m.mterm = currentTerm[m.mdest]
+    /\ IsPrefix(m.mlog, log[m.mdest])
     /\ LET i     == m.mdest
            j     == m.msource
         IN
-            /\ \/ /\ m.msuccess \* successful
-                  /\ nextIndex'  = [nextIndex  EXCEPT ![i][j] = m.mmatchIndex + 1]
-                  /\ matchIndex' = [matchIndex EXCEPT ![i][j] = m.mmatchIndex]
-               \/ /\ \lnot m.msuccess \* not successful
-                  /\ nextIndex' = [nextIndex EXCEPT ![i][j] = Max({nextIndex[i][j] - 1, 1})]
-                  /\ UNCHANGED <<matchIndex>>
-            /\ appendEntriesResponseMsgs' = appendEntriesResponseMsgs \ {m}
+            \* /\ \/ /\ m.msuccess \* successful
+            \*       /\ nextIndex'  = [nextIndex  EXCEPT ![i][j] = m.mmatchIndex + 1]
+            \*       /\ matchIndex' = [matchIndex EXCEPT ![i][j] = m.mmatchIndex]
+            \*    \/ /\ \lnot m.msuccess \* not successful
+            \*       /\ nextIndex' = [nextIndex EXCEPT ![i][j] = Max({nextIndex[i][j] - 1, 1})]
+            \*       /\ UNCHANGED <<matchIndex>>
+            /\ matchIndex' = [matchIndex EXCEPT ![i][j] = Len(m.mlog)]
+            /\ nextIndex' = nextIndex
+            /\ appendEntriesResponseMsgs' = appendEntriesResponseMsgs \* \ {m}
             /\ UNCHANGED <<currentTerm, state, votedFor, votesGranted, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs, appendEntriesRequestMsgs>>
 
 
-\* RestartAction == TRUE /\ \E i \in Server : Restart(i)
-RequestVoteAction == TRUE /\ \E i \in Server : RequestVote(i)
-UpdateTermAction == TRUE /\ \E m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m, m.mterm, m.mdest)
 \* UpdateTermRVReqAction == TRUE /\ \E m \in requestVoteRequestMsgs : UpdateTermRVReq(m.mterm, m.mdest)
 \* UpdateTermRVResAction == TRUE /\ \E m \in requestVoteResponseMsgs : UpdateTermRVRes(m.mterm, m.mdest)
 \* UpdateTermAEReqAction == TRUE /\ \E m \in appendEntriesRequestMsgs : UpdateTermAEReq(m.mterm, m.mdest)
 \* UpdateTermAEResAction == TRUE /\ \E m \in appendEntriesResponseMsgs : UpdateTermAERes(m.mterm, m.mdest)
+
+\* RestartAction == TRUE /\ \E i \in Server : Restart(i)
+RequestVoteAction == TRUE /\ \E i \in Server : RequestVote(i)
+UpdateTermAction == TRUE /\ \E m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m, m.mterm, m.mdest)
 BecomeLeaderAction == TRUE /\ \E i \in Server : BecomeLeader(i)
 ClientRequestAction == TRUE /\ \E i \in Server : ClientRequest(i)
-\* AdvanceCommitIndexAction == TRUE /\ \E i \in Server : AdvanceCommitIndex(i)
 AppendEntriesAction == TRUE /\ \E i,j \in Server : AppendEntries(i, j)
 HandleRequestVoteRequestAction == \E m \in requestVoteRequestMsgs : HandleRequestVoteRequest(m)
 HandleRequestVoteResponseAction == \E m \in requestVoteResponseMsgs : HandleRequestVoteResponse(m)
 \* RejectAppendEntriesRequestAction == \E m \in appendEntriesRequestMsgs : RejectAppendEntriesRequest(m)
 AcceptAppendEntriesRequestAppendAction == \E m \in appendEntriesRequestMsgs : AcceptAppendEntriesRequestAppend(m)
 \* AcceptAppendEntriesRequestTruncateAction == TRUE /\ \E m \in appendEntriesRequestMsgs : AcceptAppendEntriesRequestTruncate(m)
-\* AcceptAppendEntriesRequestLearnCommitAction == \E m \in appendEntriesRequestMsgs : AcceptAppendEntriesRequestLearnCommit(m)
+AcceptAppendEntriesRequestLearnCommitAction == \E m \in appendEntriesRequestMsgs : AcceptAppendEntriesRequestLearnCommit(m)
+AdvanceCommitIndexAction == TRUE /\ \E i \in Server : AdvanceCommitIndex(i)
 HandleAppendEntriesResponseAction == \E m \in appendEntriesResponseMsgs : HandleAppendEntriesResponse(m)
 
 \* Defines how the variables may transition.
@@ -566,11 +554,11 @@ Next ==
     \/ BecomeLeaderAction
     \/ ClientRequestAction
     \/ AppendEntriesAction
-    \* \/ RejectAppendEntriesRequestAction
     \/ AcceptAppendEntriesRequestAppendAction
-    \* \/ AcceptAppendEntriesRequestLearnCommitAction
     \/ HandleAppendEntriesResponseAction 
-    \* \/ AdvanceCommitIndexAction
+    \/ AcceptAppendEntriesRequestLearnCommitAction
+    \/ AdvanceCommitIndexAction
+    \* \/ RejectAppendEntriesRequestAction
     \* \/ AcceptAppendEntriesRequestTruncateAction \* (DISABLE FOR NOW FOR SMALLER PROOF)
 
 NextUnchanged == UNCHANGED vars
@@ -2118,8 +2106,5 @@ LLInv0_33b0_R0_0_I0 ==
     \A VARMAEREQ \in appendEntriesRequestMsgs : 
     \A VARLOGINDI \in LogIndices : 
         ((VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \/ (~(VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\ state[VARI] = Leader)) \/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))
-
-
-
 
 ===============================================================================
