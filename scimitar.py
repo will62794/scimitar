@@ -5371,7 +5371,10 @@ class InductiveInvGen():
                         depth_str = ""
                         if include_detailed_stats:
                             if len(name_parts[2]) > 0:
-                                label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>"
+                                print(str(node['expr']))
+                                state_vars_in_lemma = [v for v in self.state_vars if v in node['expr']]
+                                vars_str = ",".join(state_vars_in_lemma)
+                                label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>" + "<BR/> <FONT POINT-SIZE='7'>" + vars_str + "</FONT>"
                             if "depth" in node:
                                 depth_str = ",d=" + str(node["depth"])
                             if "order" in node:
