@@ -136,13 +136,11 @@
         "VARMAERES.mterm = currentTerm[VARI]",
         "matchIndex[VARI][VARJ] = VARMAERES.mmatchIndex"
     ],
-    "seed_lemmas": [
+    "seed_lfffemmas": [
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
         "~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader)))",
         "(VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \\/ (~(VARMAEREQ.mentries # <<>> /\\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\\ state[VARI] = Leader)) \\/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1))",
-        "H_LogEntryInTermImpliesSafeAtTerm /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor",
-        "H_LogEntryInTermImpliesSafeAtTermAppendEntries /\\ currentTerm = currentTerm /\\ state = state /\\ log = log /\\ votedFor = votedFor /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs",
         "H_QuorumsSafeAtTerms /\\ currentTerm = currentTerm /\\ state = state /\\ votedFor = votedFor",
         "\\A s,t \\in Server : ( /\\ s # t /\\ state[s] \\in {Leader,Candidate} /\\ state[t] \\in {Leader,Candidate} /\\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \\cap votesGranted[t] = {}",
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
@@ -168,10 +166,13 @@
 
         ],
         "HandleRequestVoteRequestAction": [
-            "\\A s,t \\in Server :  (/\\ state[s] = Candidate /\\ t \\in votesGranted[s]) => /\\ currentTerm[t] >= currentTerm[s]",
-            " \\A s,t \\in Server : (/\\ state[s] = Candidate /\\ t \\in votesGranted[s]) =>  /\\ currentTerm[t] = currentTerm[s] => votedFor[t] = s"
         ],
-        "AcceptAppendEntriesRequestAppendAction": [
+        "AppendEntriesAction":[
+            "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
+        ],
+        "AcceptAppendEntriesRequestLearnCommitAction": [
+            "H_LogMatching /\\ log = log",
+            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log"
         ]
     },
     "action_local_preds_KNOWN":{
@@ -215,13 +216,13 @@
         "MaxMsgCount": ["1000"]
     },
     "large_instance_inv_check_index": 1,
-    "cti_gen_instance_indexes": [0,1],
+    "cti_gen_instance_indexes": [0, 1],
     "constraint"  :  "StateConstraint",
     "quant_inv": "\\A VARI \\in Server : \\A VARJ \\in Server : \\A VARK \\in Server : \\E VARQ \\in Quorum : \\A VARMAEREQ \\in appendEntriesRequestMsgs : \\A VARMAERES \\in appendEntriesResponseMsgs : \\A VARREQVM \\in requestVoteRequestMsgs : \\A VARREQVRESI \\in requestVoteResponseMsgs : \\A VARREQVRESJ \\in requestVoteResponseMsgs : \\A VARLOGINDI \\in LogIndices : ",
     "quant_vars": ["VARI", "VARJ", "VARK", "VARIND", "VARM", "VARLOGINDI"],
     "model_consts"  :  "CONSTANT n1,n2,n3,n4,n5",
     "simulation_inv_check": true,
-    "simulation_inv_check_num_states": 120000000,
+    "simulation_inv_check_num_states": 80000000,
     "simulation_inv_check_depth": 100,
     "symmetry" : true,
     "typeok"  :  "TypeOKRandom",

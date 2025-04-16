@@ -1248,13 +1248,17 @@ H_LogMatchingAppendEntries ==
     \* then the server's previous entry must match the AppendEntries previous entry.
     \A m \in appendEntriesRequestMsgs : 
     \A s \in Server : 
-        (\E ind \in DOMAIN log[s] : 
-            /\ m.mtype = AppendEntriesRequest
-            /\ m.mentries # <<>>
-            /\ ind = m.mprevLogIndex + 1 
-            /\ log[s][ind] = m.mentries[1]
-            /\ m.mprevLogIndex \in DOMAIN log[s]) =>
-                log[s][m.mprevLogIndex] = m.mprevLogTerm
+        \A i \in DOMAIN log[s] :
+            (\E j \in DOMAIN m.mlog : i = j /\ log[s][i] = m.mlog[j]) => 
+            (SubSeq(log[s],1,i) = SubSeq(m.mlog,1,i)) \* prefixes must be the same.
+
+        \* (\E ind \in DOMAIN log[s] : 
+        \*     /\ m.mtype = AppendEntriesRequest
+        \*     /\ m.mlog # <<>>
+        \*     /\ ind = m.mprevLogIndex + 1 
+        \*     /\ log[s][ind] = m.mentries[1]
+        \*     /\ m.mprevLogIndex \in DOMAIN log[s]) =>
+        \*         log[s][m.mprevLogIndex] = m.mprevLogTerm
 
 \* Has a candidate server garnered all votes to win election in its term.
 CandidateWithVoteQuorumGranted(s) == 

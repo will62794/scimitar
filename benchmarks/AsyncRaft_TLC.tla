@@ -30,7 +30,7 @@ RequestVoteRequestTypeBounded == [
     mterm         : Terms,
     \* mlastLogTerm  : Terms,
     \* mlastLogIndex : LogIndicesWithZero,
-    mlog          : BoundedSeq(Terms, MaxMEntriesLen),
+    mlog          : BoundedSeq(Terms, MaxLogLen),
     msource       : Server,
     mdest         : Server
 ]
@@ -46,9 +46,9 @@ RequestVoteResponseTypeBounded == [
 AppendEntriesRequestTypeBounded == [
     mtype      : {AppendEntriesRequest},
     mterm      : Terms,
-    mprevLogIndex  : LogIndices,
-    mprevLogTerm   : Terms,
-    mentries       : BoundedSeq(Terms, MaxMEntriesLen),
+    \* mprevLogIndex  : LogIndices,
+    \* mprevLogTerm   : Terms,
+    mlog       : BoundedSeq(Terms, MaxLogLen),
     mcommitIndex   : LogIndicesWithZero,
     msource        : Server,
     mdest          : Server
@@ -57,8 +57,9 @@ AppendEntriesRequestTypeBounded == [
 AppendEntriesResponseTypeBounded == [
     mtype        : {AppendEntriesResponse},
     mterm        : Terms,
-    msuccess     : BOOLEAN,
-    mmatchIndex  : LogIndices,
+    \* msuccess     : BOOLEAN,
+    \* mmatchIndex  : LogIndices,
+    mlog         : BoundedSeq(Terms, MaxLogLen),
     msource      : Server,
     mdest        : Server
 ]
@@ -80,6 +81,8 @@ AppendEntriesResponseTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, AppendEn
 TypeOKRandom == 
     /\ requestVoteRequestMsgs \in RequestVoteRequestTypeSampled
     /\ requestVoteResponseMsgs \in RequestVoteResponseTypeSampled 
+    \* /\ requestVoteRequestMsgs = {}
+    \* /\ requestVoteResponseMsgs = {}
     /\ appendEntriesRequestMsgs \in AppendEntriesRequestTypeSampled
     /\ appendEntriesResponseMsgs \in AppendEntriesResponseTypeSampled
     /\ currentTerm \in [Server -> Terms]
