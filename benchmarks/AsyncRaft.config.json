@@ -173,6 +173,10 @@
         "AcceptAppendEntriesRequestLearnCommitAction": [
             "H_LogMatching /\\ log = log",
             "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log"
+        ],
+        "AdvanceCommitIndexAction": [
+            "H_LogMatching /\\ log = log",
+            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log"
         ]
     },
     "action_local_preds_KNOWN":{
