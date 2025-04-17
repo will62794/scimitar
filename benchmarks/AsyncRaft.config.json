@@ -176,7 +176,8 @@
         ],
         "AdvanceCommitIndexAction": [
             "H_LogMatching /\\ log = log",
-            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log"
+            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log",
+            "H_LeaderMatchIndexValid /\\ state = state /\\ log = log"
         ]
     },
     "action_local_preds_KNOWN":{
