@@ -169,6 +169,8 @@
         "HandleRequestVoteRequestAction": [
         ],
         "AppendEntriesAction":[
+        ],
+        "AcceptAppendEntriesRequestAppendAction": [
             "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
         ],
         "AcceptAppendEntriesRequestLearnCommitAction": [
