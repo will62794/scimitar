@@ -2369,6 +2369,13 @@ class InductiveInvGen():
                 
                 invs = all_invs["raw_invs"]
 
+
+                if self.specname == "AsyncRaft":
+                    logging.info(f"Removing requestVoteResponseMsgs and requestVoteRequestMsgs from candidate invariants. Orig: {len(invs)}")
+                    invs = [x for x in invs if not ("requestVoteResponseMsgs" in quant_inv_fn(x) and "requestVoteRequestMsgs" in quant_inv_fn(x))]
+                    logging.info(f"Reduced to {len(invs)} candidate invariants after removing requestVoteResponseMsgs and requestVoteRequestMsgs.")
+
+
                 # Remove any invariants that we already checked.
                 orig_size = len(invs)
                 invs = set([x for x in invs if quant_inv_fn(x) not in self.invs_checked_in_iteration[iteration]])
