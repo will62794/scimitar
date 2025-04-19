@@ -5245,7 +5245,7 @@ class InductiveInvGen():
         else:
             logging.info("Not fully done. Discovered invariant is not inductive.")
 
-    def render_proof_graph(self, save_tex=False, include_seed=True):
+    def render_proof_graph(self, save_tex=False, include_seed=True, save_invs_txt=True):
         dot = graphviz.Digraph(f'{self.specname}-proof-graph', comment='The Round Table', strict=True)  
         #  dot.graph_attr["rankdir"] = "LR"
         dot.node_attr["fontname"] = "courier"
@@ -5539,6 +5539,15 @@ class InductiveInvGen():
             sys.stdout = old_stdout # reset old stdout
             f = open(tex_out_file, 'w')
             f.write(texcode)
+            f.close()
+
+        if save_invs_txt:
+            invs_out_file = self.specdir + "/" + self.specname + f"_{self.safety}_ind-proof-tree-sd{self.seed}-invs.txt"
+            f = open(invs_out_file, 'w')
+            for n in self.proof_graph["nodes"]:
+                print(n)
+                if "is_lemma" in self.proof_graph["nodes"][n]:
+                    f.write(n + " == " + self.proof_graph["nodes"][n]["expr"] + "\n")
             f.close()
 
     def proof_graph_get_my_action_nodes(self, node):
