@@ -66,6 +66,7 @@
         "(commitIndex[VARI] > 0)",
         "(VARMAEREQ.mcommitIndex > 0)",
         "IsPrefix(VARMAEREQ.mlog, log[VARI])",
+        "log[VARI] = VARMAEREQ.mlog",
         "Len(log[VARI]) = Len(VARMAEREQ.mlog)",
         "log = [log EXCEPT ![VARI] = Append(log[VARI], currentTerm[VARI])]",
         "log = [log EXCEPT ![VARJ] = Append(log[VARJ], currentTerm[VARJ])]",
