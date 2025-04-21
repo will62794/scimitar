@@ -65,6 +65,8 @@
         "votedFor[VARREQVRESI.msource] = VARREQVRESI.mdest",
         "(commitIndex[VARI] > 0)",
         "(VARMAEREQ.mcommitIndex > 0)",
+        "VARMAEREQ.mcommitIndex \\in DOMAIN VARMAEREQ.mlog",
+        "VARMAEREQ.mcommitIndex <= Len(VARMAEREQ.mlog)",
         "IsPrefix(VARMAEREQ.mlog, log[VARI])",
         "log[VARI] = VARMAEREQ.mlog",
         "Len(log[VARI]) = Len(VARMAEREQ.mlog)",
