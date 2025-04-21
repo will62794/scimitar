@@ -102,6 +102,7 @@
         "votedFor[VARREQVM.msource] = VARREQVM.mdest",
         "commitIndex[VARI] = VARMAEREQ.mcommitIndex",
         "commitIndex[VARI] > VARMAEREQ.mcommitIndex",
+        "commitIndex[VARI] >= VARMAEREQ.mcommitIndex",
         "VARMAEREQ.mlog = <<>>",
         "VARMAEREQ.mlog # <<>> /\\ VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = LastTerm(VARMAEREQ.mlog)",
         "VARMAEREQ.mlog # <<>> /\\ LastTerm(VARMAEREQ.mlog) = currentTerm[VARI]",
@@ -181,7 +182,8 @@
         ],
         "AcceptAppendEntriesRequestLearnCommitAction": [
             "H_LogMatching /\\ log = log",
-            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log"
+            "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log",
+            "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
         ],
         "AdvanceCommitIndexAction": [
             "H_LogMatching /\\ log = log",
