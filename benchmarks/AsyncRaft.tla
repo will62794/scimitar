@@ -1450,12 +1450,11 @@ H_CommitIndexInAppendEntriesImpliesCommittedEntryExists ==
     \A m \in appendEntriesRequestMsgs : 
         ( /\ m.mtype = AppendEntriesRequest 
           /\ m.mcommitIndex > 0
-          /\ m.mentries # <<>> 
-          /\ m.mprevLogIndex > 0) =>
+          /\ m.mlog # <<>>) =>
             (\E n \in Server :
              \E ind \in DOMAIN log[n] :
-                (/\ ind = m.mprevLogIndex
-                 /\ log[n][ind] = m.mprevLogTerm
+                (/\ ind = m.mcommitIndex
+                 /\ log[n][ind] = m.mlog[ind]
                  /\ commitIndex[n] >= m.mcommitIndex))
 
 \* Commit index is no greater than the log length on any node.
