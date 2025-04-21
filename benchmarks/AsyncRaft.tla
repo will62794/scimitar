@@ -1431,6 +1431,22 @@ H_CommitIndexCoveredOnQuorum ==
                 /\ Len(log[t]) >= commitIndex[s] 
                 /\ log[t][commitIndex[s]] = log[s][commitIndex[s]]
 
+\* If an AppendEntries has been sent with a commitIndex that covers some 
+\* log entry in the message, there must be some node that has that entry 
+\* and equal or newer commitIndex.
+H_CommitIndexInAppendEntriesImpliesCommittedEntryExists == 
+    \A m \in appendEntriesRequestMsgs : 
+        ( /\ m.mtype = AppendEntriesRequest 
+          /\ m.mcommitIndex > 0
+          /\ m.mcommitIndex \in DOMAIN m.mlog
+          /\ m.mlog # <<>>) =>
+            (\E n \in Server :
+             \E ind \in DOMAIN log[n] :
+                (/\ ind = m.mcommitIndex
+                 /\ log[n][ind] = m.mlog[ind]
+                 /\ commitIndex[n] >= m.mcommitIndex))
+
+
 \* If a commit index covers a log entry in some term,
 \* then no primary in an earlier term can be enabled to commit any entries
 \* in its own log.
@@ -1442,20 +1458,6 @@ H_CommitIndexAtEntryInTermDisabledEarlierCommits ==
          /\ currentTerm[t] < log[s][commitIndex[s]]) =>
                 \A ind \in DOMAIN log[t] : Agree(t, ind) \notin Quorum 
 
-
-\* If an AppendEntries has been sent with a commitIndex that covers some 
-\* log entry in the message, there must be some node that has that entry 
-\* and equal or newer commitIndex.
-H_CommitIndexInAppendEntriesImpliesCommittedEntryExists == 
-    \A m \in appendEntriesRequestMsgs : 
-        ( /\ m.mtype = AppendEntriesRequest 
-          /\ m.mcommitIndex > 0
-          /\ m.mlog # <<>>) =>
-            (\E n \in Server :
-             \E ind \in DOMAIN log[n] :
-                (/\ ind = m.mcommitIndex
-                 /\ log[n][ind] = m.mlog[ind]
-                 /\ commitIndex[n] >= m.mcommitIndex))
 
 \* Commit index is no greater than the log length on any node.
 H_CommitIndexBoundValid == 
