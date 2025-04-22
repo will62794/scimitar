@@ -106,6 +106,7 @@
         "commitIndex[VARI] > VARMAEREQ.mcommitIndex",
         "commitIndex[VARI] >= VARMAEREQ.mcommitIndex",
         "VARMAEREQ.mlog = <<>>",
+        "LastTerm(VARMAEREQ.mlog) >= VARMAEREQ.mterm",
         "VARMAEREQ.mlog # <<>> /\\ VARLOGINDI \\in DOMAIN log[VARI] /\\ log[VARI][VARLOGINDI] = LastTerm(VARMAEREQ.mlog)",
         "VARMAEREQ.mlog # <<>> /\\ LastTerm(VARMAEREQ.mlog) = currentTerm[VARI]",
         "VARMAEREQ.mlog # <<>> /\\ LastTerm(VARMAEREQ.mlog) > currentTerm[VARI]",
@@ -153,6 +154,13 @@
         "VARMAERES.mterm > currentTerm[VARMAERES.msource]",
         "VARMAERES.mterm = currentTerm[VARI]",
         "matchIndex[VARI][VARJ] = Len(VARMAERES.mlog)"
+    ],
+    "seed_lemmas": [
+        "H_LogMatching /\\ log = log",
+        "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs",
+        "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log",
+        "H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log /\\ commitIndex = commitIndex",
+        "H_LeaderMatchIndexValid /\\ state = state /\\ log = log"
     ],
     "seed_lfffemmas": [
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
