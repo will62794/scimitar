@@ -1219,13 +1219,11 @@ H_LogMatchingBetweenAppendEntriesMsgs ==
     \A mi,mj \in appendEntriesRequestMsgs : 
         (/\ mi.mtype = AppendEntriesRequest
          /\ mj.mtype = AppendEntriesRequest  
-         /\ mi.mprevLogIndex > 0
-         /\ mj.mprevLogIndex > 0
-         /\ mi.mprevLogIndex = mj.mprevLogIndex
-         /\ mi.mentries # <<>>
-         /\ mj.mentries # <<>>
-         /\ mi.mentries[1] = mj.mentries[1]) =>
-            mi.mprevLogTerm = mj.mprevLogTerm
+         /\ mi.mlog # <<>>
+         /\ mj.mlog # <<>>) =>
+            \A i \in DOMAIN mi.mlog :
+                (\E j \in DOMAIN mj.mlog : i = j /\ mi.mlog[i] = mj.mlog[j]) => 
+                    (SubSeq(mi.mlog,1,i) = SubSeq(mj.mlog,1,i)) \* prefixes must be the same.
 
 \* If an AppendEntries request has been sent with log entries in term T, then these entries
 \* must have been created by primary in term T, and so this entry must match the log of a leader
