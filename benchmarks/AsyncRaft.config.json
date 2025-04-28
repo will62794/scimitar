@@ -196,7 +196,8 @@
         "AppendEntriesAction":[
         ],
         "AcceptAppendEntriesRequestAppendAction": [
-            "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
+            "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs",
+            "H_LogMatchingBetweenAppendEntriesMsgs /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs"
         ],
         "AcceptAppendEntriesRequestLearnCommitAction": [
             "H_LogMatching /\\ log = log",
