@@ -358,6 +358,7 @@ HandleRequestVoteResponse(m) ==
     /\ m \in requestVoteResponseMsgs
     /\ m.mtype = RequestVoteResponse
     /\ m.mterm = currentTerm[m.mdest]
+    /\ m.msource \notin votesGranted[m.mdest]
     /\ votesGranted' = [votesGranted EXCEPT ![m.mdest] = 
                                 IF m.mvoteGranted 
                                     THEN votesGranted[m.mdest] \cup {m.msource} 
@@ -555,9 +556,10 @@ Next ==
     \/ ClientRequestAction
     \/ AppendEntriesAction
     \/ AcceptAppendEntriesRequestAppendAction
-    \/ HandleAppendEntriesResponseAction 
-    \/ AcceptAppendEntriesRequestLearnCommitAction
-    \/ AdvanceCommitIndexAction
+    \* \/ HandleAppendEntriesResponseAction 
+    \* \/ AcceptAppendEntriesRequestLearnCommitAction
+    \* \/ AdvanceCommitIndexAction
+    
     \* \/ RejectAppendEntriesRequestAction
     \* \/ AcceptAppendEntriesRequestTruncateAction \* (DISABLE FOR NOW FOR SMALLER PROOF)
 

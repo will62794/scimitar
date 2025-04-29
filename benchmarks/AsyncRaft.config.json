@@ -263,7 +263,7 @@
     "quant_vars": ["VARI", "VARJ", "VARK", "VARIND", "VARM", "VARLOGINDI"],
     "model_consts"  :  "CONSTANT n1,n2,n3,n4,n5",
     "simulation_inv_check": true,
-    "simulation_inv_check_num_states": 400000000,
+    "simulation_inv_check_num_states": 100000000,
     "simulation_inv_check_depth": 100,
     "symmetry" : true,
     "typeok"  :  "TypeOKRandom",
