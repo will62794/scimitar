@@ -1106,12 +1106,11 @@ H_PrimaryHasEntriesItCreatedAppendEntries ==
     \A s \in Server :
     \A m \in appendEntriesRequestMsgs :
         (/\ m.mtype = AppendEntriesRequest
-         /\ m.mentries # <<>> 
-         /\ m.mentries[1] = currentTerm[s]
          /\ state[s] = Leader) =>
-            /\ (m.mprevLogIndex + 1) \in DOMAIN log[s]
-            /\ log[s][m.mprevLogIndex + 1] = m.mentries[1]
-
+            ~(\E k \in DOMAIN m.mlog :
+                /\ m.mlog[k] = currentTerm[s]
+                /\ ~\E ind \in DOMAIN log[s] : (ind = k /\ log[s][k] = m.mlog[k]))
+                
 \* Existence of an entry in term T implies a past election in T, so 
 \* there must be some quorum at this term or greater.
 H_LogEntryInTermImpliesSafeAtTerm == 
