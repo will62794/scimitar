@@ -1083,10 +1083,8 @@ H_LogTermsMonotonic ==
 
 H_LogTermsMonotonicAppendEntries == 
     \A m \in appendEntriesRequestMsgs :
-        (/\ m.mtype = AppendEntriesRequest
-         /\ m.mentries # <<>>
-         /\ m.mprevLogIndex > 0) => 
-            m.mentries[1] >= m.mprevLogTerm 
+        (m.mtype = AppendEntriesRequest) => 
+            \A i,j \in DOMAIN m.mlog : (i <= j) => (m.mlog[i] <= m.mlog[j])
 
 \* If a log entry exists in term T and there is a primary in term T, then this
 \* log entry should be present in that primary's log.

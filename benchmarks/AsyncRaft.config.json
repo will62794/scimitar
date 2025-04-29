@@ -160,7 +160,9 @@
         "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs",
         "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log",
         "H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log /\\ commitIndex = commitIndex",
-        "H_LeaderMatchIndexValid /\\ state = state /\\ log = log"
+        "H_LeaderMatchIndexValid /\\ state = state /\\ log = log",
+        "H_LogTermsMonotonicAppendEntries /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log",
+        "H_LogTermsMonotonic /\\ state = state /\\ log = log"
     ],
     "seed_lfffemmas": [
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
