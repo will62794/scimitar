@@ -93,6 +93,8 @@
         "\\A INDK \\in DOMAIN VARMAEREQ.mlog : VARMAEREQ.mlog[INDK] <= VARMAEREQ.mterm",
         "\\A INDK \\in DOMAIN VARMAEREQ.mlog : VARMAEREQ.mlog[INDK] <= currentTerm[VARI]",
         "\\E INDK \\in DOMAIN log[VARJ] : ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = log[VARJ][INDK])",
+        "~(\\E INDK \\in DOMAIN VARMAEREQ.mlog : /\\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\\ ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))",
+        "~(\\E INDK \\in DOMAIN log[VARJ] : /\\ log[VARJ][INDK] = currentTerm[VARI] /\\ ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = log[VARJ][INDK]))",
         "currentTerm[VARREQVM.msource] = VARREQVM.mterm",
         "currentTerm[VARREQVM.msource] >= VARREQVM.mterm",
         "state[VARREQVM.msource] = Leader",
