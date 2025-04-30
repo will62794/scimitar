@@ -52,6 +52,7 @@
         "currentTerm[VARREQVRESI.mdest] >= VARREQVRESI.mterm",
         "VARREQVRESI.msource \\in votesGranted[VARREQVRESI.mdest]",
         "VARREQVRESI.msource \\in votesGranted[VARREQVRESI.msource]",
+        "VARREQVRESI.msource \\in votesGranted[VARI]",
         "VARI \\in votesGranted[VARREQVRESI.mdest]",
         "VARI \\in votesGranted[VARREQVRESI.msource]",
         "VARJ \\in votesGranted[VARREQVRESI.mdest]",
