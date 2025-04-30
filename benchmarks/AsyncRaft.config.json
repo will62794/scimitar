@@ -93,6 +93,8 @@
         "\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]",
         "\\A INDK \\in DOMAIN VARMAEREQ.mlog : VARMAEREQ.mlog[INDK] <= VARMAEREQ.mterm",
         "\\A INDK \\in DOMAIN VARMAEREQ.mlog : VARMAEREQ.mlog[INDK] <= currentTerm[VARI]",
+        "~(\\E INDK \\in DOMAIN log[VARI] : log[VARI][INDK] = currentTerm[VARJ])",
+        "~(\\E INDK \\in DOMAIN log[VARI] : log[VARI][INDK] = VARREQVRESI.mterm)",
         "\\E INDK \\in DOMAIN log[VARJ] : ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = log[VARJ][INDK])",
         "~(\\E INDK \\in DOMAIN VARMAEREQ.mlog : /\\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\\ ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))",
         "~(\\E INDK \\in DOMAIN log[VARJ] : /\\ log[VARJ][INDK] = currentTerm[VARI] /\\ ~\\E INDI \\in DOMAIN log[VARI] : (INDI = INDK /\\ log[VARI][INDK] = log[VARJ][INDK]))",
@@ -165,12 +167,12 @@
         "H_LogMatchingAppendEntries /\\ log = log /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs",
         "H_CommitIndexCoveredOnQuorum /\\ commitIndex = commitIndex /\\ log = log",
         "H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log /\\ commitIndex = commitIndex",
-        "H_LeaderMatchIndexValid /\\ state = state /\\ log = log",
+        "H_LeaderMatchIndexValid /\\ state = state /\\ log = log /\\ matchIndex = matchIndex",
         "H_LogTermsMonotonicAppendEntries /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log",
-        "H_LogTermsMonotonic /\\ state = state /\\ log = log",
-        "H_QuorumsSafeAtTerms /\\ currentTerm = currentTerm /\\ state = state /\\ votedFor = votedFor"
+        "H_LogTermsMonotonic /\\ state = state /\\ log = log"
     ],
     "seed_lfffemmas": [
+        "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI])) \\/ (~(GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs))",
         "~((state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])) \\/ (~((state[VARJ] = Leader)))",
