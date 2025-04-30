@@ -156,7 +156,9 @@
         "VARMAERES.mterm = currentTerm[VARMAERES.msource]",
         "VARMAERES.mterm > currentTerm[VARMAERES.msource]",
         "VARMAERES.mterm = currentTerm[VARI]",
-        "matchIndex[VARI][VARJ] = Len(VARMAERES.mlog)"
+        "matchIndex[VARI][VARJ] = Len(VARMAERES.mlog)",
+        "GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
+        "GrantedVoteSet(VARJ) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs"
     ],
     "seed_lemmas": [
         "H_LogMatching /\\ log = log",
@@ -165,7 +167,8 @@
         "H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log /\\ commitIndex = commitIndex",
         "H_LeaderMatchIndexValid /\\ state = state /\\ log = log",
         "H_LogTermsMonotonicAppendEntries /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log",
-        "H_LogTermsMonotonic /\\ state = state /\\ log = log"
+        "H_LogTermsMonotonic /\\ state = state /\\ log = log",
+        "H_QuorumsSafeAtTerms /\\ currentTerm = currentTerm /\\ state = state /\\ votedFor = votedFor"
     ],
     "seed_lfffemmas": [
         "~((state[VARI] = Candidate /\\ VARI # VARJ)) \\/ (~(votesGranted[VARI] \\in Quorum)) \\/ (~(\\E INDK \\in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))",
