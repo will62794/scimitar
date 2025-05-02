@@ -38,7 +38,7 @@ RequestVoteRequestTypeBounded == [
 RequestVoteResponseTypeBounded == [
     mtype        : {RequestVoteResponse},
     mterm        : Terms,
-    mvoteGranted : BOOLEAN,
+    mvotedFor    : Server,
     msource      : Server,
     mdest        : Server
 ]

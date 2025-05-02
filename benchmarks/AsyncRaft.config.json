@@ -20,9 +20,9 @@
         "(state[VARI] \\in {Leader,Candidate} /\\ state[VARJ] \\in {Leader,Candidate} /\\ VARI # VARJ)",
         "VARREQVRESI.mterm = VARREQVRESJ.mterm /\\ VARREQVRESI.msource = VARREQVRESJ.msource",
         "VARREQVRESI.mdest = VARREQVRESJ.mdest",
-        "VARREQVRESI.mvoteGranted /\\ VARREQVRESI.mvoteGranted = VARREQVRESJ.mvoteGranted",
-        "VARREQVRESI.mterm = currentTerm[VARI] /\\ VARREQVRESI.msource = VARJ /\\ VARREQVRESI.mdest # VARI /\\ VARREQVRESI.mvoteGranted",
-        "VARREQVRESI.mterm = currentTerm[VARI] /\\ VARREQVRESI.msource = VARJ /\\ VARREQVRESI.mvoteGranted",
+        "VARREQVRESI.mvotedFor = VARREQVRESI.mdest /\\ VARREQVRESJ.mvotedFor = VARREQVRESJ.mdest /\\ VARREQVRESI.mvotedFor = VARREQVRESJ.mvotedFor",
+        "VARREQVRESI.mterm = currentTerm[VARI] /\\ VARREQVRESI.msource = VARJ /\\ VARREQVRESI.mdest # VARI /\\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest",
+        "VARREQVRESI.mterm = currentTerm[VARI] /\\ VARREQVRESI.msource = VARJ /\\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest",
         "(state[VARI] \\in {Follower,Candidate} /\\ VARI # VARJ)",
         "(state[VARI] = Leader /\\ VARI # VARJ /\\ currentTerm[VARI] = currentTerm[VARJ])",
         "(state[VARI] = Candidate /\\ VARI # VARJ)",
@@ -45,7 +45,9 @@
         "VARREQVRESI.msource = VARJ",
         "VARREQVRESI.mdest = VARI",
         "VARREQVRESI.mdest = VARJ",
-        "VARREQVRESI.mvoteGranted",
+        "VARREQVRESI.mvotedFor = VARI",
+        "VARREQVRESI.mvotedFor = VARI",
+        "VARREQVRESI.mvotedFor = VARREQVRESI.mdest",
         "VARREQVRESI.mterm = currentTerm[VARREQVRESI.mdest]",
         "VARREQVRESI.mterm = currentTerm[VARREQVRESI.msource]",
         "currentTerm[VARREQVRESI.msource] >= VARREQVRESI.mterm",
@@ -64,6 +66,7 @@
         "votedFor[VARJ] = VARI",
         "votedFor[VARI] # Nil /\\ VARI \\in votesGranted[votedFor[VARI]]",
         "votedFor[VARREQVRESI.msource] = VARREQVRESI.mdest",
+        "votedFor[VARREQVRESI.msource] = VARREQVRESI.mvotedFor",
         "(commitIndex[VARI] > 0)",
         "(VARMAEREQ.mcommitIndex > 0)",
         "VARMAEREQ.mcommitIndex \\in DOMAIN VARMAEREQ.mlog",
@@ -305,7 +308,7 @@
             "MaxTerm \\in Nat"
         ],
         "lemma_def_expands": {
-            "Safety": ["H_OnePrimaryPerTerm", "H_PrimaryHasEntriesItCreated", "H_NoLogDivergence"],
+            "Safety": ["H_OnePrimaryPerTerm", "H_PrimaryHasEntriesItCreated", "H_NoLogDivergence", "H_LogMatching"],
             "H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm": ["ExistsRequestVoteResponseQuorum"]
         },
         "action_def_expands":{

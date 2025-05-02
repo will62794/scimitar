@@ -343,7 +343,7 @@ HandleRequestVoteRequest(m) ==
             /\ requestVoteResponseMsgs' = requestVoteResponseMsgs \cup {[
                             mtype        |-> RequestVoteResponse,
                             mterm        |-> currentTerm[i],
-                            mvoteGranted |-> grant,
+                            mvotedFor    |-> votedFor'[i],
                             msource      |-> i,
                             mdest        |-> j]}
             /\ requestVoteRequestMsgs' = requestVoteRequestMsgs \* \ {m} \* discard the message.
@@ -360,7 +360,7 @@ HandleRequestVoteResponse(m) ==
     /\ m.mterm = currentTerm[m.mdest]
     /\ m.msource \notin votesGranted[m.mdest]
     /\ votesGranted' = [votesGranted EXCEPT ![m.mdest] = 
-                                IF m.mvoteGranted 
+                                IF m.mvotedFor = m.mdest 
                                     THEN votesGranted[m.mdest] \cup {m.msource} 
                                     ELSE votesGranted[m.mdest]]
     \* /\ requestVoteResponseMsgs' = requestVoteResponseMsgs \* \ {m} \* discard the message.
@@ -613,7 +613,7 @@ RequestVoteRequestType == [
 RequestVoteResponseType == [
     mtype        : {RequestVoteResponse},
     mterm        : Nat,
-    mvoteGranted : BOOLEAN,
+    mvotedFor    : Server,
     msource      : Server,
     mdest        : Server
 ]
@@ -805,7 +805,7 @@ Bait == Cardinality(requestVoteResponseMsgs) < 10
 GrantedVoteSet(cand) ==
     votesGranted[cand] \cup {s \in Server : \E m \in requestVoteResponseMsgs : 
                                                 /\ m.mdest = cand 
-                                                /\ m.mvoteGranted 
+                                                /\ m.mvotedFor = cand 
                                                 /\ m.msource = s 
                                                 /\ m.mterm = currentTerm[cand]}
 
@@ -870,7 +870,7 @@ ExistsRequestVoteResponseQuorum(T, dest) ==
         /\ \A m \in msgs : m.mtype = RequestVoteResponse
             /\ m.mterm = T
             /\ m.mdest = dest
-            /\ m.mvoteGranted
+            /\ m.mvotedFor = dest
         \* Responses form a quorum.
         /\ ({m.msource : m \in msgs} \cup {dest}) \in Quorum
 
