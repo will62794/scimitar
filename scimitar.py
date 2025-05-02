@@ -2107,6 +2107,8 @@ class InductiveInvGen():
         if preds is None:
             preds = self.preds
 
+        orig_preds = list(preds)
+
         assert len(orig_k_ctis) > 0 
 
         # TODO: Can we also project CTIs onto variable slice for faster CTI elimination checking? (3/13/24)
@@ -2231,10 +2233,12 @@ class InductiveInvGen():
                 if "seed_lemmas" in self.spec_config:
                     seed_lemmas = self.spec_config["seed_lemmas"]
                     preds += seed_lemmas
-                    logging.info(f"Adding {len(seed_lemmas)} seed lemmas to predicate set.")
+                    logging.info(f"Adding {len(seed_lemmas)} seed lemmas to predicate set, to give total of {len(preds)} predicates.")
                     for p in seed_lemmas:
                         curr_pred_weights[p] = 1.0
-
+            else:
+                logging.info(f"Resetting predicate set to original set of {len(orig_preds)} predicates.")
+                preds = orig_preds
 
             # On second iteration, search for non process local invariants.
             if iteration==2:
