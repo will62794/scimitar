@@ -45,6 +45,7 @@
         "VARREQVRESI.msource = VARJ",
         "VARREQVRESI.mdest = VARI",
         "VARREQVRESI.mdest = VARJ",
+        "VARREQVRESI.mvotedFor = Nil",
         "VARREQVRESI.mvotedFor = VARI",
         "VARREQVRESI.mvotedFor = VARI",
         "VARREQVRESI.mvotedFor = VARREQVRESI.mdest",
@@ -173,7 +174,7 @@
         "H_LeaderMatchIndexValid /\\ state = state /\\ log = log /\\ matchIndex = matchIndex",
         "H_LogTermsMonotonicAppendEntries /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log",
         "H_LogTermsMonotonic /\\ state = state /\\ log = log",
-        "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)"
+        "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvotedFor = m.mdest)"
     ],
     "seed_lfffemmas": [
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
