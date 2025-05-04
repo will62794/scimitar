@@ -179,6 +179,7 @@
         "H_LogTermsMonotonicAppendEntries /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ log = log",
         "H_LogTermsMonotonic /\\ state = state /\\ log = log",
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvotedFor = m.mdest)",
+        "H_OnePrimaryPerTerm_Safety /\\ state = state /\\ currentTerm = currentTerm",
         "H_OnePrimaryPerTerm_Inv38_8e53_R0_0_I1 /\\ state = state /\\ currentTerm = currentTerm /\\ votesGranted = votesGranted",
         "H_OnePrimaryPerTerm_Inv1455_3acc_R0_0_I1 /\\ state = state /\\ votesGranted = votesGranted",
         "H_OnePrimaryPerTerm_Inv37_9eed_R1_0_I0 /\\ requestVoteResponseMsgs = requestVoteResponseMsgs /\\ state = state /\\ votesGranted = votesGranted",

@@ -2117,7 +2117,7 @@ LLInv0_33b0_R0_0_I0 ==
 \* Set of auto-synthesized OnePrimaryPerTerm helper lemmas.
 \* 
 
-\* Safety == H_OnePrimaryPerTerm
+H_OnePrimaryPerTerm_Safety == H_OnePrimaryPerTerm
 H_OnePrimaryPerTerm_Inv38_8e53_R0_0_I1 == (\A s,t \in Server : ( /\ s # t /\ state[s] \in {Leader,Candidate} /\ state[t] \in {Leader,Candidate} /\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \cap votesGranted[t] = {})
 H_OnePrimaryPerTerm_Inv1455_3acc_R0_0_I1 == \A VARI \in Server : (votesGranted[VARI] \in Quorum) \/ (~((state[VARI] = Leader)))
 H_OnePrimaryPerTerm_Inv37_9eed_R1_0_I0 == (\A s,t \in Server : \A m \in requestVoteResponseMsgs :( /\ state[s] \in {Candidate,Leader} /\ t \in votesGranted[s]) => ~(/\ m.mterm = currentTerm[s] /\ m.msource = t /\ m.mdest # s /\ m.mvotedFor = m.mdest))
