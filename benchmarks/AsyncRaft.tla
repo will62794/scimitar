@@ -613,7 +613,7 @@ RequestVoteRequestType == [
 RequestVoteResponseType == [
     mtype        : {RequestVoteResponse},
     mterm        : Nat,
-    mvotedFor    : Server,
+    mvotedFor    : Server \cup {Nil},
     msource      : Server,
     mdest        : Server
 ]

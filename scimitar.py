@@ -5272,8 +5272,8 @@ class InductiveInvGen():
             anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
         # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
         print("Ancestors:", len(anc))
-        if len(anc) > 0:
-            print(anc)
+        # if len(anc) > 0:
+            # print(anc)
 
         cycles = nx.recursive_simple_cycles(G)
         print("Cycles:", len(cycles))
@@ -5382,7 +5382,7 @@ class InductiveInvGen():
                         depth_str = ""
                         if include_detailed_stats:
                             if len(name_parts[2]) > 0:
-                                print(str(node['expr']))
+                                # print(str(node['expr']))
                                 state_vars_in_lemma = [v for v in self.state_vars if v in node['expr']]
                                 vars_str = ",".join(state_vars_in_lemma)
                                 label += " <BR/> <FONT POINT-SIZE='12'>" + str(name_parts[2]) + " </FONT>" + "<BR/> <FONT POINT-SIZE='7'>" + vars_str + "</FONT>"
@@ -5549,7 +5549,7 @@ class InductiveInvGen():
             invs_out_file = self.specdir + "/" + self.specname + f"_{self.safety}_ind-proof-tree-sd{self.seed}-invs.txt"
             f = open(invs_out_file, 'w')
             for n in self.proof_graph["nodes"]:
-                print(n)
+                # print(n)
                 if "is_lemma" in self.proof_graph["nodes"][n]:
                     f.write(n + " == " + self.proof_graph["nodes"][n]["expr"] + "\n")
             f.close()
