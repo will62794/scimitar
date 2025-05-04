@@ -2111,4 +2111,21 @@ LLInv0_33b0_R0_0_I0 ==
     \A VARLOGINDI \in LogIndices : 
         ((VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] = currentTerm[VARI]) \/ (~(VARMAEREQ.mentries # <<>> /\ VARMAEREQ.mentries[1] = currentTerm[VARI] /\ state[VARI] = Leader)) \/ (~(VARLOGINDI = VARMAEREQ.mprevLogIndex + 1)))
 
+
+
+\* 
+\* Set of auto-synthesized OnePrimaryPerTerm helper lemmas.
+\* 
+
+\* Safety == H_OnePrimaryPerTerm
+H_OnePrimaryPerTerm_Inv38_8e53_R0_0_I1 == (\A s,t \in Server : ( /\ s # t /\ state[s] \in {Leader,Candidate} /\ state[t] \in {Leader,Candidate} /\ currentTerm[s] = currentTerm[t]) => votesGranted[s] \cap votesGranted[t] = {})
+H_OnePrimaryPerTerm_Inv1455_3acc_R0_0_I1 == \A VARI \in Server : (votesGranted[VARI] \in Quorum) \/ (~((state[VARI] = Leader)))
+H_OnePrimaryPerTerm_Inv37_9eed_R1_0_I0 == (\A s,t \in Server : \A m \in requestVoteResponseMsgs :( /\ state[s] \in {Candidate,Leader} /\ t \in votesGranted[s]) => ~(/\ m.mterm = currentTerm[s] /\ m.msource = t /\ m.mdest # s /\ m.mvotedFor = m.mdest))
+H_OnePrimaryPerTerm_Inv0_2c32_R1_1_I1 == \A VARI \in Server : \A VARJ \in Server : ((currentTerm[VARI] <= currentTerm[VARJ])) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARJ \in votesGranted[VARI])))
+H_OnePrimaryPerTerm_Inv12871_0d38_R3_0_I2 == \A VARI \in Server : \A VARJ \in Server : (votedFor[VARJ] = VARI) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARJ \in votesGranted[VARI]))) \/ (~((currentTerm[VARI] = currentTerm[VARJ])))
+H_OnePrimaryPerTerm_Inv10750_c06d_R3_1_I2 == \A VARREQVRESI \in requestVoteResponseMsgs : \A VARREQVRESJ \in requestVoteResponseMsgs : (VARREQVRESI.mdest = VARREQVRESJ.mdest) \/ (~(VARREQVRESI.mterm = VARREQVRESJ.mterm /\ VARREQVRESI.msource = VARREQVRESJ.msource) \/ (~(VARREQVRESI.mvotedFor # Nil /\ VARREQVRESJ.mvotedFor # Nil /\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest /\ VARREQVRESJ.mvotedFor = VARREQVRESJ.mdest)))
+H_OnePrimaryPerTerm_Inv13_bceb_R3_2_I0 == \A VARREQVRESI \in requestVoteResponseMsgs : (currentTerm[VARREQVRESI.msource] >= VARREQVRESI.mterm)
+H_OnePrimaryPerTerm_Inv3546_d501_R5_0_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARREQVRESI \in requestVoteResponseMsgs : ((currentTerm[VARJ] > currentTerm[VARI])) \/ (~(VARREQVRESI.mterm = currentTerm[VARI] /\ VARREQVRESI.msource = VARJ /\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest)) \/ ((votedFor[VARREQVRESI.msource] = VARREQVRESI.mdest))
+
+
 ===============================================================================
