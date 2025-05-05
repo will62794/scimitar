@@ -5412,7 +5412,9 @@ class InductiveInvGen():
 
                         # ElectionSafety ancestors.
                         if self.specname == "AsyncRaft" and n in anc:
-                            fillcolor="lightblue"
+                            # fillcolor="lightblue"
+                            color="lightblue"
+                            penwidth="6"
 
 
 
