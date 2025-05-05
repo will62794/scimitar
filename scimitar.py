@@ -5509,8 +5509,12 @@ class InductiveInvGen():
             ]
             attrs = {}
             color_cycles = False
+            inner_action_edge = "Action" in e[0]
             if any(conds):
                 style += ",blue,line width=1.0mm"
+            if inner_action_edge:
+                style += ",dotted"
+                attrs = {"color": "black", "penwidth": "2"}
             if color_cycles and e[0] in cycle_nodes and e[1] in cycle_nodes:
                 attrs = {"color": "darkred", "penwidth": "3"}
             dot.edge(e[0], e[1], style=style, **attrs)
