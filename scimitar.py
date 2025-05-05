@@ -2231,10 +2231,17 @@ class InductiveInvGen():
 
                 # Add these seed lemmas in the first round only to use if they exist.
                 if "seed_lemmas" in self.spec_config:
+                    # Filter down seed lemmas to only include those that are in the current variable slice.
                     seed_lemmas = self.spec_config["seed_lemmas"]
-                    preds += seed_lemmas
-                    logging.info(f"Adding {len(seed_lemmas)} seed lemmas to predicate set, to give total of {len(preds)} predicates.")
-                    for p in seed_lemmas:
+                    vars_in_seed_lemmas = self.extract_vars_from_preds(preds=seed_lemmas)
+                    seed_lemmas_slice_filtered = [p for i,p in enumerate(seed_lemmas) if set(vars_in_seed_lemmas[i]) <= set(var_slice)]
+                    # print("seed_lemmas_slice_filtered:", seed_lemmas_slice_filtered)
+                    logging.info(f"Filtered {len(seed_lemmas)} seed lemmas to {len(seed_lemmas_slice_filtered)} based on var slice {var_slice}.")
+
+                    # Add these seed lemmas in the first round only to use if they exist.   
+                    preds += seed_lemmas_slice_filtered
+                    logging.info(f"Adding {len(seed_lemmas_slice_filtered)} seed lemmas to predicate set, to give total of {len(preds)} predicates.")
+                    for p in seed_lemmas_slice_filtered:
                         curr_pred_weights[p] = 1.0
             else:
                 logging.info(f"Resetting predicate set to original set of {len(orig_preds)} predicates.")
