@@ -2128,6 +2128,16 @@ H_OnePrimaryPerTerm_Inv13_bceb_R3_2_I0 == \A VARREQVRESI \in requestVoteResponse
 H_OnePrimaryPerTerm_Inv3546_d501_R5_0_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARREQVRESI \in requestVoteResponseMsgs : ((currentTerm[VARJ] > currentTerm[VARI])) \/ (~(VARREQVRESI.mterm = currentTerm[VARI] /\ VARREQVRESI.msource = VARJ /\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest)) \/ ((votedFor[VARREQVRESI.msource] = VARREQVRESI.mdest))
 
 
+\* 
+\* Set of auto-synthesized PrimaryHasEntriesItCreated helper lemmas.
+\* 
+
+H_PrimaryHasEntriesItCreated_Inv33993_8596_R1_1_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARI # VARJ))) \/ (~(votesGranted[VARI] \in Quorum))
+H_PrimaryHasEntriesItCreated_Inv44831_f472_R0_1_I2 == \A VARI \in Server : \A VARJ \in Server : ~((state[VARI] = Candidate)) \/ (~(votesGranted[VARI] \in Quorum)) \/ (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))
+H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2 == \A VARI \in Server : \A VARJ \in Server : (~(\E INDK \in DOMAIN log[VARJ] : /\ log[VARJ][INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = log[VARJ][INDK]))) \/ (~((state[VARI] = Candidate)) \/ (~(votesGranted[VARI] \in Quorum)))
+H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) \/ (~(votesGranted[VARI] \in Quorum)) \/ (~((state[VARI] = Candidate /\ VARI # VARJ)))
+
+
 
 \* H_Inv19420_04f2_R2_2_I2 ==
 \*      \A VARI \in Server : 
