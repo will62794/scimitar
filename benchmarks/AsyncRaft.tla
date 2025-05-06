@@ -2128,4 +2128,30 @@ H_OnePrimaryPerTerm_Inv13_bceb_R3_2_I0 == \A VARREQVRESI \in requestVoteResponse
 H_OnePrimaryPerTerm_Inv3546_d501_R5_0_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARREQVRESI \in requestVoteResponseMsgs : ((currentTerm[VARJ] > currentTerm[VARI])) \/ (~(VARREQVRESI.mterm = currentTerm[VARI] /\ VARREQVRESI.msource = VARJ /\ VARREQVRESI.mvotedFor = VARREQVRESI.mdest)) \/ ((votedFor[VARREQVRESI.msource] = VARREQVRESI.mdest))
 
 
+
+\* H_Inv19420_04f2_R2_2_I2 ==
+\*      \A VARI \in Server : 
+\*      \A VARJ \in Server : 
+\*         (~(\E INDK \in DOMAIN log[VARI] : log[VARI][INDK] = currentTerm[VARJ])) \/ (~((state[VARJ] = Candidate))) \/ (~(GrantedVoteSet(VARJ) \in Quorum /\ votesGranted = votesGranted /\ requestVoteResponseMsgs = requestVoteResponseMsgs))
+
+\* H_Inv49482_171b_R1_1_I2 == 
+\*     \A VARI \in Server : 
+\*     \A VARMAEREQ \in appendEntriesRequestMsgs :
+\*         ((votesGranted[VARI] \in Quorum)) /\ (((state[VARI] = Candidate))) => 
+\*             (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) 
+
+
+H_Inv49482_HELPER_171b == 
+    \A VARI \in Server : 
+    \A VARMAEREQ \in appendEntriesRequestMsgs :
+        ((GrantedVoteSet(VARI) \in Quorum)) /\ (((state[VARI] = Candidate))) => 
+            (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) 
+
+
+\* H_Inv4111_f9c4_R0_1_I2 == 
+\*     \A VARI \in Server : 
+\*     \A VARMAEREQ \in appendEntriesRequestMsgs : 
+\*     ((state[VARI] = Follower)) \/ ((~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK])))) \/ (~(votesGranted[VARI] \in Quorum))
+
+
 ===============================================================================
