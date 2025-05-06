@@ -168,7 +168,8 @@
         "VARMAERES.mterm = currentTerm[VARI]",
         "matchIndex[VARI][VARJ] = Len(VARMAERES.mlog)",
         "GrantedVoteSet(VARI) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
-        "GrantedVoteSet(VARJ) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs"
+        "GrantedVoteSet(VARJ) \\in Quorum /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
+        "((GrantedVoteSet(VARI) \\in Quorum)) /\\ (((state[VARI] = Candidate))) /\\ votesGranted = votesGranted /\\ requestVoteResponseMsgs = requestVoteResponseMsgs"
     ],
     "seed_lemmas": [
         "H_LogMatching /\\ log = log",
@@ -187,7 +188,8 @@
         "H_OnePrimaryPerTerm_Inv12871_0d38_R3_0_I2 /\\ currentTerm = currentTerm /\\ state = state /\\ votesGranted = votesGranted /\\ votedFor = votedFor",
         "H_OnePrimaryPerTerm_Inv10750_c06d_R3_1_I2 /\\ requestVoteResponseMsgs = requestVoteResponseMsgs",
         "H_OnePrimaryPerTerm_Inv13_bceb_R3_2_I0 /\\ requestVoteResponseMsgs = requestVoteResponseMsgs /\\ currentTerm = currentTerm",
-        "H_OnePrimaryPerTerm_Inv3546_d501_R5_0_I2 /\\ requestVoteResponseMsgs = requestVoteResponseMsgs /\\ currentTerm = currentTerm /\\ votedFor = votedFor"
+        "H_OnePrimaryPerTerm_Inv3546_d501_R5_0_I2 /\\ requestVoteResponseMsgs = requestVoteResponseMsgs /\\ currentTerm = currentTerm /\\ votedFor = votedFor",
+        "H_Inv49482_HELPER_171b /\\ requestVoteResponseMsgs = requestVoteResponseMsgs /\\ state = state /\\ votesGranted = votesGranted /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ currentTerm = currentTerm"
     ],
     "seed_lfffemmas": [
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
