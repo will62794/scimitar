@@ -2138,17 +2138,18 @@ H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2 == \A VARI \in Server : \A VA
 H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) \/ (~(votesGranted[VARI] \in Quorum)) \/ (~((state[VARI] = Candidate /\ VARI # VARJ)))
 
 
+H_PrimaryHasEntriesItCreated_Inv16359_97be_R11_1_I2 == 
+    \A VARI \in Server : 
+    \A VARMAEREQ \in appendEntriesRequestMsgs : 
+    \A VARLOGINDI \in LogIndices : 
+        (VARMAEREQ.mterm = currentTerm[VARI]) \/ (
+            \/ (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) 
+            \/ (~(VARLOGINDI \in DOMAIN log[VARI] /\ log[VARI][VARLOGINDI] < currentTerm[VARI])))
 
-\* H_Inv19420_04f2_R2_2_I2 ==
-\*      \A VARI \in Server : 
-\*      \A VARJ \in Server : 
-\*         (~(\E INDK \in DOMAIN log[VARI] : log[VARI][INDK] = currentTerm[VARJ])) \/ (~((state[VARJ] = Candidate))) \/ (~(GrantedVoteSet(VARJ) \in Quorum /\ votesGranted = votesGranted /\ requestVoteResponseMsgs = requestVoteResponseMsgs))
-
-\* H_Inv49482_171b_R1_1_I2 == 
-\*     \A VARI \in Server : 
-\*     \A VARMAEREQ \in appendEntriesRequestMsgs :
-\*         ((votesGranted[VARI] \in Quorum)) /\ (((state[VARI] = Candidate))) => 
-\*             (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) 
+H_PrimaryHasEntriesItCreated_Inv27087_c502_R5_0_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+        (~(\E INDK \in DOMAIN log[VARJ] : /\ log[VARJ][INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = log[VARJ][INDK]))) \/ (~((state[VARI] \in {Leader,Candidate} /\ VARI # VARJ)) \/ (~(votesGranted[VARI] \in Quorum)))
 
 
 H_Inv49482_HELPER_171b == 
