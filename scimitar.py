@@ -5274,7 +5274,7 @@ class InductiveInvGen():
         # print(list(G.nodes))
         anc = []
         anc2 = []
-        if self.specname == "AsyncRaft" and self.safety in ["H_PrimaryHasEntriesItCreated", "H_LogMatching"]:
+        if self.specname == "AsyncRaft" and self.safety in ["H_PrimaryHasEntriesItCreated"]:
             anc = nx.ancestors(G, "Safety_ClientRequestAction")
             anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
         # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
