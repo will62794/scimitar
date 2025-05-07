@@ -214,26 +214,26 @@ RequestVote(i) ==
 AppendEntries(i, j) ==
     /\ i /= j
     /\ state[i] = Leader
-    /\ LET 
+    \* /\ \*LET 
             \* prevLogIndex == nextIndex[i][j] - 1
         \*    prevLogTerm == IF (prevLogIndex > 0 /\ prevLogIndex \in DOMAIN log[i])
                             \* THEN log[i][prevLogIndex]
                             \* ELSE 0
            \* Send up to 1 entry, constrained by the end of the log.
            \* NOTE: This spec never sends more than one entry at a time currently. (Will S.)
-           lastEntry == Min({Len(log[i]), nextIndex[i][j]})
+        \*    lastEntry == Min({Len(log[i]), nextIndex[i][j]})
         \*    entries == SubSeq(log[i], nextIndex[i][j], lastEntry)
-       IN 
-          /\ appendEntriesRequestMsgs' = appendEntriesRequestMsgs \cup {[
-                   mtype          |-> AppendEntriesRequest,
-                   mterm          |-> currentTerm[i],
-                \*    mprevLogIndex  |-> prevLogIndex,
-                \*    mprevLogTerm   |-> prevLogTerm,
-                \*    mentries       |-> entries,
-                   mlog           |-> log[i],
-                   mcommitIndex   |-> Min({commitIndex[i], lastEntry}),
-                   msource        |-> i,
-                   mdest          |-> j]}
+    \*    IN 
+    /\ appendEntriesRequestMsgs' = appendEntriesRequestMsgs \cup {[
+            mtype          |-> AppendEntriesRequest,
+            mterm          |-> currentTerm[i],
+        \*    mprevLogIndex  |-> prevLogIndex,
+        \*    mprevLogTerm   |-> prevLogTerm,
+        \*    mentries       |-> entries,
+            mlog           |-> log[i],
+            mcommitIndex   |-> commitIndex[i],
+            msource        |-> i,
+            mdest          |-> j]}
     /\ UNCHANGED <<currentTerm, state, votedFor, votesGranted, nextIndex, matchIndex, log, commitIndex, requestVoteRequestMsgs, requestVoteResponseMsgs, appendEntriesResponseMsgs>>
 
 \* ACTION: BecomeLeader -------------------------------------------
