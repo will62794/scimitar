@@ -2137,6 +2137,12 @@ H_PrimaryHasEntriesItCreated_Inv44831_f472_R0_1_I2 == \A VARI \in Server : \A VA
 H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2 == \A VARI \in Server : \A VARJ \in Server : (~(\E INDK \in DOMAIN log[VARJ] : /\ log[VARJ][INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = log[VARJ][INDK]))) \/ (~((state[VARI] = Candidate)) \/ (~(votesGranted[VARI] \in Quorum)))
 H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 == \A VARI \in Server : \A VARJ \in Server : \A VARMAEREQ \in appendEntriesRequestMsgs : (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) \/ (~(votesGranted[VARI] \in Quorum)) \/ (~((state[VARI] = Candidate /\ VARI # VARJ)))
 
+H_PrimaryHasEntriesItCreated_Inv15134_ad6c_R12_2_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+    \A VARREQVM \in requestVoteRequestMsgs : 
+        (votedFor[VARJ] = VARJ) \/ (~(VARREQVM.msource = VARI)) \/ (~(LastTerm(VARREQVM.mlog) > currentTerm[VARI]))
+
 
 H_PrimaryHasEntriesItCreated_Inv16359_97be_R11_1_I2 == 
     \A VARI \in Server : 

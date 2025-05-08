@@ -193,7 +193,8 @@
         "H_PrimaryHasEntriesItCreated_Inv33993_8596_R1_1_I2 /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
         "H_PrimaryHasEntriesItCreated_Inv44831_f472_R0_1_I2 /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
         "H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2 /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
-        "H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted"
+        "H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
+        "H_PrimaryHasEntriesItCreated_Inv15134_ad6c_R12_2_I2 /\\ requestVoteRequestMsgs = requestVoteRequestMsgs /\\ votedFor = votedFor /\\ currentTerm = currentTerm"
     ],
     "seed_lfffemmas": [
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
