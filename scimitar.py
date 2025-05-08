@@ -5272,11 +5272,23 @@ class InductiveInvGen():
         # print("EDGES:", G.number_of_edges())
         # print(len(list(G.nodes)))
         # print(list(G.nodes))
+
+        # Get all nodes in the proof graph.
+        all_nodes = list(G.nodes)
+        print("All nodes:", len(all_nodes))
+        election_safety_node = None
+        election_safety_nodes = [n for n in all_nodes if "1944" in n and "Action" not in n]
+        if len(election_safety_nodes) > 0:
+            election_safety_node = election_safety_nodes[0]
+            print("Election safety node:", election_safety_node)
+
+        # Get all nodes in the proof graph.
         anc = []
         anc2 = []
-        if self.specname == "AsyncRaft" and self.safety in ["H_PrimaryHasEntriesItCreated"]:
-            anc = nx.ancestors(G, "Safety_ClientRequestAction")
-            anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
+        if self.specname == "AsyncRaft" and self.safety in ["H_PrimaryHasEntriesItCreated", "H_LogMatching"] and election_safety_node is not None:
+            anc = nx.ancestors(G, election_safety_node) | {election_safety_node}
+            # anc = nx.ancestors(G, "Safety_ClientRequestAction")
+            # anc2 = nx.ancestors(G, "Safety_BecomeLeaderAction")
         # anc = nx.ancestors(G, "Inv0_2c32_R8_1_I1_HandleRequestVoteResponseAction")
         print("Ancestors:", len(anc))
         # if len(anc) > 0:
