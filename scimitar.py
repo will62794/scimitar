@@ -4564,6 +4564,10 @@ class InductiveInvGen():
                     # Delete key.
                     self.proof_graph["nodes"][n]["failed"] = False
 
+        if self.persistent_proof_tree_mode and self.all_args["render_only"]:
+            logging.info("Proof graph rendering complete. Exiting.")
+            return
+
         for roundi in range(self.num_rounds):
             logging.info("###### STARTING ROUND %d" % roundi)
             logging.info("#####################################")
@@ -5780,6 +5784,8 @@ class InductiveInvGen():
             if self.save_dot and len(self.proof_graph["edges"]) > 0:
                 # Render updated proof graph as we go.
                 self.render_proof_graph()
+                if self.all_args["save_tex"]:
+                    self.render_proof_graph(save_tex=True)
                 self.persist_proof_graph(self.latest_roundi)
 
                 # Also save TLAPS obligations for proof graph.
@@ -5946,6 +5952,7 @@ if __name__ == "__main__":
     parser.add_argument('--tlapm_install_dir', help='TLAPM binary to use if needed.', required=False, default="/usr/local", type=str)
     parser.add_argument('--do_tlaps_induction_checks', help='check inducttion with tlapm.', required=False, default=False, action='store_true')
     parser.add_argument('--auto_check_simulation_bounds', help='Auto check simulation depth bounds for invariants.', required=False, default=False, action='store_true')
+    parser.add_argument('--render_only', help='Load and render proof graph only.', required=False, default=False, action='store_true')
 
     # Apalache related commands.
     parser.add_argument('--use_apalache_ctigen', help='Use Apalache for CTI generation (experimental).', required=False, default=False, action='store_true')
