@@ -2164,6 +2164,14 @@ H_Inv49482_HELPER_171b ==
             (~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK]))) 
 
 
+H_Inv4492_6838_R5_2_I1 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+        ~(((GrantedVoteSet(VARI) \in Quorum)) /\ (((state[VARI] = Candidate))) /\ votesGranted = votesGranted /\ requestVoteResponseMsgs = requestVoteResponseMsgs) \/ (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))
+
+
+
+
 \* H_Inv4111_f9c4_R0_1_I2 == 
 \*     \A VARI \in Server : 
 \*     \A VARMAEREQ \in appendEntriesRequestMsgs : 
