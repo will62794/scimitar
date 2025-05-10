@@ -5524,15 +5524,16 @@ class InductiveInvGen():
                 "Inv12_e9c6_R1_1_I0_AppendEntriesAction" in e[0],
             ]
             attrs = {}
-            color_cycles = False
+            mark_cycles = True
             inner_action_edge = "Action" in e[0]
-            if any(conds):
-                style += ",blue,line width=1.0mm"
+            # if any(conds):
+                # style += ",blue,line width=1.0mm"
             if inner_action_edge:
                 style += ",dotted"
                 attrs = {"color": "black", "penwidth": "2"}
-            if color_cycles and e[0] in cycle_nodes and e[1] in cycle_nodes:
-                attrs = {"color": "darkred", "penwidth": "3"}
+            if mark_cycles and e[0] in cycle_nodes and e[1] in cycle_nodes:
+                # attrs = {"color": "darkred", "penwidth": "3"}
+                style += ",cycleedge"
             dot.edge(e[0], e[1], style=style, **attrs)
 
         logging.info(f"Rendering proof graph ({len(self.proof_graph['edges'])} edges)")
