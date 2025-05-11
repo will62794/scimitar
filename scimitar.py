@@ -4539,10 +4539,16 @@ class InductiveInvGen():
             # If we are just re-checking an existing proof graph, check it and then return.
             if self.recheck_proof_graph:
                 self.render_proof_graph()
-                logging.info("Re-checking proof graph.")
                 # For re-checking proof graph, just use random seeds.
                 random.seed(time.time())
-                self.check_proof_graph()
+                if type(self.recheck_proof_graph) == str:
+                    # Optionally filter which nodes to re-check.
+                    nodes_to_recheck = self.recheck_proof_graph.split(",")
+                    logging.info(f"Re-checking proof graph filtered to nodes: {nodes_to_recheck}")
+                    self.check_proof_graph(nodes_to_recheck=nodes_to_recheck)
+                else:
+                    logging.info("Re-checking proof graph for all nodes.")
+                    self.check_proof_graph()
                 return
         else:
             self.clean_proof_graph()
@@ -5703,8 +5709,10 @@ class InductiveInvGen():
 
         return k_ctis
     
-    def check_proof_graph(self):
+    def check_proof_graph(self, nodes_to_recheck=None):
         lemma_nodes = [n for n in self.proof_graph["nodes"] if "is_lemma" in self.proof_graph["nodes"][n]]
+        if nodes_to_recheck is not None:
+            lemma_nodes = [n for n in lemma_nodes if n in nodes_to_recheck]
         errors_found = []
         for n in lemma_nodes:
             print("\nProof graph checking of lemma node:", n)
@@ -5959,7 +5967,7 @@ if __name__ == "__main__":
     parser.add_argument('--use_apalache_ctigen', help='Use Apalache for CTI generation (experimental).', required=False, default=False, action='store_true')
     parser.add_argument('--do_apalache_final_induction_check', help='Do final induction check with Apalache (experimental).', required=False, default=False, action='store_true')
     parser.add_argument('--apalache_smt_timeout_secs', help='Apalache SMT timeout. (experimental).', required=False, type=int, default=15)
-    parser.add_argument('--recheck_proof_graph', help='Check proof graph inductive obligations.', default=False, action='store_true')
+    parser.add_argument('--recheck_proof_graph', help='Check proof graph inductive obligations.', default=False, nargs='?', const=True, type=str)
     
 
     args = vars(parser.parse_args())
