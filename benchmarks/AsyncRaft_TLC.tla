@@ -89,7 +89,7 @@ TypeOKRandom ==
     /\ state       \in [Server -> {Leader, Follower, Candidate}]
     /\ votedFor    \in [Server -> ({Nil} \cup Server)]
     /\ votesGranted \in [Server -> (SUBSET Server)]
-    /\ log             \in [Server -> BoundedSeq(Terms, MaxLogLen)]
+    /\ log             \in [Server -> RandomSubset(15, BoundedSeq(Terms, MaxLogLen))]
     /\ commitIndex     \in [Server -> LogIndicesWithZero]
     /\ nextIndex  \in [Server -> RandomSubset(8, [Server -> LogIndices])]
     /\ matchIndex \in [Server -> RandomSubset(8, [Server -> LogIndicesWithZero])]   
