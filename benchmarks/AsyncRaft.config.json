@@ -197,7 +197,12 @@
         "H_PrimaryHasEntriesItCreated_Inv44831_f472_R0_1_I2 /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
         "H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2 /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
         "H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2 /\\ appendEntriesRequestMsgs = appendEntriesRequestMsgs /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
-        "H_PrimaryHasEntriesItCreated_Inv15134_ad6c_R12_2_I2 /\\ requestVoteRequestMsgs = requestVoteRequestMsgs /\\ votedFor = votedFor /\\ currentTerm = currentTerm"
+        "H_PrimaryHasEntriesItCreated_Inv15134_ad6c_R12_2_I2 /\\ requestVoteRequestMsgs = requestVoteRequestMsgs /\\ votedFor = votedFor /\\ currentTerm = currentTerm",
+        "H_Inv5446_9945_R10_2_I2 /\\ state = state /\\ currentTerm = currentTerm /\\ log = log /\\ votesGranted = votesGranted",
+        "H_Inv18185_7833_R10_2_I2 /\\ votedFor = votedFor /\\ currentTerm = currentTerm /\\ requestVoteRequestMsgs = requestVoteRequestMsgs",
+        "H_Inv8678_e76a_R10_2_I2 /\\ state = state /\\ votesGranted = votesGranted",
+        "H_Inv5874_a4fb_R10_2_I2 /\\ state = state /\\ log = log /\\ requestVoteRequestMsgs = requestVoteRequestMsgs",
+        "H_Inv4116_d407_R10_2_I2 /\\ state = state /\\ votedFor = votedFor /\\ requestVoteRequestMsgs = requestVoteRequestMsgs"
     ],
     "seed_lfffemmas": [
         "\\A s,t \\in Server : \\A m \\in requestVoteResponseMsgs :( /\\ state[s] \\in {Candidate,Leader} /\\ t \\in votesGranted[s]) => ~(/\\ m.mterm = currentTerm[s] /\\ m.msource = t /\\ m.mdest # s /\\ m.mvoteGranted)",
@@ -331,6 +336,18 @@
             "Quorum \\subseteq SUBSET Server /\\ {} \\notin Quorum /\\ Quorum # {} /\\ \\A s \\in Server : {s} \\notin Quorum",
             "MaxLogLen \\in Nat",
             "MaxTerm \\in Nat"
+        ],
+        "global_def_expands": [
+            "H_PrimaryHasEntriesItCreated_Inv33993_8596_R1_1_I2",
+            "H_PrimaryHasEntriesItCreated_Inv44831_f472_R0_1_I2",
+            "H_PrimaryHasEntriesItCreated_Inv41464_0b0b_R0_1_I2",
+            "H_PrimaryHasEntriesItCreated_Inv19313_bc12_R1_1_I2",
+            "H_PrimaryHasEntriesItCreated_Inv15134_ad6c_R12_2_I2",
+            "H_Inv5446_9945_R10_2_I2",
+            "H_Inv18185_7833_R10_2_I2",
+            "H_Inv8678_e76a_R10_2_I2",
+            "H_Inv5874_a4fb_R10_2_I2",
+            "H_Inv4116_d407_R10_2_I2"
         ],
         "lemma_def_expands": {
             "Safety": ["H_OnePrimaryPerTerm", "H_PrimaryHasEntriesItCreated", "H_NoLogDivergence", "H_LogMatching"],
