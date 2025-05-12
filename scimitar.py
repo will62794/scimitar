@@ -5348,6 +5348,8 @@ class InductiveInvGen():
                     num_ctis_left = 0
                     node = self.proof_graph["nodes"][n]
                     rounded=""
+
+                    # Action node.
                     if "is_action" in node:
                         nlabel = n.split("_")[-1].replace("Action", "") # just show the action name.
                         label = nlabel
@@ -5399,7 +5401,8 @@ class InductiveInvGen():
                             parent_node_name = "_".join(n.split("_")[:-1])
                             # if parent_node_name in anc:
                                 # print("ElectionSafety slice_vars:", tuple(self.proof_graph["nodes"][n]["coi_vars"]))
-                                
+                            
+                    # Lemma node.    
                     if "is_lemma" in node:
                         # Split something like 'Inv249_R3_2_I2_0'.
                         name_parts = n.partition("_")
