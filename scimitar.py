@@ -4324,7 +4324,7 @@ class InductiveInvGen():
                     # Generate in smaller batches until we've surpasssed max number of CTIs we want.
                     all_new_action_ctis = []
                     batch_i = 0
-                    num_batches = 3
+                    num_batches = 2
                     while len(all_new_action_ctis) < self.MAX_NUM_CTIS_PER_ROUND and batch_i < num_batches:
                         logging.info(f"Action CTI generation batch {batch_i}, all_new_action_ctis={len(all_new_action_ctis)}, MAX={self.MAX_NUM_CTIS_PER_ROUND}")
                         batch_i += 1
