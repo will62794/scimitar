@@ -2167,15 +2167,38 @@ H_Inv49482_HELPER_171b ==
 H_Inv4492_6838_R5_2_I1 == 
     \A VARI \in Server : 
     \A VARJ \in Server : 
-        ~(((GrantedVoteSet(VARI) \in Quorum)) /\ (((state[VARI] = Candidate))) /\ votesGranted = votesGranted /\ requestVoteResponseMsgs = requestVoteResponseMsgs) \/ (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))
+        (((GrantedVoteSet(VARI) \in Quorum)) /\ (((state[VARI] = Candidate))) /\ votesGranted = votesGranted /\ requestVoteResponseMsgs = requestVoteResponseMsgs) => 
+            (~(\E INDK \in DOMAIN log[VARJ] : log[VARJ][INDK] = currentTerm[VARI]))
 
 
+H_Inv5446_9945_R10_2_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+        ((state[VARJ] = Leader)) \/ ((\A INDK \in DOMAIN log[VARI] : log[VARI][INDK] <= currentTerm[VARI])) \/ ((votesGranted[VARJ] = {}))
+
+H_Inv18185_7833_R10_2_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+    \A VARREQVM \in requestVoteRequestMsgs : 
+        (votedFor[VARJ] = VARI) \/ (~(VARREQVM.msource = VARI)) \/ (~(LastTerm(VARREQVM.mlog) >= currentTerm[VARI]))
+
+H_Inv8678_e76a_R10_2_I2 == 
+    \A VARJ \in Server : 
+    \A VARK \in Server : ((state[VARJ] = Leader)) \/ (~(VARK \in votesGranted[VARJ])) \/ ((VARJ \in votesGranted[VARJ]))
+
+H_Inv5874_a4fb_R10_2_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+    \A VARREQVM \in requestVoteRequestMsgs : 
+        ((state[VARI] = Follower)) \/ ((IsPrefix(VARREQVM.mlog, log[VARREQVM.msource]))) \/ ((VARREQVM.mdest = VARJ))
+
+H_Inv4116_d407_R10_2_I2 == 
+    \A VARI \in Server : 
+    \A VARJ \in Server : 
+    \A VARK \in Server : 
+        ((state[VARI] = Follower)) \/ ((votedFor[VARI] # Nil /\ VARI \in votesGranted[votedFor[VARI]])) \/ (~(VARK \in votesGranted[VARJ]))
 
 
-\* H_Inv4111_f9c4_R0_1_I2 == 
-\*     \A VARI \in Server : 
-\*     \A VARMAEREQ \in appendEntriesRequestMsgs : 
-\*     ((state[VARI] = Follower)) \/ ((~(\E INDK \in DOMAIN VARMAEREQ.mlog : /\ VARMAEREQ.mlog[INDK] = currentTerm[VARI] /\ ~\E INDI \in DOMAIN log[VARI] : (INDI = INDK /\ log[VARI][INDK] = VARMAEREQ.mlog[INDK])))) \/ (~(votesGranted[VARI] \in Quorum))
 
 
 ===============================================================================
