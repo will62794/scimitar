@@ -5500,7 +5500,7 @@ class InductiveInvGen():
                                 style="lemmanode_detailed_raft"
                             if n != "Safety" and self.specname != "AsyncRaft":
                                 style="lemmanode_detailed"
-
+                           
                             key_lemmas = {"441b": "QuorumsSafeAtTerms", "7bad":"ElectionSafety","ed8d": "CandidateElectImpliesNoLogsInTerm"}
                             es_support = ["d76d", "8e53", "42ac", "2168", "3acc", "928b", "fe26", "09bb", "82b3", "2c32", "f533", "3715"]
                             if self.specname == "AsyncRaft":
@@ -5512,6 +5512,15 @@ class InductiveInvGen():
                                 for x in (set(anc)):
                                     if x in n:
                                         style += ",es_support"
+
+                             # The ElectionSafety lemma node identified by its hash.
+                            if self.specname == "AsyncRaft" and "1944" in n and save_tex:
+                                label="\electionsafetynodetext"
+                                style+=",election_safety_node"
+
+                            if self.specname == "AsyncRaft" and "9b9d" in n and save_tex:
+                                label="\primaryhasownentriesnodetext"
+                                style+=",primary_has_own_entries_node"
                                 
                 else:
                     label = n
