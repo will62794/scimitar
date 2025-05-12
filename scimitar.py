@@ -5489,11 +5489,11 @@ class InductiveInvGen():
                             label = n.split("_")[-1].replace("Action", "")
                             if self.specname == "AsyncRaft":
                                 if n.split("_")[-1] == "HandleRequestVoteResponseAction":
-                                    label = "HandleReqVoteResp"
+                                    label = "HandleRVRes"
                                 elif n.split("_")[-1] == "AcceptAppendEntriesRequestAppendAction":
                                     label = "AcceptAppendEntries"
                                 elif n.split("_")[-1] == "HandleRequestVoteRequestAction":
-                                    label = "HandleReqVoteReq"
+                                    label = "HandleRVReq"
                             style="proofactionnode_detailed_raft"
                         else:
                             if n != "Safety" and self.specname == "AsyncRaft":
@@ -5521,6 +5521,13 @@ class InductiveInvGen():
                             if self.specname == "AsyncRaft" and "9b9d" in n and save_tex:
                                 label="\primaryhasownentriesnodetext"
                                 style+=",primary_has_own_entries_node"
+
+                            if self.specname == "AsyncRaft" and save_tex:
+                                # state_vars_in_lemma = [v for v in self.state_vars if v in node['expr']]
+                                # vars_str = ",".join(state_vars_in_lemma)
+                                if "Msgs" in node['expr']:
+                                    # label="\msgsnode"
+                                    style+=",msgs_node"
                                 
                 else:
                     label = n
