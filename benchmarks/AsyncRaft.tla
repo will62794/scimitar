@@ -339,6 +339,7 @@ HandleRequestVoteRequest(m) ==
                      /\ logOk
                      /\ votedFor[i] \in {Nil, j} 
                      IN
+            /\ grant
             /\ votedFor' = [votedFor EXCEPT ![i] = IF grant THEN j ELSE votedFor[i]]
             /\ requestVoteResponseMsgs' = requestVoteResponseMsgs \cup {[
                             mtype        |-> RequestVoteResponse,
