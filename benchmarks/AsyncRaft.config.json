@@ -347,7 +347,8 @@
             "H_Inv18185_7833_R10_2_I2",
             "H_Inv8678_e76a_R10_2_I2",
             "H_Inv5874_a4fb_R10_2_I2",
-            "H_Inv4116_d407_R10_2_I2"
+            "H_Inv4116_d407_R10_2_I2",
+            "GrantedVoteSet"
         ],
         "lemma_def_expands": {
             "Safety": ["H_OnePrimaryPerTerm", "H_PrimaryHasEntriesItCreated", "H_NoLogDivergence", "H_LogMatching"],
