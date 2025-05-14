@@ -5333,6 +5333,9 @@ class InductiveInvGen():
             if curr_line:
                 lines.append(curr_line)
             return "{" + "<BR/>".join(lines) + "}"
+        # Track node ids for local labeling.
+        node_ids = {}
+        next_node_id = 0
         for e in self.proof_graph["edges"]:
 
             for n in e:
@@ -5404,6 +5407,10 @@ class InductiveInvGen():
                             
                     # Lemma node.    
                     if "is_lemma" in node:
+                        if n not in node_ids:
+                            node_ids[n] = next_node_id
+                            next_node_id += 1
+
                         # Split something like 'Inv249_R3_2_I2_0'.
                         name_parts = n.partition("_")
                         fontpt = 16
@@ -5490,6 +5497,8 @@ class InductiveInvGen():
                             if self.specname == "AsyncRaft":
                                 if n.split("_")[-1] == "HandleRequestVoteResponseAction":
                                     label = "HandleRVRes"
+                                # elif n.split("_")[-1] == "AppendEntriesAction":
+                                    # label = "AE"
                                 elif n.split("_")[-1] == "AcceptAppendEntriesRequestAppendAction":
                                     label = "AcceptAppendEntries"
                                 elif n.split("_")[-1] == "HandleRequestVoteRequestAction":
@@ -5512,6 +5521,12 @@ class InductiveInvGen():
                                 for x in (set(anc)):
                                     if x in n:
                                         style += ",es_support"
+                        
+                            if self.specname == "AsyncRaft" and save_tex:
+                                label = f"Inv{node_ids[n]}"
+
+                            if n == "Safety" and save_tex:
+                                label = "\safetynodetext"
 
                              # The ElectionSafety lemma node identified by its hash.
                             if self.specname == "AsyncRaft" and "1944" in n and save_tex:
@@ -5532,6 +5547,9 @@ class InductiveInvGen():
                                 if "Msgs" in node['expr']:
                                     # label="\msgsnode"
                                     style+=",msgs_node"
+                            
+                            
+
                                 
                 else:
                     label = n
@@ -5565,7 +5583,7 @@ class InductiveInvGen():
                 style += ",cycleedge"
             dot.edge(e[0], e[1], style=style, **attrs)
 
-        logging.info(f"Rendering proof graph ({len(self.proof_graph['edges'])} edges)")
+        logging.info(f"Rendering proof graph ({len(self.proof_graph['edges'])} edges, {len(node_ids)} lemma nodes)")
         suffix = ""
         if include_seed:
             suffix = f"-sd{self.seed}"
