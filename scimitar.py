@@ -5522,6 +5522,10 @@ class InductiveInvGen():
                                 label="\primaryhasownentriesnodetext"
                                 style+=",primary_has_own_entries_node"
 
+                            if self.specname == "AsyncRaft" and "3baf" in n and save_tex:
+                                label="\primaryhasownentriesAEnodetext"
+                                style+=",primary_has_own_entries_AE_node"
+
                             if self.specname == "AsyncRaft" and save_tex:
                                 # state_vars_in_lemma = [v for v in self.state_vars if v in node['expr']]
                                 # vars_str = ",".join(state_vars_in_lemma)
