@@ -1129,11 +1129,11 @@ class InductiveInvGen():
 
         all_tla_ctis = set()
         all_cti_objs = []
-        outfiles = os.listdir("benchmarks/gen_tla/apalache_ctigen")
+        outfiles = os.listdir(os.path.join(self.specdir, "gen_tla/apalache_ctigen"))
         for outf in outfiles:
             if "itf.json" in outf:
                 # print(outf)
-                cti_obj = json.load(open(f"benchmarks/gen_tla/apalache_ctigen/{outf}"))
+                cti_obj = json.load(open(os.path.join(self.specdir, f"gen_tla/apalache_ctigen/{outf}")))
                 print(cti_obj)
                 all_cti_objs.append(cti_obj)
 
@@ -1328,7 +1328,7 @@ class InductiveInvGen():
         # Apalache run.
         if self.use_apalache_ctigen:
             # Clean the output directory.
-            os.system("rm -rf benchmarks/gen_tla/apalache-cti-out")
+            os.system(f"rm -rf {os.path.join(self.specdir, 'gen_tla/apalache-cti-out')}")
 
             apalache_bin = "apalache/bin/apalache-mc"
             rundir = "gen_tla/apalache_ctigen"
@@ -3437,7 +3437,7 @@ class InductiveInvGen():
                     logging.info(f"Re-checking CTIs at node {proof_graph_node}, action={proof_graph_action}.")
                     
                     # Re-check a bit if we didn't find any CTIs, with configurable number of re-checks.
-                    rechecks=1
+                    rechecks=3
                     k_ctis_rechecked = self.check_proof_node(proof_graph_node, action_filter=[proof_graph_action])
                     while len(k_ctis_rechecked) == 0 and rechecks > 0:
                         logging.info(f"Re-checking for CTIs again at node {proof_graph_node}, action={proof_graph_action}, rechecks_left={rechecks}.")
@@ -3575,7 +3575,7 @@ class InductiveInvGen():
         ###########
         # Build a demo proof structure.
         ###########
-        self.proof_base_filename = f"benchmarks/{self.specname}.proof"
+        self.proof_base_filename = os.path.join(self.specdir, f"{self.specname}.proof")
 
         lemmaTRUE = StructuredProofNode("LemmaTrue", "TRUE")
         lemmaTRUEShim = StructuredProofNode("LemmaTrueShim", "1=1")
@@ -3682,7 +3682,7 @@ class InductiveInvGen():
 
         # root_obligation = ("Safety", safety)
         # Optionally save proof structure as DOT graph.
-        # proof.save_as_dot("benchmarks/" + self.specname + "_ind-proof-tree")
+        # proof.save_as_dot(os.path.join(self.specdir, self.specname + "_ind-proof-tree"))
 
         proof = None
 
@@ -3874,7 +3874,7 @@ class InductiveInvGen():
             import flask
             from flask import Flask
             from flask_cors import CORS
-            app = Flask(__name__, static_folder="benchmarks")
+            app = Flask(__name__, static_folder=self.specdir)
             CORS(app)
             import threading
 
@@ -3885,8 +3885,8 @@ class InductiveInvGen():
             def home(path):
                 # For empty path, send base spec HTML.
                 if path == "":
-                    return flask.send_from_directory('benchmarks', f"{self.specname}.proof.html")
-                return flask.send_from_directory('benchmarks', path)
+                    return flask.send_from_directory(self.specdir, f"{self.specname}.proof.html")
+                return flask.send_from_directory(self.specdir, path)
 
             @app.route('/api/getProofGraph')
             def getProofGraph():
@@ -4223,14 +4223,14 @@ class InductiveInvGen():
     def reparse_spec_with_proof_graph_defs(self):
         """ Re-parse the main spec but include any new lemma definitions that now exist in the generated proof graph."""
         specname = f"{self.specname}_lemma_parse"
-        rootpath = f"benchmarks/{specname}"
+        rootpath = os.path.join(self.specdir, specname)
         node_conjuncts = [(n, self.proof_graph["nodes"][n]["expr"], "") for n in self.proof_graph["nodes"] if "is_lemma" in self.proof_graph["nodes"][n]]
         self.make_check_invariants_spec([], rootpath, defs_to_add=node_conjuncts)
         # self.make_check_invariants_spec([], rootpath, defs_to_add=self.strengthening_conjuncts)
 
         logging.info("Re-parsing spec for any newly discovered lemma definitions.")
         s1 = time.time()
-        self.spec_obj_with_lemmas = tlaparse.parse_tla_file(self.specdir, specname)
+        self.spec_obj_with_lemmas = tlaparse.parse_tla_file(self.specdir, specname, tlc_binary=TLC_JAR)
         self.reparsing_duration_secs += (time.time() - s1)
         logging.info("Done re-parsing. Total time spent parsing so far: {:.2f}s".format(self.reparsing_duration_secs))   
 
@@ -4254,7 +4254,7 @@ class InductiveInvGen():
         ret = local_proof.to_tlaps_proof_skeleton(
                             self.spec_config["tlaps_proof_config"], 
                             add_lemma_defs=[(n, self.proof_graph["nodes"][n]["expr"]) for n in lemma_nodes], 
-                            seed=111115, workdir="benchmarks/gen_tla",tag=obligation_pred,
+                            seed=111115, workdir=os.path.join(self.specdir, "gen_tla"),tag=obligation_pred,
                             include_typeok=False)
         tla_proof_file = ret["tlaps_filename"]
         lemma_source_map = ret["lemma_source_map"]
@@ -4263,7 +4263,7 @@ class InductiveInvGen():
             print(m, lemma_source_map[m])
         logging.info("Checking local proof obligations with TLAPS.")
         st = time.time()
-        proof_stats = tlaps.tlapm_check_proof(tla_proof_file, stretch=0.2, nthreads=4, smt_timeout=3, tlapm_install_dir=self.tlapm_install_dir)
+        proof_stats = tlaps.tlapm_check_proof(tla_proof_file, stretch=0.2, nthreads=4, smt_timeout=3, tlapm_install_dir=self.tlapm_install_dir, specdir=self.specdir)
         obl_states = proof_stats["obligation_states"]
 
         print("--- TLAPS Checks --- ")
@@ -4520,7 +4520,7 @@ class InductiveInvGen():
         # Re-parse spec object to include definitions of any newly generate strengthening lemmas.
         # if len(self.strengthening_conjuncts) > 0:
         #     specname = f"{self.specname}_lemma_parse"
-        #     rootpath = f"benchmarks/{specname}"
+        #     rootpath = os.path.join(self.specdir, specname)
         #     self.make_check_invariants_spec([], rootpath, defs_to_add=self.strengthening_conjuncts)
 
         #     logging.info("Re-parsing spec for any newly discovered lemma definitions.")
@@ -5075,12 +5075,12 @@ class InductiveInvGen():
         #     print(p)
         # self.check_invariants(pred_invs)
         specname = f"{self.specname}_extract_preds"
-        rootpath = f"benchmarks/{specname}"
+        rootpath = os.path.join(self.specdir, specname)
         invname_prefix = "PredInvDef"
         self.make_check_invariants_spec(pred_invs, rootpath, invname_prefix=invname_prefix)
 
         # Parse spec and get defs.
-        tla_spec_obj = tlaparse.parse_tla_file(self.specdir, specname)
+        tla_spec_obj = tlaparse.parse_tla_file(self.specdir, specname, tlc_binary=TLC_JAR)
         self.spec_defs = tla_spec_obj.get_all_user_defs(level=["0","1"])
         self.tla_spec_obj = tla_spec_obj
         self.state_vars = self.tla_spec_obj.get_all_vars()
@@ -5791,7 +5791,7 @@ class InductiveInvGen():
         if self.load_parse_tree:
             logging.info(f"Parsing spec '{self.specname}' into parse tree.")
             try:
-                tla_spec_obj = tlaparse.parse_tla_file(self.specdir, f"{self.specname}")
+                tla_spec_obj = tlaparse.parse_tla_file(self.specdir, f"{self.specname}", tlc_binary=TLC_JAR)
                 self.spec_defs = tla_spec_obj.get_all_user_defs(level="1")
                 self.tla_spec_obj = tla_spec_obj
                 self.state_vars = self.tla_spec_obj.get_all_vars()
@@ -5942,9 +5942,13 @@ if __name__ == "__main__":
         print(f"Setting default Java to fast Mac version: '{MAC_FAST_JAVA_EXE}'")
         JAVA_EXE = MAC_FAST_JAVA_EXE
 
+    # Globalize TLC_JAR path.
+    TLC_JAR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "benchmarks/tla2tools-checkall.jar")
+    print(f"TLC_JAR: '{TLC_JAR}'")
+
     # Parse command line arguments.
     parser = argparse.ArgumentParser(description='')
-    parser.add_argument('--spec', help="Name of the protocol benchmark to run (given as 'benchmarks/<spec_name>').", required=True, type=str)
+    parser.add_argument('--spec', help="Path to the TLA+ specification file (e.g., 'dir/home/spec.tla'). The base directory of this path will be used as the benchmarks directory.", required=True, type=str)
     parser.add_argument('--ninvs', help='Maximum number of invariants to generate at each iteration.', required=False, type=int, default=5000)
     parser.add_argument('--niters', help='Maximum number of invariant generation iterations to run in each CTI elimination round.', required=False, type=int, default=3)
     parser.add_argument('--nrounds', help='Maximum number of CTI elimination rounds to run.', required=False, type=int, default=3)
@@ -6060,6 +6064,9 @@ if __name__ == "__main__":
     # Set Java binary path.
     JAVA_EXE = args["java_exe"]
     TLC_JAR = args["tlc_jar"]
+
+    
+    
     spec_config_file = os.path.join(specdir, specname) + ".config.json"
 
     # Allow overriding config file with custom one.
@@ -6069,11 +6076,19 @@ if __name__ == "__main__":
     fcfg = open(spec_config_file)
     spec_config = json.load(fcfg)
 
+    # Check for some defaults.
+    if "tlaps_proof_config" not in spec_config:
+        spec_config["tlaps_proof_config"] = {
+            "assumes": [],
+            "global_def_expands": [],
+            "lemma_def_expands": {},
+            "action_def_expands": {}
+        }
 
     # Initialize the config with parameters needed for verification (e.g. grammar predicates, etc.),
     # assuming a give seed/base config is given.
     if args["auto_init_config_params"]:
-        spec_obj = tlaparse.parse_tla_file(specdir, specname)
+        spec_obj = tlaparse.parse_tla_file(specdir, specname, tlc_binary=TLC_JAR)
         # Extract preds separately for each action.
         all_preds = []
         actions = []
