@@ -1,4 +1,4 @@
---------------------------- MODULE TicketProtocol ---------------------------
+--------------------------- MODULE ticket_lock ---------------------------
 
 EXTENDS Naturals, FiniteSets
 
