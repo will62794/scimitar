@@ -98,7 +98,7 @@ TypeOK ==
     /\ decide_abort \in SUBSET Node
     /\ abort_flag \in BOOLEAN 
     
-Safety == 
+SafetyInv == 
     /\ \A n,n2 \in Node : (n \in decide_commit) => (n2 \notin decide_abort) 
     /\ \A n,n2 \in Node : (n \in decide_commit) => (n2 \in vote_yes)
     /\ \A n,n2 \in Node : (n \in decide_abort) => abort_flag

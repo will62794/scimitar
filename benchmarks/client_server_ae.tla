@@ -51,7 +51,7 @@ TypeOK ==
 
 NextUnchanged == UNCHANGED vars
 
-Safety == \A n \in Node, p \in Response : (<<n,p>> \in response_received) => ResponseMatched(n,p)
+Inv == \A n \in Node, p \in Response : (<<n,p>> \in response_received) => ResponseMatched(n,p)
 
 Symmetry == Permutations(Node) \cup Permutations(Request) \cup Permutations(Response)
 
