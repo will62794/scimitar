@@ -1,5 +1,4 @@
----- MODULE lockserver ----
-\* benchmark: i4-lock-server
+---- MODULE lock_server_sync ----
 
 EXTENDS TLC, Naturals
 
@@ -43,9 +42,12 @@ Init ==
     /\ semaphore = [i \in Server |-> TRUE]
     /\ clientlocks = [i \in Client |-> {}]
 
+ConnectAction == TRUE /\ \E c \in Client, s \in Server : Connect(c, s)
+DisconnectAction == TRUE /\ \E c \in Client, s \in Server : Disconnect(c, s)
+
 Next == 
-    \/ \E c \in Client, s \in Server : Connect(c, s)
-    \/ \E c \in Client, s \in Server : Disconnect(c, s)
+    \/ ConnectAction
+    \/ DisconnectAction
 
 NextUnchanged == UNCHANGED vars
 
@@ -55,13 +57,6 @@ TypeOK ==
 
 \* Two different clients cannot hold the lock of the same server simultaneously.
 Inv == \A ci,cj \in Client : (clientlocks[ci] \cap clientlocks[cj] # {}) => (ci = cj)
-
-\* The inductive invariant.
-Ind == 
-    /\ TypeOK
-    /\ Inv
-    \* A client and server never hold the same lock at the same time.
-    /\ \A c \in Client, s \in Server : (s \in clientlocks[c]) => ~semaphore[s]
 
 CTICost == 0
 

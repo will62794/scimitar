@@ -1,4 +1,4 @@
----- MODULE lockserv ----
+---- MODULE lock_server_async ----
 EXTENDS TLC, Naturals
 
 CONSTANT Node
