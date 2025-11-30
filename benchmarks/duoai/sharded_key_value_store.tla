@@ -1,5 +1,5 @@
----- MODULE sharded_kv ----
-EXTENDS TLC, Randomization
+---- MODULE sharded_key_value_store ----
+EXTENDS TLC, Naturals
 
 CONSTANT Key
 CONSTANT Value
@@ -36,10 +36,14 @@ Put(n, k, v) ==
     /\ table' = [table EXCEPT ![n][k] = v]
     /\ UNCHANGED <<owner, transfer_msg>>
 
+ReshardAction == TRUE /\ \E k \in Key, v \in Value, n_old,n_new \in Node : Reshard(k,v,n_old,n_new)
+RecvTransferMsgAction == TRUE /\ \E n \in Node, k \in Key, v \in Value : RecvTransferMsg(n,k,v)
+PutAction == TRUE /\ \E n \in Node, k \in Key, v \in Value : Put(n,k,v)
+
 Next == 
-    \/ \E k \in Key, v \in Value, n_old,n_new \in Node : Reshard(k,v,n_old,n_new)
-    \/ \E n \in Node, k \in Key, v \in Value : RecvTransferMsg(n,k,v)
-    \/ \E n \in Node, k \in Key, v \in Value : Put(n,k,v)
+    \/ ReshardAction
+    \/ RecvTransferMsgAction
+    \/ PutAction
 
 Init == 
     /\ table = [n \in Node |-> [k \in Key |-> Nil]]
@@ -54,18 +58,20 @@ TypeOK ==
     /\ owner \in [Node -> SUBSET Key]
     /\ transfer_msg \in SUBSET (Node \times Key \times Value)
 
-TypeOKRandom == 
-    /\ owner \in [Node -> SUBSET Key]
-    /\ table \in [Node -> [Key -> Value \cup {Nil}]]
-    /\ transfer_msg \in RandomSetOfSubsets(150, 5, (Node \times Key \times Value))
+\* TypeOKRandom == 
+\*     /\ owner \in [Node -> SUBSET Key]
+\*     /\ table \in [Node -> [Key -> Value \cup {Nil}]]
+\*     /\ transfer_msg \in RandomSetOfSubsets(150, 5, (Node \times Key \times Value))
 
 \* Keys unique.
-Safety == 
+Inv == 
     \A n1,n2 \in Node, k \in Key, v1,v2 \in Value : 
         (table[n1][k]=v1 /\ table[n2][k]=v2) => (n1=n2 /\ v1=v2)
 
 Symmetry == Permutations(Key) \cup Permutations(Value) \cup Permutations(Node)
 
 NextUnchanged == UNCHANGED vars
+
+CTICost == 0
 
 ====
