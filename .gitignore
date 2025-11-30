@@ -53,7 +53,8 @@ apa_indcheck
 *.proof.pickle
 *.svg
 trace.json
-benchmarks/*.xml
+benchmarks/**/*.xml
+*slice_dist*.pdf
 *.DS_Store
 states2
 *_TTrace_*
