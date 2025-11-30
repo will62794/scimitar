@@ -1,7 +1,7 @@
 ---- MODULE consensus_forall ----
 \* benchmark: pyv-consensus-forall
 
-EXTENDS TLC, Naturals, Randomization
+EXTENDS TLC, Naturals
 
 CONSTANT Node,Value,Quorum
 
@@ -82,16 +82,16 @@ TypeOK ==
     /\ voting_quorum \in Quorum
     /\ decided \in SUBSET (Node \X Value)
 
-TypeOKRandom ==
-    /\ vote_request_msg \in RandomSubset(15, SUBSET (Node \X Node))
-    /\ voted \in RandomSubset(5, [Node -> BOOLEAN])
-    /\ vote_msg \in RandomSubset(15, SUBSET (Node \X Node))
-    /\ votes \in RandomSubset(15, SUBSET (Node \X Node))
-    /\ leader \in RandomSubset(5, [Node -> BOOLEAN])
-    /\ voting_quorum \in RandomSubset(5, Quorum)
-    /\ decided \in RandomSubset(15, SUBSET (Node \X Value))
+\* TypeOKRandom ==
+\*     /\ vote_request_msg \in RandomSubset(15, SUBSET (Node \X Node))
+\*     /\ voted \in RandomSubset(5, [Node -> BOOLEAN])
+\*     /\ vote_msg \in RandomSubset(15, SUBSET (Node \X Node))
+\*     /\ votes \in RandomSubset(15, SUBSET (Node \X Node))
+\*     /\ leader \in RandomSubset(5, [Node -> BOOLEAN])
+\*     /\ voting_quorum \in RandomSubset(5, Quorum)
+\*     /\ decided \in RandomSubset(15, SUBSET (Node \X Value))
 
-Safety == 
+Inv == 
     \A n1,n2 \in Node : \A v1,v2 \in Value : 
         (<<n1,v1>> \in decided /\ <<n2,v2>> \in decided) => (v1=v2)
 
@@ -100,5 +100,7 @@ NoLeader == ~\E i \in Node : leader[i]
 Symmetry == Permutations(Node) \cup Permutations(Value)
 
 NextUnchanged == UNCHANGED vars
+
+CTICost == 0
 
 ====
