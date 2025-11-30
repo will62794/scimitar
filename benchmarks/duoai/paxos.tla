@@ -1,0 +1,5 @@
+---- MODULE paxos ----
+EXTENDS TLC
+
+
+====
