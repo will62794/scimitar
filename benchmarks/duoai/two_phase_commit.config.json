@@ -26,8 +26,13 @@
         "VARI = VARJ /\\ alive = alive"
     ],
     "preds_alt" : [],
-    "safety"  :  "SafetyInv",
-    "constants"  :  "CONSTANTS\nNode={n1,n2,n3}\nn1=n1\nn2=n2\nn3=n3\n",
+    "safety"  :  "Inv",
+    "constants": {
+        "Node": ["{n1,n2,n3}"],
+        "n1": "n1",
+        "n2": "n2",
+        "n3": "n3"
+    },
     "constraint"  :  "",
     "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : ",
     "quant_inv_alt"  :  null,

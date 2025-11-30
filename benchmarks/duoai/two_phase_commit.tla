@@ -1,7 +1,7 @@
 ---- MODULE two_phase_commit ----
 \* benchmark: i4-two-phase-commit
 
-EXTENDS TLC
+EXTENDS TLC, Naturals, FiniteSets
 
 CONSTANT Node
 
@@ -67,14 +67,22 @@ Abort(n) ==
     /\ decide_abort' = decide_abort \cup {n}
     /\ UNCHANGED <<vote_yes,vote_no,alive,go_commit,go_abort,decide_commit,abort_flag>>
 
+Vote1Action == TRUE /\ \E n \in Node : Vote1(n)
+Vote2Action == TRUE /\ \E n \in Node : Vote2(n)
+FailAction == TRUE /\ \E n \in Node : Fail(n)
+Go1Action == TRUE /\ Go1
+Go2Action == TRUE /\ Go2
+CommitAction == TRUE /\ \E n \in Node : Commit(n)
+AbortAction == TRUE /\ \E n \in Node : Abort(n)
+
 Next ==
-    \/ \E n \in Node : Vote1(n)
-    \/ \E n \in Node : Vote2(n)
-    \/ \E n \in Node : Fail(n)
-    \/ Go1
-    \/ Go2
-    \/ \E n \in Node : Commit(n)
-    \/ \E n \in Node : Abort(n)
+    \/ Vote1Action
+    \/ Vote2Action
+    \/ FailAction
+    \/ Go1Action
+    \/ Go2Action
+    \/ CommitAction
+    \/ AbortAction
 
 Init == 
     /\ vote_yes = {}
@@ -98,11 +106,12 @@ TypeOK ==
     /\ decide_abort \in SUBSET Node
     /\ abort_flag \in BOOLEAN 
     
-SafetyInv == 
-    /\ \A n,n2 \in Node : (n \in decide_commit) => (n2 \notin decide_abort) 
-    /\ \A n,n2 \in Node : (n \in decide_commit) => (n2 \in vote_yes)
-    /\ \A n,n2 \in Node : (n \in decide_abort) => abort_flag
+Inv == \A n,n2 \in Node : (n \in decide_commit) => (n2 \notin decide_abort) 
+InvB == \A n,n2 \in Node : (n \in decide_commit) => (n2 \in vote_yes)
+InvC == \A n,n2 \in Node : (n \in decide_abort) => abort_flag
 
 Symmetry == Permutations(Node)
+
+CTICost == 0
 
 ====
