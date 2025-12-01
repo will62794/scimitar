@@ -1,7 +1,6 @@
 ---- MODULE client_server_ae ----
-\* benchmark: pyv-client-server-ae
 
-EXTENDS TLC
+EXTENDS TLC, Naturals
 
 CONSTANT Node
 CONSTANT Request
@@ -32,10 +31,14 @@ ReceiveResponse(n,p) ==
     /\ response_received' = response_received \cup {<<n,p>>}
     /\ UNCHANGED <<request_sent,response_sent,match>>
 
+NewRequestAction == \E n \in Node, r \in Request : NewRequest(n,r)
+RespondAction == \E n \in Node, r \in Request, p \in Response : Respond(n,r,p)
+ReceiveResponseAction == \E n \in Node, p \in Response : ReceiveResponse(n,p)
+
 Next ==
-    \/ \E n \in Node, r \in Request : NewRequest(n,r)
-    \/ \E n \in Node, r \in Request, p \in Response : Respond(n,r,p)
-    \/ \E n \in Node, p \in Response : ReceiveResponse(n,p)
+    \/ NewRequestAction
+    \/ RespondAction
+    \/ ReceiveResponseAction
 
 Init == 
     /\ match \in SUBSET (Request \X Response)
@@ -51,8 +54,10 @@ TypeOK ==
 
 NextUnchanged == UNCHANGED vars
 
-Safety == \A n \in Node, p \in Response : (<<n,p>> \in response_received) => ResponseMatched(n,p)
+Correctness == \A n \in Node, p \in Response : (<<n,p>> \in response_received) => ResponseMatched(n,p)
 
 Symmetry == Permutations(Node) \cup Permutations(Request) \cup Permutations(Response)
+
+CTICost == 0
 
 ====
