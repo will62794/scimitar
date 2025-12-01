@@ -15,7 +15,7 @@
         "VALI = VALJ /\\ owner = owner"
     ],
     "preds_alt" : [],
-    "safety"  :  "Inv",
+    "safety"  :  "Correctness",
     "constants": {
         "Node": ["{n1,n2,n3}"],
         "Key": ["{k1,k2}"],

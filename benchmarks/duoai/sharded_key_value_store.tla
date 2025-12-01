@@ -64,7 +64,7 @@ TypeOK ==
 \*     /\ transfer_msg \in RandomSetOfSubsets(150, 5, (Node \times Key \times Value))
 
 \* Keys unique.
-Inv == 
+Correctness == 
     \A n1,n2 \in Node, k \in Key, v1,v2 \in Value : 
         (table[n1][k]=v1 /\ table[n2][k]=v2) => (n1=n2 /\ v1=v2)
 
