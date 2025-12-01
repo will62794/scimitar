@@ -25,7 +25,16 @@
         "DbRequestId": ["{i1,i2}"],
         "n1": "n1",
         "n2": "n2",
-        "n3": "n3"
+        "n3": "n3",
+        "r1": "r1",
+        "r2": "r2",
+        "r3": "r3",
+        "p1": "p1",
+        "p2": "p2",
+        "p3": "p3",
+        "i1": "i1",
+        "i2": "i2",
+        "i3": "i3"
     },
     "constraint"  :  "",
     "quant_inv"  :  "\\A VARI \\in Node : \\A VARID \\in DbRequestId : \\A VARR \\in Request : \\A VARJ \\in Node : \\A VARP \\in Response : ",
