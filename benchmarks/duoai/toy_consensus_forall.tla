@@ -1,5 +1,4 @@
 ---- MODULE toy_consensus_forall ----
-\* benchmark: pyv-toy-consensus-forall
 
 EXTENDS TLC, Naturals, FiniteSets
 
@@ -34,14 +33,17 @@ Init ==
     /\ voted = [n \in Node |-> FALSE]
     /\ decided = {}
 
+CastVoteAction == TRUE /\ \E i \in Node, v \in Value : CastVote(i, v)
+DecideAction == TRUE /\ \E v \in Value, Q \in Quorums : Decide(v, Q)
+
 Next == 
-    \/ \E i \in Node, v \in Value : CastVote(i, v)
-    \/ \E v \in Value, Q \in Quorums : Decide(v, Q)
+    \/ CastVoteAction
+    \/ DecideAction
 
 NextUnchanged == UNCHANGED vars
 
 \* Can only decide on a single value
-Inv == \A vi,vj \in decided : vi = vj
+ConsensusInv == \A vi,vj \in decided : vi = vj
 
 TypeOK == 
     /\ vote \in [Node -> Value \cup {Nil}]
@@ -50,34 +52,6 @@ TypeOK ==
 
 Symmetry == Permutations(Node)
 
-\*
-\* Weakest precondition.
-\*
-
-(**
-
-Inv == \A vi,vj \in decided : vi = vj
-wp(Next, Inv) ==
-    /\ ENABLED CastVote(i,v) => wp(Post(CastVote), Inv)
-    /\ ENABLED Decide(v,Q)   => wp(Post(Decide), Inv)
-
-A1 == wp(Decide, Inv) ==
-    /\ \A v \in Value, Q \in Quorum : 
-        \A n \in Q : (vote[n] = v) => \A vi,vj \in (decided \cup {v}) : vi = vj
-
-A2 == wp(CastVote, A1) ==
-    \A i \in Node, v \in Value :
-        ~voted[i] => 
-            \A vz \in Value, Q \in Quorum : 
-            \A n \in Q : ([vote EXCEPT ![i] = v][n] = vz) => \A vi,vj \in (decided \cup {vz}) : vi = vj
-
-A3 == wp(Decide, A1) ==
-    \A v \in Value, Q \in Quorum :
-        (\A n \in Q : vote[n] = v) => 
-            \A vz \in Value, Q \in Quorum : 
-            \A n \in Q : (vote[n] = vz) => \A vi,vj \in ((decided \cup {v}) \cup {vz}) : vi = vj
-
-**)
-
+CTICost == 0
 
 ====
