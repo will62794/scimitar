@@ -1,7 +1,6 @@
 ---- MODULE consensus_wo_decide ----
-\* benchmark: pyv-consensus-wo-decide
 
-EXTENDS TLC, Randomization
+EXTENDS TLC, Naturals
 
 CONSTANT Node
 CONSTANT Quorums
@@ -12,20 +11,6 @@ VARIABLE vote_msg
 VARIABLE votes
 VARIABLE leader
 VARIABLE voting_quorum
-
-\* mutable relation vote_request_msg(node, node)
-\* mutable relation voted(node)
-\* mutable relation vote_msg(node, node)
-\* mutable relation votes(node, node)
-\* mutable relation leader(node)
-\* mutable constant voting_quorum: quorum
-
-
-\* transition send_request_vote(src: node, dst: node)
-\* transition send_vote(src: node, dst: node)
-\* transition recv_vote(n: node, sender: node)
-\* transition choose_voting_quorum(q, sn)
-\* transition become_leader(n: node)
 
 SendRequestVote(i,j) == 
     /\ vote_request_msg' = [vote_request_msg EXCEPT ![<<i,j>>] = TRUE]
@@ -63,12 +48,18 @@ Init ==
     /\ leader = [s \in Node |-> FALSE]
     /\ voting_quorum \in Quorums
 
+SendRequestVoteAction == TRUE /\ \E i,j \in Node : SendRequestVote(i,j)
+SendVoteAction == TRUE /\ \E i,j \in Node : SendVote(i,j)
+RecvVoteAction == TRUE /\ \E i,j \in Node : RecvVote(i,j)
+ChooseVotingQuorumAction == TRUE /\ \E i \in Node : ChooseVotingQuorum(i)
+BecomeLeaderAction == TRUE /\ \E i \in Node : BecomeLeader(i)
+
 Next == 
-    \/ \E i,j \in Node : SendRequestVote(i,j)
-    \/ \E i,j \in Node : SendVote(i,j)
-    \/ \E i,j \in Node : RecvVote(i,j)
-    \/ \E i \in Node : ChooseVotingQuorum(i)
-    \/ \E i \in Node : BecomeLeader(i)
+    \/ SendRequestVoteAction
+    \/ SendVoteAction
+    \/ RecvVoteAction
+    \/ ChooseVotingQuorumAction
+    \/ BecomeLeaderAction
 
 TypeOK == 
     /\ vote_request_msg \in [Node \X Node -> BOOLEAN]
@@ -78,15 +69,15 @@ TypeOK ==
     /\ leader \in [Node -> BOOLEAN]
     /\ voting_quorum \in Quorums
 
-TypeOKRandom ==
-    /\ vote_request_msg \in RandomSubset(25, [Node \X Node -> BOOLEAN])
-    /\ voted \in RandomSubset(6, [Node -> BOOLEAN])
-    /\ vote_msg \in RandomSubset(25, [Node \X Node -> BOOLEAN])
-    /\ votes \in RandomSubset(25, [Node \X Node -> BOOLEAN])
-    /\ leader \in RandomSubset(6, [Node -> BOOLEAN])
-    /\ voting_quorum \in RandomSubset(4, Quorums)
+\* TypeOKRandom ==
+\*     /\ vote_request_msg \in RandomSubset(25, [Node \X Node -> BOOLEAN])
+\*     /\ voted \in RandomSubset(6, [Node -> BOOLEAN])
+\*     /\ vote_msg \in RandomSubset(25, [Node \X Node -> BOOLEAN])
+\*     /\ votes \in RandomSubset(25, [Node \X Node -> BOOLEAN])
+\*     /\ leader \in RandomSubset(6, [Node -> BOOLEAN])
+\*     /\ voting_quorum \in RandomSubset(4, Quorums)
 
-Safety == \A i,j \in Node : (leader[i] /\ leader[j]) => (i = j)
+ConsensusInv == \A i,j \in Node : (leader[i] /\ leader[j]) => (i = j)
 
 NoLeader == ~\E i \in Node : leader[i]
 
@@ -94,37 +85,6 @@ Symmetry == Permutations(Node)
 
 NextUnchanged == UNCHANGED <<vote_request_msg,voted,vote_msg,votes,leader,voting_quorum>>
 
-\*
-\* Inductive invariant definition.
-\*
-
-\* invariant votes(N, N1) -> vote_msg(N1, N)
-A1 == \A n,n1 \in Node : votes[<<n,n1>>] => vote_msg[<<n1,n>>]
-
-\* invariant vote_msg(N, N1) & vote_msg(N, N2) -> N1 = N2
-A2 == 
-    \A n,n1,n2 \in Node : 
-        vote_msg[<<n,n1>>] /\ vote_msg[<<n,n2>>] => n1=n2
-
-\* vote_msg(N, N1) -> voted(N)
-A3 == \A n,n1 \in Node : vote_msg[<<n,n1>>] => voted[n]
-
-\* invariant leader(N) & member(N1, voting_quorum) -> votes(N, N1)
-A4 == \A n,n1 \in Node: (leader[n] /\ n1 \in voting_quorum) => votes[<<n,n1>>]
-
-\* The human generated invariant.
-IndHuman == 
-    /\ Safety
-    /\ A1
-    /\ A2
-    /\ A3
-    /\ A4
-
-Ind == 
-    /\ Safety
-
-IInit ==
-    /\ TypeOKRandom
-    /\ Ind
+CTICost == 0
 
 ====
