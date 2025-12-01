@@ -58,12 +58,12 @@ Init ==
     /\ voting_quorum \in Quorum
     /\ decided = {}
 
-SendRequestVoteAction == \E i,j \in Node : SendRequestVote(i,j)
-SendVoteAction == \E i,j \in Node : SendVote(i,j)
-RecvVoteAction == \E i,j \in Node : RecvVote(i,j)
-ChooseVotingQuorumAction == \E i \in Node : ChooseVotingQuorum(i)
-BecomeLeaderAction == \E i \in Node : BecomeLeader(i)
-DecideAction == \E i \in Node, v \in Value : Decide(i, v)
+SendRequestVoteAction == TRUE /\ \E i,j \in Node : SendRequestVote(i,j)
+SendVoteAction == TRUE /\ \E i,j \in Node : SendVote(i,j)
+RecvVoteAction == TRUE /\\E i,j \in Node : RecvVote(i,j)
+ChooseVotingQuorumAction == TRUE /\ \E i \in Node : ChooseVotingQuorum(i)
+BecomeLeaderAction == TRUE /\ \E i \in Node : BecomeLeader(i)
+DecideAction == TRUE /\ \E i \in Node, v \in Value : Decide(i, v)
 
 Next == 
     \/ SendRequestVoteAction
@@ -91,7 +91,7 @@ TypeOK ==
 \*     /\ voting_quorum \in RandomSubset(5, Quorum)
 \*     /\ decided \in RandomSubset(15, SUBSET (Node \X Value))
 
-Inv == 
+ConsensusInv == 
     \A n1,n2 \in Node : \A v1,v2 \in Value : 
         (<<n1,v1>> \in decided /\ <<n2,v2>> \in decided) => (v1=v2)
 

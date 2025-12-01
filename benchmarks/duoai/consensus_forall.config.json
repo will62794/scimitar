@@ -26,7 +26,7 @@
         "<<VARJ,VALI>> \\in decided"
     ],
     "preds_alt" : [],
-    "safety"  :  "Inv",
+    "safety"  :  "ConsensusInv",
     "constants": {
         "Node": ["{n1,n2,n3}"],
         "Quorum": ["{{n1,n2},{n2,n3},{n1,n3}}"],
