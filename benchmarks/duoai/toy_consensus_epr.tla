@@ -1,5 +1,4 @@
 ---- MODULE toy_consensus_epr ----
-\* benchmark: pyv-toy-consensus-epr
 
 EXTENDS TLC, Naturals, FiniteSets
 
@@ -33,9 +32,12 @@ Init ==
     /\ vote = {}
     /\ decided = {}
 
+CastVoteAction == TRUE /\ \E i \in Node, v \in Value : CastVote(i, v)
+DecideAction == TRUE /\ \E v \in Value, Q \in Quorum : Decide(v, Q)
+
 Next == 
-    \/ \E i \in Node, v \in Value : CastVote(i, v)
-    \/ \E v \in Value, Q \in Quorum : Decide(v, Q)
+    \/ CastVoteAction
+    \/ DecideAction
 
 NextUnchanged == UNCHANGED vars
 
@@ -45,8 +47,10 @@ TypeOK ==
     /\ decided \in SUBSET Value
 
 \* Can only decide on a single value
-Safety == \A vi,vj \in decided : vi = vj
+ConsensusInv == \A vi,vj \in decided : vi = vj
 
 Symmetry == Permutations(Node) \cup Permutations(Value)
+
+CTICost == 0
 
 ====
