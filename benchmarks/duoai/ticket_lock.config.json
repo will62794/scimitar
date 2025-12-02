@@ -1,8 +1,11 @@
 {
     "preds"  :  [
         "pc[VARNI] = \"pc1\"",
+        "pc[VARNJ] = \"pc1\"",
+        "pc[VARNI] = \"pc2\"",
         "pc[VARNJ] = \"pc2\"",
-        "pc[VARNK] = \"pc3\"",
+        "pc[VARNI] = \"pc3\"",
+        "pc[VARNJ] = \"pc3\"",
         "service = zero",
         "next_ticket = zero",
         "<<VARNJ,VARK>> \\in m",
@@ -16,13 +19,16 @@
     "constants"  :  {
         "Thread": ["{t0,t1,t2}"],
         "Ticket": ["{0,1,2}"],
-        "zero": "0"
+        "zero": "0",
+        "t0": "t0",
+        "t1": "t1",
+        "t2": "t2"
     },
     "constraint"  :  "",
     "quant_inv"  :  "\\A VARNI \\in Thread : \\A VARNJ \\in Thread : \\A VARK \\in Ticket : ",
     "quant_inv_alt"  :  null,
     "quant_vars": [],
-    "model_consts"  :  "CONSTANT t0,t1,t2,0,1,2",
+    "model_consts"  :  "CONSTANT t0,t1,t2",
     "symmetry" : true,
     "typeok"  :  "TypeOK",
     "simulate"  :  true,

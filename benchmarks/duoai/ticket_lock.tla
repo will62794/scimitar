@@ -1,6 +1,6 @@
 --------------------------- MODULE ticket_lock ---------------------------
 
-EXTENDS Naturals, FiniteSets
+EXTENDS Naturals, FiniteSets, TLC
 
 (***************************************************************************)
 (* Constants and basic order on tickets                                    *)
@@ -87,12 +87,16 @@ TypeOK ==
   /\ pc \in [Thread -> {"pc1", "pc2", "pc3"}]
   /\ service \in Ticket
   /\ next_ticket \in Ticket
-  /\ m \subseteq Thread \X Ticket
+  /\ m \in SUBSET (Thread \X Ticket)
+
+
+
+Symmetry == Permutations(Thread)
+
 
 (***************************************************************************)
 (* Safety: at most one thread in pc3                                       *)
 (***************************************************************************)
-
 MutualExcl ==
   \A T1, T2 \in Thread :
     (pc[T1] = "pc3" /\ pc[T2] = "pc3") => T1 = T2
