@@ -41,18 +41,16 @@ Init ==
 
 (* step12(t, new_next_ticket) *)
 Step12(t, new_next_ticket) ==
-  /\ t \in Thread /\ new_next_ticket \in Ticket
   /\ pc[t] = "pc1"
   /\ ~(new_next_ticket <= next_ticket)
   /\ \A Z \in Ticket : (~(Z <= next_ticket)) => (new_next_ticket <= Z)
   /\ pc' = [pc EXCEPT ![t] = "pc2"]
-  /\ m' = m \cup {<<t,next_ticket>>}
+  /\ m' = (m \ {<<t,notk>> : notk \in Ticket \ {next_ticket}}) \cup {<<t,next_ticket>>}
   /\ next_ticket' = new_next_ticket
   /\ service' = service
 
 (* step23(t, k) *)
 Step23(t, k) ==
-  /\ t \in Thread /\ k \in Ticket
   /\ pc[t] = "pc2"
   /\ <<t, k>> \in m
   /\ (k <= service)
@@ -63,7 +61,6 @@ Step23(t, k) ==
 
 (* step31(t, new_service) *)
 Step31(t, new_service) ==
-  /\ t \in Thread /\ new_service \in Ticket
   /\ pc[t] = "pc3"
   /\ ~(new_service <= service)
   /\ \A Z \in Ticket : (~(Z <= service)) => (new_service <= Z)

@@ -5,10 +5,10 @@
         "pc[VARNK] = \"pc3\"",
         "service = zero",
         "next_ticket = zero",
-        "m[VARNI][VARK] = TRUE",
-        "m[VARNJ][VARK] = TRUE",
-        "m[VARNK][VARI] = TRUE",
-        "m[VARNK][VARJ] = TRUE",
+        "<<VARNJ,VARK>> \\in m",
+        "<<VARNI,VARK>> \\in m",
+        "<<VARNI,VARK>> \\in m /\\ VARK <= service",
+        "<<VARNJ,VARK>> \\in m /\\ VARK <= service",
         "VARNI = VARNJ /\\ pc = pc"
     ],
     "preds_alt" : [],
@@ -19,7 +19,7 @@
         "zero": "0"
     },
     "constraint"  :  "",
-    "quant_inv"  :  "\\A VARNI \\in Thread : \\A VARNJ \\in Thread : ",
+    "quant_inv"  :  "\\A VARNI \\in Thread : \\A VARNJ \\in Thread : \\A VARK \\in Ticket : ",
     "quant_inv_alt"  :  null,
     "quant_vars": [],
     "model_consts"  :  "CONSTANT t0,t1,t2,0,1,2",
