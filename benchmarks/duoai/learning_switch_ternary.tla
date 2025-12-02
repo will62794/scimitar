@@ -1,7 +1,6 @@
----- MODULE learning_switch_i4 ----
-\* benchmark: i4-learning-switch
+---- MODULE learning_switch_ternary ----
 
-EXTENDS TLC, Randomization
+EXTENDS TLC, Naturals, Randomization
 
 CONSTANT Packet
 CONSTANT Node
@@ -56,10 +55,15 @@ Route(p,sw0,sw1,sw2) ==
             /\ pending' = IF cond2 THEN pending \cup {<<p,sw1,sw2>>} ELSE pending
     /\ UNCHANGED <<src,dst,link>>
 
+                                       
+NewPacketAction == TRUE /\ \E p \in Packet : NewPacket(p)
+FloodAction == TRUE /\ \E p \in Packet, sw0,sw1,sw2 \in Node : Flood(p,sw0,sw1,sw2)
+RouteAction == TRUE /\ \E p \in Packet, sw0,sw1,sw2 \in Node : Route(p,sw0,sw1,sw2)
+
 Next ==
-    \/ \E p \in Packet : NewPacket(p)
-    \/ \E p \in Packet, sw0,sw1,sw2 \in Node : Flood(p,sw0,sw1,sw2)
-    \/ \E p \in Packet, sw0,sw1,sw2 \in Node : Route(p,sw0,sw1,sw2)
+    \/ NewPacketAction
+    \/ FloodAction
+    \/ RouteAction
 
 Init ==
     /\ route_dom = {}
@@ -73,17 +77,12 @@ Init ==
     \* Symmetric links.
     /\ \A x,y \in Node : (link[x] = y) => (link[y] = x)
 
-\* invariant [1000000] 
-\* route_tc(N, X, X) & 
-\* (route_tc(N, X, Y) & route_tc(N, Y, Z) -> route_tc(N, X, Z)) & 
-\* (route_tc(N, X, Y) & route_tc(N, Y, X) -> X = Y) & 
-\* (route_tc(N, X, Y) & route_tc(N, X, Z) -> (route_tc(N, Y, Z) | route_tc(N, Z, Y)))
-Safety ==
+Correctness ==
     \A n,x,y,z \in Node : 
         /\ <<n,x,x>> \in route_tc
-        /\ (<<n,x,y>> \in route_tc /\ <<n,y,z>> \in route_tc) => <<n,x,z>> \in route_tc
-        /\ (<<n,x,y>> \in route_tc /\ <<n,y,x>> \in route_tc) => (x = y)
-        /\ <<n,x,y>> \in route_tc /\ <<n,x,z>> \in route_tc => (<<n,y,z>> \in route_tc \/ <<n,z,y>> \in route_tc)
+        \* /\ (<<n,x,y>> \in route_tc /\ <<n,y,z>> \in route_tc) => <<n,x,z>> \in route_tc
+        \* /\ (<<n,x,y>> \in route_tc /\ <<n,y,x>> \in route_tc) => (x = y)
+        \* /\ <<n,x,y>> \in route_tc /\ <<n,x,z>> \in route_tc => (<<n,y,z>> \in route_tc \/ <<n,z,y>> \in route_tc)
 
 TypeOK ==
     /\ route_dom \in SUBSET (Node \X Node)
@@ -94,15 +93,25 @@ TypeOK ==
     /\ link \in [Node -> Node]
 
 TypeOKRandom ==
-    /\ route_dom \in RandomSetOfSubsets(35, 5, (Node \X Node))
+    /\ route_dom \in SUBSET (Node \X Node)
     /\ route_tc \in RandomSetOfSubsets(35, 5, {<<x,y,z>> \in Node \X Node \X Node: y=z})
     /\ pending \in RandomSetOfSubsets(35, 5, (Packet \X Node \X Node))
-    /\ src \in RandomSubset(20, [Packet -> Node])
-    /\ dst \in RandomSubset(20, [Packet -> Node])
-    /\ link \in RandomSubset(10, [Node -> Node])
+    /\ src \in [Packet -> Node]
+    /\ dst \in [Packet -> Node]
+    /\ link \in [Node -> Node]
+
+\* TypeOKRandom ==
+\*     /\ route_dom \in RandomSetOfSubsets(35, 5, (Node \X Node))
+\*     /\ route_tc \in RandomSetOfSubsets(35, 5, {<<x,y,z>> \in Node \X Node \X Node: y=z})
+\*     /\ pending \in RandomSetOfSubsets(35, 5, (Packet \X Node \X Node))
+\*     /\ src \in RandomSubset(20, [Packet -> Node])
+\*     /\ dst \in RandomSubset(20, [Packet -> Node])
+\*     /\ link \in RandomSubset(10, [Node -> Node])
 
 Symmetry == Permutations(Node) \cup Permutations(Packet)
 
 NextUnchanged == UNCHANGED vars
+
+CTICost == 0
 
 ====

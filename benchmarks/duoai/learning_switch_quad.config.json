@@ -13,7 +13,7 @@
         "VARJ = VARK /\\ table = table"
     ],
     "preds_alt" : [],
-    "safety"  :  "Safety",
+    "safety"  :  "Correctness",
     "constants"  :  "CONSTANTS\nNode={n1,n2,n3,n4}\nn1=n1\nn2=n2\nn3=n3\nn4=n4\n",
     "constraint"  :  "CONSTRAINT StateConstraint",
     "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : \\A VARZ \\in Node :",
@@ -21,6 +21,6 @@
     "quant_vars": ["VARI", "VARJ"],
     "model_consts"  :  "CONSTANT n1,n2,n3,n4",
     "symmetry" : true,
-    "typeok"  :  "TypeOKRandom",
+    "typeok"  :  "TypeOK",
     "simulate"  :  true      
 }

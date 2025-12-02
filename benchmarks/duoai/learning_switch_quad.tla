@@ -1,7 +1,6 @@
----- MODULE learning_switch ----
-\* benchmark: pyv-learning-switch
+---- MODULE learning_switch_quad ----
 
-EXTENDS TLC, Naturals, FiniteSets, Randomization
+EXTENDS TLC, Naturals, FiniteSets
 
 CONSTANT 
     \* @type: Set(Str);
@@ -34,9 +33,12 @@ Forward(ps,pd,sw0,sw1,nondet) ==
                             /\ (<<ps,n1,sw1>> \in table /\ <<ps,sw0,n2>> \in table) }
                 ELSE table
 
+                          
+NewPacketAction == TRUE /\ \E ps,pd \in Node : NewPacket(ps,pd)
+ForwardAction == TRUE /\ \E ps,pd,sw0,sw1,nondet \in Node : Forward(ps,pd,sw0,sw1,nondet)
 Next == 
-    \/ \E ps,pd \in Node : NewPacket(ps,pd)
-    \/ \E ps,pd,sw0,sw1,nondet \in Node : Forward(ps,pd,sw0,sw1,nondet)
+    \/ NewPacketAction
+    \/ ForwardAction
 
 Init ==
     /\ table = {<<t,n1,n2>> \in (Node \X Node \X Node) : n1 = n2}
@@ -48,26 +50,12 @@ TypeOK ==
     /\ table \in SUBSET (Node \X Node \X Node)
     /\ pending \in SUBSET (Node \X Node \X Node \X Node)
 
-\* invariant [safety] 
-\* (forall T, X. table(T,X,X)) & 
-\* (forall T, X, Y, Z. table(T,X,Y) & table(T,Y,Z) -> table(T,X,Z)) &
-\* (forall T, X, Y. table(T,X,Y) & table(T,Y,X) -> X = Y) & 
-\* (forall T, X, Y, Z. table(T,X,Y) & table(T,X,Z) -> table(T,Y,Z) | table(T,Z,Y))
-Safety == 
-    \* /\ TRUE
-    \* /\ TypeOK
+Correctness == 
     /\ \A t,x \in Node : <<t,x,x>> \in table
-    /\ \A t,x,y,z \in Node : (<<t,x,y>> \in table /\ <<t,y,z>> \in table) => (<<t,x,z>> \in table)
-    /\ \A t,x,y \in Node : (<<t,x,y>> \in table /\ <<t,y,x>> \in table) => (x = y)
-    /\ \A t,x,y,z \in Node : (<<t,x,y>> \in table /\ <<t,x,z>> \in table) => (<<t,y,z>> \in table \/ <<t,z,y>> \in table)
+    \* /\ \A t,x,y,z \in Node : (<<t,x,y>> \in table /\ <<t,y,z>> \in table) => (<<t,x,z>> \in table)
+    \* /\ \A t,x,y \in Node : (<<t,x,y>> \in table /\ <<t,y,x>> \in table) => (x = y)
+    \* /\ \A t,x,y,z \in Node : (<<t,x,y>> \in table /\ <<t,x,z>> \in table) => (<<t,y,z>> \in table \/ <<t,z,y>> \in table)
     
-    \* Correct strengthening conjuncts.
-    \* /\ \A ps,pd,s,d \in Node : (<<ps,pd,s,d>> \in pending /\ ps # s) => <<ps,s,ps>> \in table
-    \* /\ \A t,x,y \in Node : (<<t,x,y>> \in table /\ t # y /\ x # y) => <<t,y,t>> \in table
-
-\* #invariant [help_3] pending(PS,PD,S,D) & PS ~= S -> table(PS,S,PS)
-\* #invariant [help_4] table(T,X,Y) & T ~= Y & X ~= Y -> table(T,Y,T)
-
 StateConstraint == Cardinality(pending) < 5
 
 Symmetry == Permutations(Node)
@@ -80,9 +68,11 @@ Test == Cardinality(pending) < 3
 \* The average number of elements in each subset is n.
 
 \* TODO: Figure out proper tuning for this.
-TypeOKRandom ==
-    /\ table \in RandomSetOfSubsets(80000, RandomElement(16..24), (Node \X Node \X Node))
-    /\ pending \in RandomSetOfSubsets(50, 8, (Node \X Node \X Node \X Node))
+\* TypeOKRandom ==
+\*     /\ table \in RandomSetOfSubsets(80000, RandomElement(16..24), (Node \X Node \X Node))
+\*     /\ pending \in RandomSetOfSubsets(50, 8, (Node \X Node \X Node \X Node))
+
+CTICost == 0
 
 \* \* A1 == <<s2,s1,s0>> \notin table
 \* Test == Cardinality(pending) < 2
