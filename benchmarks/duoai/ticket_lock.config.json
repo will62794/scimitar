@@ -1,0 +1,39 @@
+{
+    "preds"  :  [
+        "pc[VARNI] = \"pc1\"",
+        "pc[VARNJ] = \"pc2\"",
+        "pc[VARNK] = \"pc3\"",
+        "service = zero",
+        "next_ticket = zero",
+        "m[VARNI][VARK] = TRUE",
+        "m[VARNJ][VARK] = TRUE",
+        "m[VARNK][VARI] = TRUE",
+        "m[VARNK][VARJ] = TRUE",
+        "VARNI = VARNJ /\\ pc = pc"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "MutualExcl",
+    "constants"  :  {
+        "Thread": ["{t0,t1,t2}"],
+        "Ticket": ["{0,1,2}"],
+        "zero": "0"
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARNI \\in Thread : \\A VARNJ \\in Thread : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": [],
+    "model_consts"  :  "CONSTANT t0,t1,t2,0,1,2",
+    "symmetry" : true,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true,
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "lemma_def_expands": {
+            "Safety": ["MutualExcl"]
+
+        },
+        "action_def_expands":{
+        }
+    }    
+}
