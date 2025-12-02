@@ -1,6 +1,6 @@
 ---- MODULE chord_ring_maintenance ----
 
-EXTENDS Naturals, FiniteSets
+EXTENDS Naturals, FiniteSets, TLC
 
 (***************************************************************************)
 (* Carrier and ring topology                                               *)
@@ -56,16 +56,6 @@ P(x, y)  == <<x, y>> \in p
 OverrideRow(R, x, S) ==
   { r \in R : r[1] # x }
   \cup { <<x, y>> : y \in S }
-
-TypeInv ==
-  /\ a \subseteq NODE
-  /\ s1 \subseteq NODE \X NODE
-  /\ s2 \subseteq NODE \X NODE
-  /\ p  \subseteq NODE \X NODE
-  /\ in_s1 \subseteq NODE
-  /\ in_s2 \subseteq NODE
-  /\ reach \subseteq NODE
-  /\ error \subseteq NODE
 
 (***************************************************************************)
 (* Init                                                                    *)
@@ -250,32 +240,40 @@ Test(x) ==
   /\ UNCHANGED <<org, other>>
 
 (***************************************************************************)
-(* Step relation                                                            *)
+(*  relation                                                            *)
 (***************************************************************************)
 
-JoinStep      == \E x, y \in NODE : Join(x, y)
-StabilizeStep == \E x, y, z \in NODE : Stabilize(x, y, z)
-NotifyStep    == \E x, y, z \in NODE : Notify(x, y, z)
-InheritStep   == \E x, y, z \in NODE : Inherit(x, y, z)
-RemoveStep    == \E x, y, z \in NODE : Remove(x, y, z)
-FailStep      == \E x \in NODE       : Fail(x)
-ReachOrgStep  == \E x, y, z \in NODE : ReachOrg(x, y, z)
-RemoveOrgStep == \E x, y, z \in NODE : RemoveOrg(x, y, z)
-TestStep      == \E x \in NODE       : Test(x)
+JoinAction      == TRUE /\ \E x, y \in NODE : Join(x, y)
+StabilizeAction == TRUE /\ \E x, y, z \in NODE : Stabilize(x, y, z)
+NotifyAction    == TRUE /\ \E x, y, z \in NODE : Notify(x, y, z)
+InheritAction   == TRUE /\ \E x, y, z \in NODE : Inherit(x, y, z)
+RemoveAction    == TRUE /\ \E x, y, z \in NODE : Remove(x, y, z)
+FailAction      == TRUE /\ \E x \in NODE       : Fail(x)
+ReachOrgAction  == TRUE /\ \E x, y, z \in NODE : ReachOrg(x, y, z)
+RemoveOrgAction == TRUE /\ \E x, y, z \in NODE : RemoveOrg(x, y, z)
+TestAction      == TRUE /\ \E x \in NODE       : Test(x)
 
 Next ==
-  \/ JoinStep
-  \/ StabilizeStep
-  \/ NotifyStep
-  \/ InheritStep
-  \/ RemoveStep
-  \/ FailStep
-  \/ ReachOrgStep
-  \/ RemoveOrgStep
-  \/ TestStep
-  \/ UNCHANGED Vars
+  \/ JoinAction
+  \/ StabilizeAction
+  \/ NotifyAction
+  \/ InheritAction
+  \/ RemoveAction
+  \/ FailAction
+  \/ ReachOrgAction
+  \/ RemoveOrgAction
+  \/ TestAction
 
-Spec == Init /\ [][Next]_Vars /\ []TypeInv
+
+TypeOK ==
+  /\ a \in SUBSET NODE
+  /\ s1 \in SUBSET (NODE \X NODE)
+  /\ s2 \in SUBSET (NODE \X NODE)
+  /\ p  \in SUBSET (NODE \X NODE)
+  /\ in_s1 \in SUBSET NODE
+  /\ in_s2 \in SUBSET NODE
+  /\ reach \in SUBSET NODE
+  /\ error \in SUBSET NODE
 
 (***************************************************************************)
 (* Safety property corresponding to invariant [1000000] ~error(N)          *)
@@ -283,6 +281,6 @@ Spec == Init /\ [][Next]_Vars /\ []TypeInv
 
 ErrorFree == \A n \in NODE : n \notin error
 
-THEOREM Spec => []ErrorFree
+CTICost == 0
 
 =============================================================================
