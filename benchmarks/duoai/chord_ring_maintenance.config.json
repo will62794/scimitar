@@ -1,0 +1,37 @@
+{
+    "preds"  :  [
+        "IsActive(VARI)",
+        "IsActive(VARJ)",
+        "S1(VARI, VARJ)",
+        "S2(VARI, VARJ)",
+        "P(VARI, VARJ)",
+        "btw(VARI, VARJ, VARK)",
+        "Error(VARI)"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "ErrorFree",
+    "constants": {
+        "NODE": ["{0,1,2}"]
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARI \\in NODE : \\A VARJ \\in NODE : \\A VARK \\in NODE : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": [],
+    "model_consts"  :  "",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true,  
+    "tlaps_proof_config": {
+        "assumes": [
+        ],
+        "global_def_expands":[
+            "IsActive", "S1", "S2", "P", "btw", "Error"
+        ],
+        "lemma_def_expands": {
+            "Safety": ["ErrorFree"]
+
+        },
+        "action_def_expands":{
+        }
+    }    
+}

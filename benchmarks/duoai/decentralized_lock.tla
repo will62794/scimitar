@@ -1,5 +1,4 @@
----- MODULE simple_decentralized_lock ----
-\* benchmark: ex-simple-decentralized-lock
+---- MODULE decentralized_lock ----
 
 EXTENDS TLC
 

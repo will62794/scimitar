@@ -287,6 +287,8 @@ TypeOK ==
   /\ in_s2 \in SUBSET NODE
   /\ reach \in SUBSET NODE
   /\ error \in SUBSET NODE
+  /\ org \in NODE
+  /\ other \in NODE
 
 (***************************************************************************)
 (* Safety property corresponding to invariant [1000000] ~error(N)          *)
