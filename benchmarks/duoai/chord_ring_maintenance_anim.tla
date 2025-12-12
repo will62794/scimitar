@@ -26,7 +26,7 @@ DiGraph(V, E, nodeAttrsFn, edgeAttrsFn) == SVGElem("digraph", [V |-> V, E |-> E,
 
 
 Nodes == {n : n \in NODE}
-Edges == {<<n1, n2>> : n1, n2 \in NODE}
+Edges == s1 \cup s2
 
 
 
@@ -36,7 +36,7 @@ nodeAttrsFn(n) ==
     [
     label |-> ToString(n),
     color |-> "black",
-    fillcolor |-> "red",
+    fillcolor |-> IF n = org THEN "lightgreen" ELSE "white",
     penwidth |-> "2",
     fontsize |-> "12",
     shape |-> "circle", 
@@ -45,20 +45,20 @@ nodeAttrsFn(n) ==
 
 edgeAttrsFn(e) == [
     label |-> "",
-    color |-> "black"
+    color |-> IF e \in s2 /\ e \notin s1 THEN "blue" ELSE "black"
     \* fontsize |-> "8"
 ]
 
 GraphElem == <<Group(<<DiGraph(Nodes,Edges,
                                    [n \in Nodes |-> nodeAttrsFn(n)], 
                                    [e \in Edges |-> edgeAttrsFn(e)])>>, 
-                                   [transform |-> "translate(0, 210) scale(0.67)"])>>
+                                   [transform |-> "translate(0, 10) scale(0.67)"])>>
 
 
 \* 
 \* Animation view.
 \* 
-AnimView == Group(<<GraphElem>>, [transform |-> "translate(100, 50) scale(1.7)"])
+AnimView == Group(GraphElem, [transform |-> "translate(60, 10) scale(1.7)"])
 
 
 
