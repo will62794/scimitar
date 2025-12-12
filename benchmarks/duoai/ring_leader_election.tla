@@ -1,11 +1,8 @@
 ---- MODULE ring_leader_election ----
-EXTENDS TLC
+EXTENDS TLC, Naturals, FiniteSets
 
-
-\* type node
-\* type id
-CONSTANT node
-CONSTANT id
+CONSTANT Node
+CONSTANT Id
 
 \* # A ring topology of nodes
 \* instantiate ring : ring_topology(node)
@@ -26,114 +23,115 @@ CONSTANT id
 
 VARIABLE leader
 VARIABLE pending
-
-\* after init {
-\*     leader(N) := false;
-\*     pending(V,N) := false;
-\* }
-
-\* action send(n: node, n1: node) = {
-\*     # send my own id to the next node
-\*     require n ~= n1 & ((Z ~= n & Z ~= n1) -> ring.btw(n, n1, Z));
-\*     pending(idn(n), n1) := true;
-\* }
-
-\* action become_leader(n: node) = {
-\*     require pending(idn(n), n);
-\*     leader(n) := true;
-\* }
-
-\* action receive(n: node, m: id, n1: node) = {
-\*     require pending(m, n);
-\*     require n ~= n1 & ((Z ~= n & Z ~= n1) -> ring.btw(n, n1, Z));
-\* #    require m ~= idn(n);
-\*     if le(idn(n), m) {
-\*         pending(m, n1) := true;
-\*     };
-\* }
+VARIABLE idn
 
 Vars == <<leader, pending>>
+
+Injective(f) == \A x, y \in DOMAIN f : f[x] = f[y] => x = y
 
 (***************************************************************************)
 (* Init                                                                    *)
 (***************************************************************************)
 
 Init ==
-  /\ leader \in [node -> BOOLEAN]
-  /\ pending \in [id -> [node -> BOOLEAN]]
-  /\ \A n \in node : leader[n] = FALSE
-  /\ \A v \in id : \A n \in node : pending[v][n] = FALSE
+  /\ leader \in [Node -> BOOLEAN]
+  /\ pending \in [Id -> [Node -> BOOLEAN]]
+  /\ \A n \in Node : leader[n] = FALSE
+  /\ \A v \in Id : \A n \in Node : pending[v][n] = FALSE
+  /\ idn \in [Node -> Id]
+  /\ Injective(idn)
 
 (***************************************************************************)
 (* Helper: idn is a function from node to id, injective                    *)
 (***************************************************************************)
 
-ASSUME idn \in [node -> id]
-ASSUME \A x, y \in node : idn[x] = idn[y] => x = y
+\* ASSUME idn \in [node -> id]
+\* ASSUME \A x, y \in node : idn[x] = idn[y] => x = y
 
-(***************************************************************************)
-(* The ring.btw relation on the node set                                   *)
-(***************************************************************************)
+\* (***************************************************************************)
+\* (* The ring.btw relation on the node set                                   *)
+\* (***************************************************************************)
 
-ASSUME ring_btw \in [node -> [node -> [node -> BOOLEAN]]]
-(* Properties of ring_btw are assumed elsewhere *)
+\* ASSUME ring_btw \in [node -> [node -> [node -> BOOLEAN]]]
+\* (* Properties of ring_btw are assumed elsewhere *)
 
-(***************************************************************************)
-(* The le relation: a total order on ids                                   *)
-(***************************************************************************)
+\* (***************************************************************************)
+\* (* The le relation: a total order on ids                                   *)
+\* (***************************************************************************)
 
-ASSUME le \in [id -> [id -> BOOLEAN]]
+\* ASSUME le \in [id -> [id -> BOOLEAN]]
 (* le is a total order *)
+
+\* 
+\* The Boolean function btw is used to check the order
+\* of identifiers. Because identifier order wraps around at zero, it
+\* is meaningless to compare two identifiers—each precedes and
+\* succeeds the other. This is why btw has three arguments
+btw(x, y, z) == 
+    IF x < z THEN ((x < y) /\ (y < z)) ELSE ((x < y) \/ (y < z))
 
 (***************************************************************************)
 (* Action: Send                                                            *)
 (***************************************************************************)
 
 Send(n, n1) ==
-  /\ n \in node
-  /\ n1 \in node
+  /\ n \in Node
+  /\ n1 \in Node
   /\ n # n1
-  /\ \A Z \in node : (Z # n /\ Z # n1) => ring_btw[n][n1][Z]
+  /\ \A Z \in Node : (Z # n /\ Z # n1) => btw(n, n1, Z)
   /\ pending' = [pending EXCEPT ![idn[n]][n1] = TRUE]
-  /\ UNCHANGED leader
+  /\ UNCHANGED <<leader, idn>>
 
 (***************************************************************************)
 (* Action: BecomeLeader                                                    *)
 (***************************************************************************)
 
 BecomeLeader(n) ==
-  /\ n \in node
+  /\ n \in Node
   /\ pending[idn[n]][n]
   /\ leader' = [leader EXCEPT ![n] = TRUE]
-  /\ UNCHANGED pending
+  /\ UNCHANGED <<pending, idn>>
 
 (***************************************************************************)
 (* Action: Receive                                                         *)
 (***************************************************************************)
 
 Receive(n, m, n1) ==
-  /\ n \in node
-  /\ m \in id
-  /\ n1 \in node
+  /\ n \in Node
+  /\ m \in Id
+  /\ n1 \in Node
   /\ pending[m][n]
   /\ n # n1
-  /\ \A Z \in node : (Z # n /\ Z # n1) => ring_btw[n][n1][Z]
-  /\ IF le[idn[n]][m]
+  /\ \A Z \in Node : (Z # n /\ Z # n1) => btw(n, n1, Z)
+  /\ IF idn[n] <= m
         THEN pending' = [pending EXCEPT ![m][n1] = TRUE]
         ELSE pending' = pending
-  /\ UNCHANGED leader
+  /\ UNCHANGED <<leader, idn>>
+
+TypeOK ==
+  /\ leader \in [Node -> BOOLEAN]
+  /\ pending \in [Id -> [Node -> BOOLEAN]]
+  /\ idn \in [Node -> Id]
 
 (***************************************************************************)
 (* Next operator                                                           *)
 (***************************************************************************)
 
+SendAction == TRUE /\ \E n \in Node : \E n1 \in Node : Send(n, n1)
+BecomeLeaderAction == TRUE /\ \E n \in Node : BecomeLeader(n)
+ReceiveAction == TRUE /\ \E n \in Node : \E m \in Id : \E n1 \in Node : Receive(n, m, n1)
+
 Next ==
-  \E n \in node : \E n1 \in node : Send(n, n1)
-  \/ \E n \in node : BecomeLeader(n)
-  \/ \E n \in node : \E m \in id : \E n1 \in node : Receive(n, m, n1)
+  \/ SendAction
+  \/ BecomeLeaderAction
+  \/ ReceiveAction
 
 
+\* invariant [1000000] forall X: node, Y:node. leader(X) & leader(Y) -> X = Y  # at most one leader
+LeaderSafety == \A n1,n2 \in Node : (leader[n1] /\ leader[n2]) => (n1 = n2)
 
+NextUnchanged == UNCHANGED <<leader, pending, idn>>
 
+CTICost == 0
 
 ====

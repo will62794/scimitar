@@ -1,0 +1,22 @@
+{
+    "preds"  :  [
+        "leader[VARI]",
+        "leader[VARJ]",
+        "pending[VARI][VARJ]",
+        "idn[VARI] = VARJ"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "LeaderSafety",
+    "constants": {
+        "Node": ["{0,1,2}"],
+        "Id": ["{0,1,2}"]
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": ["VARI", "VARJ"],
+    "model_consts"  :  "",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  false      
+}
