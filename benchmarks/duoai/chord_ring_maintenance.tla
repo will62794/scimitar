@@ -6,13 +6,15 @@ EXTENDS Naturals, FiniteSets, TLC
 (* Carrier and ring topology                                               *)
 (***************************************************************************)
 
+\* 
+\* Chord assumes that node identifiers form a ring identifier space i.e.
+\* a set of natural numbers modulo N, where 0 is adjacent to (N-1).
+\* 
 CONSTANTS NODE
 
 (* org and other are distinct nodes in NODE *)
 \* ASSUME org \in NODE /\ other \in NODE /\ org # other
-
 \* ASSUME btw \subseteq NODE \X NODE \X NODE
-
 \* (* Ring topology axioms: translate Ivy's module ring_topology(carrier) *)
 \* ASSUME
 \*   /\ \A W, X, Y, Z \in NODE :
@@ -61,8 +63,21 @@ OverrideRow(R, x, S) ==
 (* Init                                                                    *)
 (***************************************************************************)
 
-\* TODO: Implement this behavior properly.
-btw(x, y, z) == FALSE
+\* 
+\* The Boolean function btw is used to check the order
+\* of identifiers. Because identifier order wraps around at zero, it
+\* is meaningless to compare two identifiers—each precedes and
+\* succeeds the other. This is why btw has three arguments
+\* 
+\* Boolean function between (n1,n2,n3: Identifier)
+\* { if (n1 < n3) return ( n1 < n2 && n2 < n3 )
+\*   else return ( n1 < n2 || n2 < n3 )
+\* }
+\* 
+\* Note taken from https://arxiv.org/pdf/1502.06461.
+\* 
+btw(x, y, z) == 
+    IF x < z THEN ((x < y) /\ (y < z)) ELSE ((x < y) \/ (y < z))
 
 Init ==
   /\ org    \in NODE
@@ -251,7 +266,6 @@ RemoveAction    == TRUE /\ \E x, y, z \in NODE : Remove(x, y, z)
 FailAction      == TRUE /\ \E x \in NODE       : Fail(x)
 ReachOrgAction  == TRUE /\ \E x, y, z \in NODE : ReachOrg(x, y, z)
 RemoveOrgAction == TRUE /\ \E x, y, z \in NODE : RemoveOrg(x, y, z)
-TestAction      == TRUE /\ \E x \in NODE       : Test(x)
 
 Next ==
   \/ JoinAction
@@ -262,7 +276,6 @@ Next ==
   \/ FailAction
   \/ ReachOrgAction
   \/ RemoveOrgAction
-  \/ TestAction
 
 
 TypeOK ==
@@ -279,7 +292,22 @@ TypeOK ==
 (* Safety property corresponding to invariant [1000000] ~error(N)          *)
 (***************************************************************************)
 
-ErrorFree == \A n \in NODE : n \notin error
+Error(x) == 
+  /\ \A X0, Y0 \in NODE :
+        (S1(X0, Y0) /\ IsActive(Y0) /\ (Y0 \in reach))
+          => X0 \in reach
+  /\ \A X0, Y0, Z0 \in NODE :
+        ( S1(X0, Y0) /\ ~IsActive(Y0)
+          /\ S2(X0, Z0) /\ IsActive(Z0) /\ (Z0 \in reach) )
+          => X0 \in reach
+  /\ \A Y0 \in NODE :
+        (btw(x, Y0, org) /\ IsActive(Y0)) => Y0 \in reach
+  /\ IsActive(x)
+  /\ x \notin reach
+  /\ x \in in_s1 => \E Y0 \in NODE : S1(x, Y0)
+  /\ x \in in_s2 => \E Y0 \in NODE : S2(x, Y0)
+
+ErrorFree == ~\E x \in NODE : Error(x)
 
 CTICost == 0
 
