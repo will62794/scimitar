@@ -68,6 +68,8 @@ TypeOK ==
 (***************************************************************************)
 
 Init ==
+  \* Each transaction is a sequence of read/write ops, each of which are executed on
+  \* some node.
   /\ precommit_tx = { <<zero, n>> : n \in NODE }
   /\ abort_tx  = {}
   /\ commit_tx = { zero }
