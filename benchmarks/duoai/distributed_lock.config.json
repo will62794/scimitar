@@ -1,0 +1,25 @@
+{
+    "preds"  :  [
+        "[epoch |-> VARE, source |-> VARS] \\in locked",
+        "[epoch |-> VARE, source |-> VART] \\in locked",
+        "VARS = first",
+        "VART = first"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "LockInv",
+    "constants"  :  {
+        "Node": ["{n1,n2,n3}"],
+        "Epoch": ["{0,1,2,3}"],
+        "n1": "n1",
+        "n2": "n2",
+        "n3": "n3"
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARS \\in Node : \\A VART \\in Node : \\A VARE \\in Epoch : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": [],
+    "model_consts"  :  "CONSTANT n1,n2,n3",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true      
+}
