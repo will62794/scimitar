@@ -1,0 +1,20 @@
+{
+    "preds"  :  [
+    ],
+    "preds_alt" : [],
+    "safety"  :  "LinSafety",
+    "constants"  :  {
+        "Node": ["{n1,n2,n3}"],
+        "n1": "n1",
+        "n2": "n2",
+        "n3": "n3"
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : \\A VARK \\in Node : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": ["VARI", "VARJ"],
+    "model_consts"  :  "CONSTANT n1,n2,n3",
+    "symmetry" : true,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  true      
+}

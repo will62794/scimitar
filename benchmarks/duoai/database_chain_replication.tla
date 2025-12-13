@@ -35,84 +35,6 @@ OpInTx(tx, op)       == <<tx, op>> \in op_in_tx
 OpOrder(o1, o2)      == <<o1, o2>> \in oporder
 
 (***************************************************************************)
-(* Structural assumptions (axioms)                                         *)
-(***************************************************************************)
-
-ASSUME
-  /\ zero \in TRANSACTION
-  /\ le \subseteq TRANSACTION \X TRANSACTION
-  /\ op_reads_key  \subseteq OPERATION \X KEY
-  /\ op_writes_key \subseteq OPERATION \X KEY
-  /\ op_node       \subseteq OPERATION \X NODE
-  /\ node_for_key  \subseteq KEY \X NODE
-  /\ op_in_tx      \subseteq TRANSACTION \X OPERATION
-  /\ oporder       \subseteq OPERATION \X OPERATION
-
-  (*************************************************************************)
-  (* total_order(le)                                                       *)
-  (*************************************************************************)
-  /\ \A X \in TRANSACTION : Le(X, X)                           \* reflexive
-  /\ \A X, Y, Z \in TRANSACTION :
-        (Le(X, Y) /\ Le(Y, Z)) => Le(X, Z)                     \* transitive
-  /\ \A X, Y \in TRANSACTION :
-        (Le(X, Y) /\ Le(Y, X)) => X = Y                        \* antisym
-  /\ \A X, Y \in TRANSACTION :
-        Le(X, Y) \/ Le(Y, X)                                   \* total
-  /\ \A X \in TRANSACTION : Le(zero, X)                        \* zero ≤ X
-
-  (*************************************************************************)
-  (* Each operation reads/writes at most one key, and not same key         *)
-  (*************************************************************************)
-  /\ \A op \in OPERATION, k1, k2 \in KEY :
-        (OpReadsKey(op, k1) /\ OpReadsKey(op, k2)) => k1 = k2
-  /\ \A op \in OPERATION, k1, k2 \in KEY :
-        (OpWritesKey(op, k1) /\ OpWritesKey(op, k2)) => k1 = k2
-  /\ \A op \in OPERATION, k1, k2 \in KEY :
-        (OpReadsKey(op, k1) /\ OpWritesKey(op, k2)) => k1 # k2
-
-  (*************************************************************************)
-  (* Operation location and key location                                   *)
-  (*************************************************************************)
-  /\ \A op \in OPERATION, n1, n2 \in NODE :
-        (OpNode(op, n1) /\ OpNode(op, n2)) => n1 = n2
-
-  /\ \A k \in KEY, n1, n2 \in NODE :
-        (NodeForKey(k, n1) /\ NodeForKey(k, n2)) => n1 = n2
-
-  /\ \A op \in OPERATION, k \in KEY, n1, n2 \in NODE :
-        (OpReadsKey(op, k) /\ NodeForKey(k, n1) /\ OpNode(op, n2))
-          => n1 = n2
-
-  /\ \A op \in OPERATION, k \in KEY, n1, n2 \in NODE :
-        (OpWritesKey(op, k) /\ NodeForKey(k, n1) /\ OpNode(op, n2))
-          => n1 = n2
-
-  (*************************************************************************)
-  (* op_in_tx and oporder                                                  *)
-  (*************************************************************************)
-  /\ \A tx1, tx2 \in TRANSACTION, op \in OPERATION :
-        (OpInTx(tx1, op) /\ OpInTx(tx2, op)) => tx1 = tx2
-
-  /\ \A t \in TRANSACTION,
-        o1, o2 \in OPERATION,
-        n1, n2 \in NODE :
-        ( OpInTx(t, o1) /\ OpInTx(t, o2) /\ o1 # o2
-          /\ OpNode(o1, n1) /\ OpNode(o2, n2) )
-          => n1 # n2
-
-  /\ \A o \in OPERATION : OpOrder(o, o)                       \* reflexive
-  /\ \A x, y, z \in OPERATION :
-        (OpOrder(x, y) /\ OpOrder(y, z)) => OpOrder(x, z)     \* transitive
-  /\ \A x, y \in OPERATION :
-        (OpOrder(x, y) /\ OpOrder(y, x)) => x = y             \* antisym
-  /\ \A t \in TRANSACTION, x, y \in OPERATION :
-        (OpInTx(t, x) /\ OpInTx(t, y))
-          => (OpOrder(x, y) \/ OpOrder(y, x))                 \* total in tx
-  /\ \A t \in TRANSACTION, x, y \in OPERATION :
-        (OpInTx(t, x) /\ (OpOrder(x, y) \/ OpOrder(y, x)))
-          => OpInTx(t, y)                                     \* closed
-
-(***************************************************************************)
 (* State variables                                                         *)
 (***************************************************************************)
 
@@ -133,7 +55,7 @@ DependsTx(t1, k, t2) == <<t1, k, t2>> \in depends_tx
 ReadTx(tx, k)    == <<tx, k>> \in read_tx
 WriteTx(tx, k)   == <<tx, k>> \in write_tx
 
-TypeInv ==
+TypeOK ==
   /\ precommit_tx \subseteq TRANSACTION \X NODE
   /\ abort_tx     \subseteq TRANSACTION
   /\ commit_tx    \subseteq TRANSACTION
@@ -146,16 +68,12 @@ TypeInv ==
 (***************************************************************************)
 
 Init ==
-  /\ precommit_tx
-       = { <<zero, n>> : n \in NODE }
+  /\ precommit_tx = { <<zero, n>> : n \in NODE }
   /\ abort_tx  = {}
   /\ commit_tx = { zero }
-  /\ depends_tx
-       = { <<zero, k, zero>> : k \in KEY }
-  /\ read_tx
-       = { <<zero, k>> : k \in KEY }
-  /\ write_tx
-       = { <<zero, k>> : k \in KEY }
+  /\ depends_tx = { <<zero, k, zero>> : k \in KEY }
+  /\ read_tx = { <<zero, k>> : k \in KEY }
+  /\ write_tx = { <<zero, k>> : k \in KEY }
 
 (***************************************************************************)
 (* Actions                                                                 *)
@@ -292,11 +210,8 @@ DoProgress(tx, op, n, kw, kr, luwkw, lurkw, luwkr, lcwkr) ==
                THEN {<<tx, kr>>}
                ELSE {})
 
-  /\ precommit_tx'
-       = precommit_tx \cup {<<tx, n>>}
-
+  /\ precommit_tx' = precommit_tx \cup {<<tx, n>>}
   /\ abort_tx' = abort_tx
-
   /\ LET LastOp ==
          \A O \in OPERATION : OpOrder(op, O) => O = op
      IN commit_tx'
@@ -316,9 +231,6 @@ Next ==
         n \in NODE, kw, kr \in KEY,
         luwkw, lurkw, luwkr, lcwkr \in TRANSACTION :
         DoProgress(tx, op, n, kw, kr, luwkw, lurkw, luwkr, lcwkr)
-  \/ UNCHANGED Vars
-
-Spec == Init /\ [][Next]_Vars /\ []TypeInv
 
 (***************************************************************************)
 (* Safety: Linearizability + Atomicity (Ivy invariant)                     *)
@@ -343,6 +255,6 @@ LinSafety ==
         (CommitTx(T) /\ OpInTx(T, O) /\ OpNode(O, N))
           => Precommit(T, N)
 
-THEOREM Spec => []LinSafety
 
+CTICost == 0
 =============================================================================
