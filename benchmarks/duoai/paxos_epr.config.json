@@ -1,0 +1,24 @@
+{
+    "preds"  :  [
+        "leader[VARI]",
+        "leader[VARJ]",
+        "pending[VARI][VARJ]",
+        "idn[VARI] = VARJ"
+    ],
+    "preds_alt" : [],
+    "safety"  :  "ConsensusInv",
+    "constants": {
+        "Node": ["{a1,a2,a3}"],
+        "Value": ["{v1,v2}"],
+        "Quorum": ["{{a1,a2},{a1,a3},{a2,a3}}"],
+        "Round": ["{0,1,2}"]
+    },
+    "constraint"  :  "",
+    "quant_inv"  :  "\\A VARI \\in Node : \\A VARJ \\in Node : ",
+    "quant_inv_alt"  :  null,
+    "quant_vars": ["VARI", "VARJ"],
+    "model_consts"  :  "",
+    "symmetry" : false,
+    "typeok"  :  "TypeOK",
+    "simulate"  :  false      
+}
