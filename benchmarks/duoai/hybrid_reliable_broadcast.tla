@@ -38,7 +38,7 @@ VARIABLES
 
 Vars == <<rcv_init, accept, sent_msg, rcv_msg, sent_msg_tmp, sent_msg_proj, quorum_A, quorum_B, member_fc, member_fi, member_fs, member_fa>>
 
-RcvInit(n) == n \in rcv_init
+RcvInit(n) == rcv_init[n]
 Accept(n)  == n \in accept
 
 SentMsg(s, d) == <<s, d>> \in sent_msg
@@ -191,7 +191,6 @@ ReceiveMsg_c_2(n, s) ==
 (*** fi – arbitrary omission ***)
 
 ReceiveInit_i(n) ==
-  /\ n \in NODE
   /\ n \in member_fi
   /\ RcvInit(n)
   /\ sent_msg_tmp' = sent_msg
