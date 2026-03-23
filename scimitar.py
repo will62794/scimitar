@@ -3581,21 +3581,25 @@ class InductiveInvGen():
         lemmaTRUEShim = StructuredProofNode("LemmaTrueShim", "1=1")
 
         # Import proof structure definitions for various protocols.
-        import proof_2pc
-        import proof_asr
-        import proof_adr
-        import proof_asr_coreLogInv
+
         import proof_consensus_epr
-        import proof_consensus_epr_demo
-        import proof_basic_consensus
-        import proof_simple_consensus
-        import proof_async_raft
-        import proof_async_raft_no_truncate
-        import proof_Paxos
-        import proof_EPaxos
-        import proof_Zab
-        import proof_Boulanger
-        import proof_Hermes
+        import proof_TwoPhase
+        import proof_AbstractStaticRaft
+        import proof_Bakery
+        import proof_AsyncRaft_notruncate
+
+
+        # OLDER STUFF.
+        # import proof_adr
+        # import proof_asr_coreLogInv
+        # import proof_basic_consensus
+        # import proof_simple_consensus
+        # import proof_async_raft
+        # import proof_Paxos
+        # import proof_EPaxos
+        # import proof_Zab
+        # import proof_Boulanger
+        # import proof_Hermes
 
         #
         # Set the specified spec appropriately.
@@ -3605,9 +3609,9 @@ class InductiveInvGen():
         nodes = None
         print(self.proof_struct_tag)
         if self.specname == "TwoPhase":
-            root = proof_2pc.root
-            actions = proof_2pc.actions
-            nodes = proof_2pc.nodes
+            root = proof_TwoPhase.root
+            actions = proof_TwoPhase.actions
+            nodes = proof_TwoPhase.nodes
         elif self.specname == "Hermes":
             root = proof_Hermes.root
             actions = proof_Hermes.actions
@@ -3619,9 +3623,9 @@ class InductiveInvGen():
                 actions = proof_asr_coreLogInv.asr_actions
                 nodes = proof_asr_coreLogInv.asr_nodes
             else:
-                root = proof_asr.asr_root
-                actions = proof_asr.asr_actions
-                nodes = proof_asr.asr_nodes
+                root = proof_AbstractStaticRaft.asr_root
+                actions = proof_AbstractStaticRaft.asr_actions
+                nodes = proof_AbstractStaticRaft.asr_nodes
         elif self.specname == "AbstractDynamicRaft":
             root = proof_adr.adr_root
             actions = proof_adr.adr_actions
@@ -3630,6 +3634,10 @@ class InductiveInvGen():
             root = proof_Boulanger.root
             actions = proof_Boulanger.actions
             nodes = proof_Boulanger.nodes
+        elif self.specname == "Bakery":
+            root = proof_Bakery.root
+            actions = proof_Bakery.actions
+            nodes = proof_Bakery.nodes
         elif self.specname == "consensus_epr":
             if self.proof_struct_tag == "demo":
                 root = proof_consensus_epr_demo.root
@@ -3647,9 +3655,9 @@ class InductiveInvGen():
             # if self.proof_struct_tag == "no_truncate":
             
             # For now just always use this version of the proof.
-            root = proof_async_raft_no_truncate.root
-            actions = proof_async_raft_no_truncate.actions
-            nodes = proof_async_raft_no_truncate.nodes
+            root = proof_AsyncRaft_notruncate.root
+            actions = proof_AsyncRaft_notruncate.actions
+            nodes = proof_AsyncRaft_notruncate.nodes
             # else:
             #     root = proof_async_raft.root
             #     actions = proof_async_raft.actions
