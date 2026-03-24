@@ -28,9 +28,8 @@ EXTENDS AsyncRaft, Randomization
 RequestVoteRequestTypeBounded == [
     mtype         : {RequestVoteRequest},
     mterm         : Terms,
-    \* mlastLogTerm  : Terms,
-    \* mlastLogIndex : LogIndicesWithZero,
-    mlog          : BoundedSeq(Terms, MaxLogLen),
+    mlastLogTerm  : Terms,
+    mlastLogIndex : LogIndicesWithZero,
     msource       : Server,
     mdest         : Server
 ]
@@ -38,7 +37,7 @@ RequestVoteRequestTypeBounded == [
 RequestVoteResponseTypeBounded == [
     mtype        : {RequestVoteResponse},
     mterm        : Terms,
-    mvotedFor    : Server \cup {Nil},
+    mvoteGranted : BOOLEAN,
     msource      : Server,
     mdest        : Server
 ]
@@ -46,9 +45,9 @@ RequestVoteResponseTypeBounded == [
 AppendEntriesRequestTypeBounded == [
     mtype      : {AppendEntriesRequest},
     mterm      : Terms,
-    \* mprevLogIndex  : LogIndices,
-    \* mprevLogTerm   : Terms,
-    mlog       : BoundedSeq(Terms, MaxLogLen),
+    mprevLogIndex  : LogIndices,
+    mprevLogTerm   : Terms,
+    mentries       : BoundedSeq(Terms, MaxMEntriesLen),
     mcommitIndex   : LogIndicesWithZero,
     msource        : Server,
     mdest          : Server
@@ -57,9 +56,8 @@ AppendEntriesRequestTypeBounded == [
 AppendEntriesResponseTypeBounded == [
     mtype        : {AppendEntriesResponse},
     mterm        : Terms,
-    \* msuccess     : BOOLEAN,
-    \* mmatchIndex  : LogIndices,
-    mlog         : BoundedSeq(Terms, MaxLogLen),
+    msuccess     : BOOLEAN,
+    mmatchIndex  : LogIndices,
     msource      : Server,
     mdest        : Server
 ]
@@ -69,30 +67,24 @@ NumSubsets == 15
 
 \* RequestVoteRequestTypeSampled == RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteRequestTypeBounded) 
 \* RequestVoteResponseTypeSampled == RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteResponseTypeBounded)  
-\* AppendEntriesRequestTypeSampled == RandomSetOfSubsets(10, 1, AppendEntriesRequestTypeBounded) \*\cup RandomSetOfSubsets(3, 3, AppendEntriesRequestTypeBounded)
-\* AppendEntriesResponseTypeSampled == RandomSetOfSubsets(10, 1, AppendEntriesResponseTypeBounded) \*\cup RandomSetOfSubsets(2, 2, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseTypeBounded)  
+AppendEntriesRequestTypeSampled == RandomSetOfSubsets(2, 2, AppendEntriesRequestTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesRequestTypeBounded)
+AppendEntriesResponseTypeSampled == RandomSetOfSubsets(1, 1, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(2, 2, AppendEntriesResponseTypeBounded) \cup RandomSetOfSubsets(3, 3, AppendEntriesResponseTypeBounded)  
 
-\* Assume max of 1 message in network is sufficient for CTI sampling.
-RequestVoteRequestTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, RequestVoteRequestTypeBounded)}
-RequestVoteResponseTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, RequestVoteResponseTypeBounded)}
-AppendEntriesRequestTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, AppendEntriesRequestTypeBounded)}
-AppendEntriesResponseTypeSampled == {{m,m1} : m,m1 \in RandomSubset(80, AppendEntriesResponseTypeBounded)}
+\* ASSUME PrintT(RandomSetOfSubsets(10, 1, RequestVoteRequestTypeBounded) )
 
 TypeOKRandom == 
-    /\ requestVoteRequestMsgs \in RequestVoteRequestTypeSampled
-    /\ requestVoteResponseMsgs \in RequestVoteResponseTypeSampled 
-    \* /\ requestVoteRequestMsgs = {}
-    \* /\ requestVoteResponseMsgs = {}
+    /\ requestVoteRequestMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteRequestTypeBounded) 
+    /\ requestVoteResponseMsgs \in RandomSetOfSubsets(NumSubsets, AvgSubsetSize, RequestVoteResponseTypeBounded) 
     /\ appendEntriesRequestMsgs \in AppendEntriesRequestTypeSampled
     /\ appendEntriesResponseMsgs \in AppendEntriesResponseTypeSampled
     /\ currentTerm \in [Server -> Terms]
     /\ state       \in [Server -> {Leader, Follower, Candidate}]
     /\ votedFor    \in [Server -> ({Nil} \cup Server)]
     /\ votesGranted \in [Server -> (SUBSET Server)]
-    /\ log             \in [Server -> RandomSubset(15, BoundedSeq(Terms, MaxLogLen))]
+    /\ nextIndex  \in [Server -> [Server -> LogIndices]]
+    /\ matchIndex \in [Server -> [Server -> LogIndicesWithZero]]        
+    /\ log             \in [Server -> BoundedSeq(Terms, MaxLogLen)]
     /\ commitIndex     \in [Server -> LogIndicesWithZero]
-    /\ nextIndex  \in [Server -> RandomSubset(8, [Server -> LogIndices])]
-    /\ matchIndex \in [Server -> RandomSubset(8, [Server -> LogIndicesWithZero])]   
 
 Symmetry == Permutations(Server)
 
