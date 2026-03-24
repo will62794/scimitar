@@ -353,12 +353,12 @@ H_Inv4227_eecc_R10_0_I3 ==
 H_Inv32498_2818_R11_0_I2 == 
     \A VARI \in Procs : 
     \A VARJ \in Procs : 
-        ~(max[VARI] < num[VARJ]) \/ (~(pc[VARI] = "e3") \/ (~(pc[VARJ] = "cs"))) \/ (~(VARI \in unchecked[VARJ]))
+        ~(max[VARI] < num[VARJ]) \/ (~(pc[VARI] = "e3") \/ (~(pc[VARJ] = "cs")))
 
 H_Inv2740_e784_R16_0_I3 == 
     \A VARI \in Procs : 
     \A VARJ \in Procs : 
-        (VARI \in unchecked[VARJ]) \/ (~(max[VARI] < num[VARJ])) \/ (~(pc[VARI] = "e3")) \/ (~(pc[VARJ] \in {"w1","w2"})) \/ (~(VARI \in unchecked[VARJ]))
+        (VARI \in unchecked[VARJ]) \/ (~(max[VARI] < num[VARJ])) \/ (~(pc[VARI] = "e3")) \/ (~(pc[VARJ] \in {"w1","w2"}))
 
 H_Inv3293_1a1e_R17_0_I3 == 
     \A VARI \in Procs : 
