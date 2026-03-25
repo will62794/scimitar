@@ -1317,10 +1317,23 @@ H_NodesVotedInQuorumInTermImpliesNoAppendEntriesRequestsInTerm ==
                 /\ m.mtype = AppendEntriesRequest
                 /\ m.mterm = currentTerm[s])
 
+\* Does there exist a quorum of RequestVote responses in term T
+\* that support voting for server 'dest'.
+ExistsVoteResponseOrGrantedQuorum(T, dest) == 
+    \E msgs \in SUBSET requestVoteResponseMsgs : 
+        /\ \A m \in msgs : m.mtype = RequestVoteResponse
+            /\ m.mterm = T
+            /\ m.mdest = dest
+            /\ m.mvoteGranted
+        \* Responses form a quorum.
+        /\ currentTerm[dest] = T
+        /\ ({m.msource : m \in msgs} \cup votesGranted[dest]) \in Quorum
+
 H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm == 
     \A s \in Server :
         (/\ state[s] = Candidate
-         /\ ExistsRequestVoteResponseQuorum(currentTerm[s], s)) =>
+        \*  /\ ExistsRequestVoteResponseQuorum(currentTerm[s], s)) =>
+         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s)) =>
             /\ ~(\E m \in (appendEntriesRequestMsgs) : m.mterm = currentTerm[s])
             /\ ~(\E m \in (appendEntriesResponseMsgs) : m.msuccess /\ m.mterm = currentTerm[s])
 
