@@ -864,6 +864,18 @@ ExistsRequestVoteResponseQuorum(T, dest) ==
         \* Responses form a quorum.
         /\ ({m.msource : m \in msgs} \cup {dest}) \in Quorum
 
+\* Does there exist a quorum of RequestVote responses in term T
+\* that support voting for server 'dest'.
+ExistsVoteResponseOrGrantedQuorum(T, dest) == 
+    \E msgs \in SUBSET requestVoteResponseMsgs : 
+        /\ \A m \in msgs : m.mtype = RequestVoteResponse
+            /\ m.mterm = T
+            /\ m.mdest = dest
+            /\ m.mvoteGranted
+        \* Responses form a quorum.
+        /\ currentTerm[dest] = T
+        /\ ({m.msource : m \in msgs} \cup votesGranted[dest]) \in Quorum
+
 \* If a successful quorum of request vote repsonses was sent in term T, then 
 \* there can be no logs that exist in term T.
 \* TODO: Fix this to get a correct statement here.
@@ -888,7 +900,7 @@ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm ==
 H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm == 
     \A s \in Server :
         (/\ state[s] = Candidate
-         /\ ExistsRequestVoteResponseQuorum(currentTerm[s], s)) =>
+         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s)) =>
             /\ \A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s]
 
 H_VoteQuorumLogTerms ==
@@ -919,13 +931,13 @@ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm ==
 H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm == 
     \A s \in Server :
         (/\ state[s] = Candidate
-         /\ ExistsRequestVoteResponseQuorum(currentTerm[s], s)) =>
+         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s)) =>
             /\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s])
 
 H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm == 
     \A s \in Server :
         (/\ state[s] = Candidate
-         /\ ExistsRequestVoteResponseQuorum(currentTerm[s], s)) =>
+         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s)) =>
             ~(\E m \in appendEntriesRequestMsgs :   
                 /\ m.mtype = AppendEntriesRequest
                 /\ m.mentries # <<>>
@@ -1316,18 +1328,6 @@ H_NodesVotedInQuorumInTermImpliesNoAppendEntriesRequestsInTerm ==
             ~(\E m \in appendEntriesRequestMsgs : 
                 /\ m.mtype = AppendEntriesRequest
                 /\ m.mterm = currentTerm[s])
-
-\* Does there exist a quorum of RequestVote responses in term T
-\* that support voting for server 'dest'.
-ExistsVoteResponseOrGrantedQuorum(T, dest) == 
-    \E msgs \in SUBSET requestVoteResponseMsgs : 
-        /\ \A m \in msgs : m.mtype = RequestVoteResponse
-            /\ m.mterm = T
-            /\ m.mdest = dest
-            /\ m.mvoteGranted
-        \* Responses form a quorum.
-        /\ currentTerm[dest] = T
-        /\ ({m.msource : m \in msgs} \cup votesGranted[dest]) \in Quorum
 
 H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm == 
     \A s \in Server :

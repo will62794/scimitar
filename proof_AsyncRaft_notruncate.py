@@ -139,7 +139,8 @@ requestVoteQuorumInTermImpliesNoOtherLeadersInTerm.children = {
     "BecomeLeaderAction":[
         candidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
         voteGrantedImpliesVoteResponseMsgConsistent,
-        candidateInTermVotedForItself
+        candidateInTermVotedForItself,
+        votesCantBeGrantedTwiceToCandidatesInSameTerm
     ],
     "HandleRequestVoteRequestAction":[
         quorumsSafeAtTerms,
@@ -163,7 +164,7 @@ requestVoteQuorumInTermImpliesNoOtherLogsInTerm.children = {
         candidateInTermVotedForItself
     ],
     "RequestVoteAction": [
-        logEntryInTermImpliesSafeAtTerms,
+        # logEntryInTermImpliesSafeAtTerms,
         requestVoteResponseToNodeImpliesNodeSafeAtTerm
     ],
     "AcceptAppendEntriesRequestAppendAction": [
@@ -198,7 +199,8 @@ candidateWithVotesGrantedInTermImplyVotedForSafeAtTerm = make_node("H_CandidateW
 quorumsSafeAtTerms.children = {
     "BecomeLeaderAction": [
         candidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
-        candidateInTermVotedForItself
+        candidateInTermVotedForItself,
+        voteInGrantedImpliesVotedFor
     ]
 }
 
@@ -210,10 +212,18 @@ logEntryInTermImpliesSafeAtTermAppendEntries.children = {
 
 logEntryInTermImpliesSafeAtTerms.children = {
     "ClientRequestAction": [
-        quorumsSafeAtTerms
+        # quorumsSafeAtTerms,
+        # votesCantBeGrantedTwiceToCandidatesInSameTerm,
+        voteInGrantedImpliesVotedFor,
+        # candidateInTermVotedForItself,
+        leaderHasVotesGrantedQuorum,
+        voteGrantedImpliesNodeSafeAtTerm
     ],
     "AcceptAppendEntriesRequestAppendAction": [
         logEntryInTermImpliesSafeAtTermAppendEntries
+    ],
+    "HandleRequestVoteResponseAction": [
+        candidateInTermVotedForItself
     ]
 }
 
@@ -230,7 +240,7 @@ candidateWithVotesGrantedInTermImplyNoOtherLogsInTerm.children = {
         logEntryInTermImpliesSafeAtTerms
     ],
     "HandleRequestVoteResponseAction": [
-        requestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+        # requestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
         requestVoteQuorumInTermImpliesNoOtherLogsInTerm
     ],
     "AcceptAppendEntriesRequestAppendAction": [

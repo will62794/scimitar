@@ -14,6 +14,7 @@ import multiprocessing
 import time
 import io
 import contextlib
+import os
 
 from mc import CTI
 import mc
@@ -1133,7 +1134,6 @@ class StructuredProof():
 
             # Use context manager to redirect stdout
             with contextlib.redirect_stdout(output_capture):
-                import os
                 old_stdout = sys.stdout # backup current stdout
                 sys.stdout = open(os.devnull, "w")
                 figpreamble=f"""
@@ -1144,7 +1144,6 @@ class StructuredProof():
                         figpreamble += "\AsyncRaftWithProofStatusFigPreamble{}"
                     else:
                         figpreamble += "\AsyncRaftFigPreamble{}"
-
 
                 texcode = dot2tex.dot2tex(dot.source, debug=False, output="dot2tex.log", format='tikz', figpreamble=figpreamble, autosize=True, crop=False, figonly=True, texmode="math")
                 sys.stdout = old_stdout # reset old stdout
