@@ -115,9 +115,15 @@ THEOREM L_0 == TypeOK /\ H_RequestVoteRequestFromNodeImpliesSafeAtTerm /\ Next =
 <1>12. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11 DEF Next
 
 
+ASSUME S3 == Server = {1,2,3} /\ Quorum = {{1,2},{2,3},{1,3},{1,2,3}}
+\*ASSUME S5 == 
+\*    /\ Server = {1,2,3,4,5} 
+\*    /\ Quorum = {{1,2,3},{1,2,4},{1,2,5},{1,3,4},{1,3,5},{1,4,5},{2,3,4},{2,3,5},{2,4,5},{3,4,5}}
+\*USE S3
+
 \*** H_QuorumsSafeAtTerms
 THEOREM L_1 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_VoteInGrantedImpliesVotedFor /\ H_QuorumsSafeAtTerms /\ Next => H_QuorumsSafeAtTerms'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, QuorumsExistForNonEmptySets, QuorumsAreServerSubsets DEF LastTerm
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, FS_Subset, FS_Singleton, FS_Union, QuorumsExistForNonEmptySets, QuorumsAreServerSubsets, StaticQuorumsOverlap, FS_Difference, AddingToQuorumRemainsQuorum DEF LastTerm
   \* (H_QuorumsSafeAtTerms,RequestVoteAction)
   <1>1. TypeOK /\ H_QuorumsSafeAtTerms /\ RequestVoteAction => H_QuorumsSafeAtTerms' 
     <2> SUFFICES ASSUME TypeOK /\ H_QuorumsSafeAtTerms /\ RequestVoteAction,
@@ -145,7 +151,25 @@ THEOREM L_1 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm 
     <2> QED
       BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_QuorumsSafeAtTerms,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_QuorumsSafeAtTerms,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_VoteInGrantedImpliesVotedFor /\ H_QuorumsSafeAtTerms /\ BecomeLeaderAction => H_QuorumsSafeAtTerms' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,H_CandidateInTermVotedForItself,H_VoteInGrantedImpliesVotedFor,BecomeLeaderAction,BecomeLeader,H_QuorumsSafeAtTerms
+  <1>3. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_VoteInGrantedImpliesVotedFor /\ H_QuorumsSafeAtTerms /\ BecomeLeaderAction => H_QuorumsSafeAtTerms' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
+                        H_CandidateInTermVotedForItself,
+                        H_VoteInGrantedImpliesVotedFor,
+                        H_QuorumsSafeAtTerms,
+                        TRUE,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW s \in Server',
+                        (state[s] = Leader)'
+                 PROVE  (\E Q \in Quorum : 
+                         \A t \in Q : 
+                            /\ currentTerm[t] >= currentTerm[s]
+                            /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
+                            /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+      BY DEF BecomeLeaderAction, H_QuorumsSafeAtTerms
+    <2> QED
+      BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,H_CandidateInTermVotedForItself,H_VoteInGrantedImpliesVotedFor,BecomeLeaderAction,BecomeLeader,H_QuorumsSafeAtTerms
   \* (H_QuorumsSafeAtTerms,ClientRequestAction)
   <1>4. TypeOK /\ H_QuorumsSafeAtTerms /\ ClientRequestAction => H_QuorumsSafeAtTerms' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_QuorumsSafeAtTerms
   \* (H_QuorumsSafeAtTerms,AdvanceCommitIndexAction)
@@ -253,7 +277,21 @@ THEOREM L_4 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_CandidateWit
   \* (H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ HandleRequestVoteRequestAction => H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm' BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteResponseTermsMatchSource,
+                        H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (state[s]  \in {Candidate,Leader})',
+                        NEW v \in (votesGranted[s])'
+                 PROVE  (/\ currentTerm[v] >= currentTerm[s])'
+      BY DEF H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm, HandleRequestVoteResponseAction
+    <2>1. (currentTerm[v] >= currentTerm[s])'
+      BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. QED
+      BY <2>1
   \* (H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ AcceptAppendEntriesRequestAppendAction => H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm
   \* (H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,AcceptAppendEntriesRequestLearnCommitAction)
@@ -297,7 +335,24 @@ THEOREM L_5 == TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ H_App
   \* (H_AppendEntriesResponseInTermImpliesSafeAtTerms,AppendEntriesAction)
   <1>6. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ AppendEntriesAction => H_AppendEntriesResponseInTermImpliesSafeAtTerms' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_AppendEntriesResponseInTermImpliesSafeAtTerms
   \* (H_AppendEntriesResponseInTermImpliesSafeAtTerms,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ HandleRequestVoteRequestAction => H_AppendEntriesResponseInTermImpliesSafeAtTerms' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_AppendEntriesResponseInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ HandleRequestVoteRequestAction => H_AppendEntriesResponseInTermImpliesSafeAtTerms' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_AppendEntriesResponseInTermImpliesSafeAtTerms,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW m_1 \in appendEntriesResponseMsgs',
+                        (m_1.mtype = AppendEntriesResponse /\ m_1.msuccess)'
+                 PROVE  (  \E u \in Server :
+                         \E Q \in Quorum : 
+                             /\ u = m_1.mdest
+                             /\ currentTerm[u] >= m_1.mterm
+                             /\ (currentTerm[u] = m_1.mterm) => state[u] = Leader
+                             /\ \A t \in Q : 
+                                 /\ currentTerm[t] >= m_1.mterm
+                                 /\ currentTerm[t] = m_1.mterm => (votedFor[t] = m_1.mdest))'
+      BY DEF H_AppendEntriesResponseInTermImpliesSafeAtTerms, HandleRequestVoteRequestAction
+    <2> QED
+      BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_AppendEntriesResponseInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_AppendEntriesResponseInTermImpliesSafeAtTerms,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ HandleRequestVoteResponseAction => H_AppendEntriesResponseInTermImpliesSafeAtTerms' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_AppendEntriesResponseInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_AppendEntriesResponseInTermImpliesSafeAtTerms,AcceptAppendEntriesRequestAppendAction)
@@ -325,7 +380,24 @@ THEOREM L_6 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_AppendEntriesRequestInTermImp
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,AppendEntriesAction)
   <1>6. TypeOK /\ H_QuorumsSafeAtTerms /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ AppendEntriesAction => H_AppendEntriesRequestInTermImpliesSafeAtTerms' BY DEF TypeOK,H_QuorumsSafeAtTerms,AppendEntriesAction,AppendEntries,H_AppendEntriesRequestInTermImpliesSafeAtTerms
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ HandleRequestVoteRequestAction => H_AppendEntriesRequestInTermImpliesSafeAtTerms' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_AppendEntriesRequestInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ HandleRequestVoteRequestAction => H_AppendEntriesRequestInTermImpliesSafeAtTerms' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_AppendEntriesRequestInTermImpliesSafeAtTerms,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW m_1 \in appendEntriesRequestMsgs',
+                        (m_1.mtype = AppendEntriesRequest)'
+                 PROVE  (  \E u \in Server :
+                         \E Q \in Quorum :
+                             /\ u = m_1.msource \* sender of the AppendEntries must have been leader of that term.
+                             /\ currentTerm[u] >= m_1.mterm
+                             /\ (currentTerm[u] = m_1.mterm) => state[u] = Leader
+                             /\ \A t \in Q : 
+                                 /\ currentTerm[t] >= m_1.mterm
+                                 /\ currentTerm[t] = m_1.mterm => (votedFor[t] = m_1.msource))'
+      BY DEF H_AppendEntriesRequestInTermImpliesSafeAtTerms, HandleRequestVoteRequestAction
+    <2> QED
+      BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_AppendEntriesRequestInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ HandleRequestVoteResponseAction => H_AppendEntriesRequestInTermImpliesSafeAtTerms' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_AppendEntriesRequestInTermImpliesSafeAtTerms,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,AcceptAppendEntriesRequestAppendAction)
@@ -345,17 +417,106 @@ THEOREM L_7 == TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_Req
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,UpdateTermAction)
   <1>2. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ UpdateTermAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
+  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (~(\E m \in appendEntriesRequestMsgs :   
+                             /\ m.mtype = AppendEntriesRequest
+                             /\ m.mentries # <<>>
+                             /\ m.mentries[1] = currentTerm[s]))'
+      BY DEF BecomeLeaderAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
+    <2> QED
+      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,ClientRequestAction)
   <1>4. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ ClientRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ AdvanceCommitIndexAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AppendEntriesAction)
-  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
+  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (~(\E m \in appendEntriesRequestMsgs :   
+                             /\ m.mtype = AppendEntriesRequest
+                             /\ m.mentries # <<>>
+                             /\ m.mentries[1] = currentTerm[s]))'
+      BY DEF AppendEntriesAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
+    <2> QED
+      BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTermAppendEntries,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTermAppendEntries,
+                        H_CandidateInTermVotedForItself,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (~(\E m_1 \in appendEntriesRequestMsgs :   
+                             /\ m_1.mtype = AppendEntriesRequest
+                             /\ m_1.mentries # <<>>
+                             /\ m_1.mentries[1] = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm, HandleRequestVoteRequestAction
+    <2> QED
+      BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTermAppendEntries,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (~(\E m_1 \in appendEntriesRequestMsgs :   
+                             /\ m_1.mtype = AppendEntriesRequest
+                             /\ m_1.mentries # <<>>
+                             /\ m_1.mentries[1] = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm, HandleRequestVoteResponseAction
+    <2> QED
+      BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ AcceptAppendEntriesRequestAppendAction => H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestLearnCommitAction)
@@ -395,7 +556,7 @@ THEOREM L_8 == TypeOK /\ H_RequestVoteRequestFromNodeImpliesSafeAtTerm /\ H_Requ
 
 \*** H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
 THEOREM L_9 == TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ H_CandidateInTermVotedForItself /\ H_VotesCantBeGrantedTwiceToCandidatesInSameTerm /\ H_QuorumsSafeAtTerms /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ Next => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7 DEF ExistsVoteResponseOrGrantedQuorum
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, FS_Subset, FS_Singleton, FS_Union, QuorumsExistForNonEmptySets, QuorumsAreServerSubsets, StaticQuorumsOverlap, FS_Difference, AddingToQuorumRemainsQuorum DEF ExistsVoteResponseOrGrantedQuorum
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,RequestVoteAction)
   <1>1. TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ RequestVoteAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm,RequestVoteAction,RequestVote,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,UpdateTermAction)
@@ -403,21 +564,145 @@ THEOREM L_9 == TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_C
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,BecomeLeaderAction)
   <1>3. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ H_CandidateInTermVotedForItself /\ H_VotesCantBeGrantedTwiceToCandidatesInSameTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,H_VoteGrantedImpliesVoteResponseMsgConsistent,H_CandidateInTermVotedForItself,H_VotesCantBeGrantedTwiceToCandidatesInSameTerm,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,ClientRequestAction)
-  <1>4. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ ClientRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+  <1>4. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ ClientRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        ClientRequest(i),
+                        NEW s \in Server',
+                        (/\ state[s] = Candidate
+                         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s))'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF ClientRequestAction, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,ClientRequestAction,ClientRequest,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AdvanceCommitIndexAction)
-  <1>5. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AdvanceCommitIndexAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+  <1>5. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AdvanceCommitIndexAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        AdvanceCommitIndex(i),
+                        NEW s \in Server',
+                        (/\ state[s] = Candidate
+                         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s))'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF AdvanceCommitIndexAction, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AppendEntriesAction)
-  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF AppendEntriesAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_QuorumsSafeAtTerms /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,H_QuorumsSafeAtTerms,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_QuorumsSafeAtTerms /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_QuorumsSafeAtTerms,
+                        H_CandidateInTermVotedForItself,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm, HandleRequestVoteRequestAction
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,H_QuorumsSafeAtTerms,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (/\ state[s] = Candidate
+                         /\ ExistsVoteResponseOrGrantedQuorum(currentTerm[s], s))'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm, HandleRequestVoteResponseAction
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AcceptAppendEntriesRequestAppendAction)
-  <1>9. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AcceptAppendEntriesRequestAppendAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+  <1>9. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AcceptAppendEntriesRequestAppendAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestAppend(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF AcceptAppendEntriesRequestAppendAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm, LogOk, CanAppend
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AcceptAppendEntriesRequestLearnCommitAction)
   <1>10. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ AcceptAppendEntriesRequestLearnCommitAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,HandleAppendEntriesResponseAction)
-  <1>11. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleAppendEntriesResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+  <1>11. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ HandleAppendEntriesResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        NEW m \in appendEntriesResponseMsgs,
+                        HandleAppendEntriesResponse(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm, HandleAppendEntriesResponseAction
+    <2>1. (\A n \in Server : ~(state[n] = Leader /\ currentTerm[n] = currentTerm[s]))'
+      BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm
+    <2>2. QED
+      BY <2>1
 <1>12. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11 DEF Next
 
 
@@ -467,7 +752,21 @@ THEOREM L_11 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGranted
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ HandleRequestVoteRequestAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_VoteGrantedImpliesNodeSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ HandleRequestVoteResponseAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_VoteGrantedImpliesNodeSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ HandleRequestVoteResponseAction => H_VoteGrantedImpliesNodeSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteResponseTermsMatchSource,
+                        H_VoteGrantedImpliesNodeSafeAtTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (state[s] \in {Candidate,Leader})',
+                        NEW t \in (votesGranted[s])'
+                 PROVE  (/\ currentTerm[t] >= currentTerm[s])'
+      BY DEF H_VoteGrantedImpliesNodeSafeAtTerm, HandleRequestVoteResponseAction
+    <2>1. (currentTerm[t] >= currentTerm[s])'
+      BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_VoteGrantedImpliesNodeSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. QED
+      BY <2>1
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ AcceptAppendEntriesRequestAppendAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_VoteGrantedImpliesNodeSafeAtTerm
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,AcceptAppendEntriesRequestLearnCommitAction)
@@ -509,7 +808,24 @@ THEOREM L_12 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm
 THEOREM L_13 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteInGrantedImpliesVotedFor /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ H_RequestVoteResponseMsgsInTermUnique /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ Next => H_VoteGrantedImpliesVoteResponseMsgConsistent'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_VoteGrantedImpliesVoteResponseMsgConsistent,RequestVoteAction)
-  <1>1. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ RequestVoteAction => H_VoteGrantedImpliesVoteResponseMsgConsistent' BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,RequestVoteAction,RequestVote,H_VoteGrantedImpliesVoteResponseMsgConsistent,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ RequestVoteAction => H_VoteGrantedImpliesVoteResponseMsgConsistent' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteResponseTermsMatchSource,
+                        H_VoteGrantedImpliesVoteResponseMsgConsistent,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW s \in Server', NEW t \in Server',
+                        NEW m \in requestVoteResponseMsgs',
+                        (/\ state[s] \in {Candidate,Leader}
+                         /\ t \in votesGranted[s])'
+                 PROVE  (~(/\ m.mterm = currentTerm[s]
+                           /\ m.msource = t
+                           /\ m.mdest # s
+                           /\ m.mvoteGranted))'
+      BY DEF H_VoteGrantedImpliesVoteResponseMsgConsistent, RequestVoteAction
+    <2> QED
+      BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,RequestVoteAction,RequestVote,H_VoteGrantedImpliesVoteResponseMsgConsistent,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_VoteGrantedImpliesVoteResponseMsgConsistent,UpdateTermAction)
   <1>2. TypeOK /\ H_VoteGrantedImpliesVoteResponseMsgConsistent /\ UpdateTermAction => H_VoteGrantedImpliesVoteResponseMsgConsistent' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_VoteGrantedImpliesVoteResponseMsgConsistent,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_VoteGrantedImpliesVoteResponseMsgConsistent,BecomeLeaderAction)
@@ -608,17 +924,116 @@ THEOREM L_16 == TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ H_Ap
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,RequestVoteAction)
   <1>1. TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ RequestVoteAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,H_AppendEntriesRequestInTermImpliesSafeAtTerms,H_AppendEntriesResponseInTermImpliesSafeAtTerms,H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm,RequestVoteAction,RequestVote,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,UpdateTermAction)
-  <1>2. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ UpdateTermAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>2. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ UpdateTermAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,
+                        TRUE,
+                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
+                        UpdateTerm(m.mterm, m.mdest),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ ~(\E m_1 \in (appendEntriesRequestMsgs) : m_1.mterm = currentTerm[s])
+                         /\ ~(\E m_1 \in (appendEntriesResponseMsgs) : m_1.msuccess /\ m_1.mterm = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm, UpdateTermAction
+    <2>1. (~(\E m_1 \in (appendEntriesRequestMsgs) : m_1.mterm = currentTerm[s]))'
+      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    <2>2. (~(\E m_1 \in (appendEntriesResponseMsgs) : m_1.msuccess /\ m_1.mterm = currentTerm[s]))'
+      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    <2>3. QED
+      BY <2>1, <2>2
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ ~(\E m \in (appendEntriesRequestMsgs) : m.mterm = currentTerm[s])
+                         /\ ~(\E m \in (appendEntriesResponseMsgs) : m.msuccess /\ m.mterm = currentTerm[s]))'
+      BY DEF BecomeLeaderAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>1. (~(\E m \in (appendEntriesRequestMsgs) : m.mterm = currentTerm[s]))'
+      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>2. (~(\E m \in (appendEntriesResponseMsgs) : m.msuccess /\ m.mterm = currentTerm[s]))'
+      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>3. QED
+      BY <2>1, <2>2
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,ClientRequestAction)
   <1>4. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ ClientRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ AdvanceCommitIndexAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,AppendEntriesAction)
-  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+  <1>6. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ AppendEntriesAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ ~(\E m \in (appendEntriesRequestMsgs) : m.mterm = currentTerm[s])
+                         /\ ~(\E m \in (appendEntriesResponseMsgs) : m.msuccess /\ m.mterm = currentTerm[s]))'
+      BY DEF AppendEntriesAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>1. (~(\E m \in (appendEntriesRequestMsgs) : m.mterm = currentTerm[s]))'
+      BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>2. (~(\E m \in (appendEntriesResponseMsgs) : m.msuccess /\ m.mterm = currentTerm[s]))'
+      BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,AppendEntriesAction,AppendEntries,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm
+    <2>3. QED
+      BY <2>1, <2>2
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,H_AppendEntriesResponseInTermImpliesSafeAtTerms,H_AppendEntriesRequestInTermImpliesSafeAtTerms,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_AppendEntriesResponseInTermImpliesSafeAtTerms /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_AppendEntriesResponseInTermImpliesSafeAtTerms,
+                        H_AppendEntriesRequestInTermImpliesSafeAtTerms,
+                        H_CandidateInTermVotedForItself,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ ~(\E m_1 \in (appendEntriesRequestMsgs) : m_1.mterm = currentTerm[s])
+                         /\ ~(\E m_1 \in (appendEntriesResponseMsgs) : m_1.msuccess /\ m_1.mterm = currentTerm[s]))'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm, HandleRequestVoteRequestAction
+    <2>1. (~(\E m_1 \in (appendEntriesRequestMsgs) : m_1.mterm = currentTerm[s]))'
+      BY DEF TypeOK,H_AppendEntriesResponseInTermImpliesSafeAtTerms,H_AppendEntriesRequestInTermImpliesSafeAtTerms,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. (~(\E m_1 \in (appendEntriesResponseMsgs) : m_1.msuccess /\ m_1.mterm = currentTerm[s]))'
+      BY DEF TypeOK,H_AppendEntriesResponseInTermImpliesSafeAtTerms,H_AppendEntriesRequestInTermImpliesSafeAtTerms,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>3. QED
+      BY <2>1, <2>2
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,AcceptAppendEntriesRequestAppendAction)
@@ -644,9 +1059,45 @@ THEOREM L_17 == TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ H_LogEntryInTermI
   \* (H_LogEntryInTermImpliesSafeAtTermAppendEntries,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ AdvanceCommitIndexAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_LogEntryInTermImpliesSafeAtTermAppendEntries
   \* (H_LogEntryInTermImpliesSafeAtTermAppendEntries,AppendEntriesAction)
-  <1>6. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ AppendEntriesAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTerm,AppendEntriesAction,AppendEntries,H_LogEntryInTermImpliesSafeAtTermAppendEntries
+  <1>6. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ AppendEntriesAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        H_LogEntryInTermImpliesSafeAtTermAppendEntries,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW m \in appendEntriesRequestMsgs',
+                        (/\ m.mtype = AppendEntriesRequest
+                         /\ m.mentries # <<>>)'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= m.mentries[1]
+                             /\ (currentTerm[u] = m.mentries[1]) => state[u] = Leader
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= m.mentries[1]
+                                 /\ currentTerm[n] = m.mentries[1] => (votedFor[n] = u))'
+      BY DEF AppendEntriesAction, H_LogEntryInTermImpliesSafeAtTermAppendEntries
+    <2> QED
+      BY SubSeqProperties, LenProperties,  QuorumsExistForNonEmptySets, QuorumsAreServerSubsets DEF TypeOK,H_LogEntryInTermImpliesSafeAtTerm,AppendEntriesAction,AppendEntries,H_LogEntryInTermImpliesSafeAtTermAppendEntries, Min
   \* (H_LogEntryInTermImpliesSafeAtTermAppendEntries,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ HandleRequestVoteRequestAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_LogEntryInTermImpliesSafeAtTermAppendEntries,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ HandleRequestVoteRequestAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTermAppendEntries,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW m_1 \in appendEntriesRequestMsgs',
+                        (  /\ m_1.mtype = AppendEntriesRequest
+                         /\ m_1.mentries # <<>>)'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= m_1.mentries[1]
+                             /\ (currentTerm[u] = m_1.mentries[1]) => state[u] = Leader
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= m_1.mentries[1]
+                                 /\ currentTerm[n] = m_1.mentries[1] => (votedFor[n] = u))'
+      BY DEF H_LogEntryInTermImpliesSafeAtTermAppendEntries, HandleRequestVoteRequestAction
+    <2> QED
+      BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_LogEntryInTermImpliesSafeAtTermAppendEntries,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_LogEntryInTermImpliesSafeAtTermAppendEntries,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ HandleRequestVoteResponseAction => H_LogEntryInTermImpliesSafeAtTermAppendEntries' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_LogEntryInTermImpliesSafeAtTermAppendEntries,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_LogEntryInTermImpliesSafeAtTermAppendEntries,AcceptAppendEntriesRequestAppendAction)
@@ -662,7 +1113,21 @@ THEOREM L_17 == TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ H_LogEntryInTermI
 THEOREM L_18 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ Next => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,RequestVoteAction)
-  <1>1. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ RequestVoteAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,RequestVoteAction,RequestVote,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ RequestVoteAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW s \in Server',
+                        (state[s] = Candidate /\ votesGranted[s] \in Quorum)'
+                 PROVE  (~(\E m \in appendEntriesRequestMsgs :   
+                             /\ m.mtype = AppendEntriesRequest
+                             /\ m.mentries # <<>>
+                             /\ m.mentries[1] = currentTerm[s]))'
+      BY DEF H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm, RequestVoteAction
+    <2> QED
+      BY DEF TypeOK,RequestVoteAction,RequestVote,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,UpdateTermAction)
   <1>2. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ UpdateTermAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,BecomeLeaderAction)
@@ -672,11 +1137,40 @@ THEOREM L_18 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTer
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ AdvanceCommitIndexAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,AppendEntriesAction)
-  <1>6. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ AppendEntriesAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm,AppendEntriesAction,AppendEntries,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm
+  <1>6. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ AppendEntriesAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm,
+                        H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW s \in Server',
+                        (state[s] = Candidate /\ votesGranted[s] \in Quorum)'
+                 PROVE  (~(\E m \in appendEntriesRequestMsgs :   
+                             /\ m.mtype = AppendEntriesRequest
+                             /\ m.mentries # <<>>
+                             /\ m.mentries[1] = currentTerm[s]))'
+      BY DEF AppendEntriesAction, H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm
+    <2> QED
+      BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm,AppendEntriesAction,AppendEntries,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm, Min
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ HandleRequestVoteRequestAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate /\ votesGranted[s] \in Quorum)'
+                 PROVE  (~(\E m_1 \in appendEntriesRequestMsgs :   
+                             /\ m_1.mtype = AppendEntriesRequest
+                             /\ m_1.mentries # <<>>
+                             /\ m_1.mentries[1] = currentTerm[s]))'
+      BY DEF H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm, HandleRequestVoteResponseAction
+    <2> QED
+      BY ElementOfSeq,EmptySeq DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm /\ AcceptAppendEntriesRequestAppendAction => H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm
   \* (H_CandidateWithVotesGrantedInTermImplyNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestLearnCommitAction)
@@ -692,9 +1186,51 @@ THEOREM L_19 == TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,RequestVoteAction)
   <1>1. TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ RequestVoteAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm,RequestVoteAction,RequestVote,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType,ExistsRequestVoteResponseQuorum
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,UpdateTermAction)
-  <1>2. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ UpdateTermAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType,ExistsRequestVoteResponseQuorum
+  <1>2. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ UpdateTermAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,
+                        TRUE,
+                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
+                        UpdateTerm(m.mterm, m.mdest),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm, UpdateTermAction
+    <2>1. (\A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType,ExistsRequestVoteResponseQuorum
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
+  <1>3. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ BecomeLeaderAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m \in msgs : m.mtype = RequestVoteResponse
+                             /\ m.mterm = (currentTerm[s])
+                             /\ m.mdest = s
+                             /\ m.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m.msource : m \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF BecomeLeaderAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm
+    <2>1. (\A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ClientRequestAction)
   <1>4. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ ClientRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoOtherLeadersInTerm,ClientRequestAction,ClientRequest,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,AdvanceCommitIndexAction)
@@ -704,9 +1240,50 @@ THEOREM L_19 == TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ HandleRequestVoteRequestAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTerm,H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,ExistsRequestVoteResponseQuorum
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,ExistsRequestVoteResponseQuorum
+  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ HandleRequestVoteResponseAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm, HandleRequestVoteResponseAction
+    <2>1. (\A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,ExistsRequestVoteResponseQuorum
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,AcceptAppendEntriesRequestAppendAction)
-  <1>9. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ AcceptAppendEntriesRequestAppendAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
+  <1>9. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ AcceptAppendEntriesRequestAppendAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,
+                        H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestAppend(m),
+                        NEW s \in Server',
+                        (state[s] = Candidate)',
+                        NEW msgs \in (SUBSET requestVoteResponseMsgs)',
+                        (/\ \A m_1 \in msgs : m_1.mtype = RequestVoteResponse
+                             /\ m_1.mterm = (currentTerm[s])
+                             /\ m_1.mdest = s
+                             /\ m_1.mvoteGranted
+                         \* Responses form a quorum.
+                         /\ currentTerm[s] = (currentTerm[s])
+                         /\ ({m_1.msource : m_1 \in msgs} \cup votesGranted[s]) \in Quorum)'
+                 PROVE  (/\ \A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF AcceptAppendEntriesRequestAppendAction, ExistsVoteResponseOrGrantedQuorum, H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm
+    <2>1. (\A n \in Server : \A ind \in DOMAIN log[n] : log[n][ind] # currentTerm[s])'
+      BY DEF LogOk,CanAppend,TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntryLogsInTerm,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
+    <2>2. QED
+      BY <2>1
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,AcceptAppendEntriesRequestLearnCommitAction)
   <1>10. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm /\ AcceptAppendEntriesRequestLearnCommitAction => H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,ExistsRequestVoteResponseQuorum
   \* (H_RequestVoteQuorumInTermImpliesNoOtherLogsInTerm,HandleAppendEntriesResponseAction)
@@ -716,11 +1293,45 @@ THEOREM L_19 == TypeOK /\ H_RequestVoteResponseToNodeImpliesNodeSafeAtTerm /\ H_
 
 \*** H_LogEntryInTermImpliesSafeAtTerm
 THEOREM L_20 == TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ H_LeaderHasVotesGrantedQuorum /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_LogEntryInTermImpliesSafeAtTerm /\ Next => H_LogEntryInTermImpliesSafeAtTerm'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, FS_Singleton, FS_Union, QuorumsExistForNonEmptySets, QuorumsAreServerSubsets, StaticQuorumsOverlap, FS_Difference, AddingToQuorumRemainsQuorum
   \* (H_LogEntryInTermImpliesSafeAtTerm,RequestVoteAction)
-  <1>1. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ RequestVoteAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,RequestVoteAction,RequestVote,H_LogEntryInTermImpliesSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ RequestVoteAction => H_LogEntryInTermImpliesSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW s \in Server',
+                        NEW i_1 \in (DOMAIN log[s])'
+                 PROVE  (  \E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= log[s][i_1]
+                             /\ (currentTerm[u] = log[s][i_1]) => (state[u] = Leader /\ votesGranted[u] = Q)
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= log[s][i_1]
+                                 /\ currentTerm[n] = log[s][i_1] => (votedFor[n] = u))'
+      BY DEF H_LogEntryInTermImpliesSafeAtTerm, RequestVoteAction
+    <2> QED
+      BY DEF LastTerm, TypeOK,RequestVoteAction,RequestVote,H_LogEntryInTermImpliesSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_LogEntryInTermImpliesSafeAtTerm,UpdateTermAction)
-  <1>2. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ UpdateTermAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_LogEntryInTermImpliesSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>2. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ UpdateTermAction => H_LogEntryInTermImpliesSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        TRUE,
+                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
+                        UpdateTerm(m.mterm, m.mdest),
+                        NEW s \in Server',
+                        NEW i \in (DOMAIN log[s])'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= log[s][i]
+                             /\ (currentTerm[u] = log[s][i]) => (state[u] = Leader /\ votesGranted[u] = Q)
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= log[s][i]
+                                 /\ currentTerm[n] = log[s][i] => (votedFor[n] = u))'
+      BY DEF H_LogEntryInTermImpliesSafeAtTerm, UpdateTermAction
+    <2> QED
+      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_LogEntryInTermImpliesSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_LogEntryInTermImpliesSafeAtTerm,BecomeLeaderAction)
   <1>3. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ BecomeLeaderAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_LogEntryInTermImpliesSafeAtTerm
   \* (H_LogEntryInTermImpliesSafeAtTerm,ClientRequestAction)
@@ -730,11 +1341,61 @@ THEOREM L_20 == TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ H_LeaderHasVotesGran
   \* (H_LogEntryInTermImpliesSafeAtTerm,AppendEntriesAction)
   <1>6. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ AppendEntriesAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_LogEntryInTermImpliesSafeAtTerm
   \* (H_LogEntryInTermImpliesSafeAtTerm,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ HandleRequestVoteRequestAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_LogEntryInTermImpliesSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ HandleRequestVoteRequestAction => H_LogEntryInTermImpliesSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW s \in Server',
+                        NEW i \in (DOMAIN log[s])'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= log[s][i]
+                             /\ (currentTerm[u] = log[s][i]) => (state[u] = Leader /\ votesGranted[u] = Q)
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= log[s][i]
+                                 /\ currentTerm[n] = log[s][i] => (votedFor[n] = u))'
+      BY DEF H_LogEntryInTermImpliesSafeAtTerm, HandleRequestVoteRequestAction
+    <2> QED
+      BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_LogEntryInTermImpliesSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_LogEntryInTermImpliesSafeAtTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_CandidateInTermVotedForItself /\ H_LogEntryInTermImpliesSafeAtTerm /\ HandleRequestVoteResponseAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,H_CandidateInTermVotedForItself,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_LogEntryInTermImpliesSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_CandidateInTermVotedForItself /\ H_LogEntryInTermImpliesSafeAtTerm /\ HandleRequestVoteResponseAction => H_LogEntryInTermImpliesSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateInTermVotedForItself,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        NEW i \in (DOMAIN log[s])'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= log[s][i]
+                             /\ (currentTerm[u] = log[s][i]) => (state[u] = Leader /\ votesGranted[u] = Q)
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= log[s][i]
+                                 /\ currentTerm[n] = log[s][i] => (votedFor[n] = u))'
+      BY DEF H_LogEntryInTermImpliesSafeAtTerm, HandleRequestVoteResponseAction
+    <2> QED
+      BY DEF TypeOK,H_CandidateInTermVotedForItself,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_LogEntryInTermImpliesSafeAtTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_LogEntryInTermImpliesSafeAtTerm,AcceptAppendEntriesRequestAppendAction)
-  <1>9. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_LogEntryInTermImpliesSafeAtTerm /\ AcceptAppendEntriesRequestAppendAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTermAppendEntries,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_LogEntryInTermImpliesSafeAtTerm
+  <1>9. TypeOK /\ H_LogEntryInTermImpliesSafeAtTermAppendEntries /\ H_LogEntryInTermImpliesSafeAtTerm /\ AcceptAppendEntriesRequestAppendAction => H_LogEntryInTermImpliesSafeAtTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogEntryInTermImpliesSafeAtTermAppendEntries,
+                        H_LogEntryInTermImpliesSafeAtTerm,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestAppend(m),
+                        NEW s \in Server',
+                        NEW i \in (DOMAIN log[s])'
+                 PROVE  (\E Q \in Quorum : 
+                         \E u \in Server : 
+                             /\ currentTerm[u] >= log[s][i]
+                             /\ (currentTerm[u] = log[s][i]) => (state[u] = Leader /\ votesGranted[u] = Q)
+                             /\ \A n \in Q : 
+                                 /\ currentTerm[n] >= log[s][i]
+                                 /\ currentTerm[n] = log[s][i] => (votedFor[n] = u))'
+      BY DEF AcceptAppendEntriesRequestAppendAction, H_LogEntryInTermImpliesSafeAtTerm
+    <2> QED
+      BY DEF TypeOK,H_LogEntryInTermImpliesSafeAtTermAppendEntries,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_LogEntryInTermImpliesSafeAtTerm
   \* (H_LogEntryInTermImpliesSafeAtTerm,AcceptAppendEntriesRequestLearnCommitAction)
   <1>10. TypeOK /\ H_LogEntryInTermImpliesSafeAtTerm /\ AcceptAppendEntriesRequestLearnCommitAction => H_LogEntryInTermImpliesSafeAtTerm' BY DEF TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_LogEntryInTermImpliesSafeAtTerm
   \* (H_LogEntryInTermImpliesSafeAtTerm,HandleAppendEntriesResponseAction)
@@ -817,7 +1478,7 @@ THEOREM L_21 == TypeOK /\ H_VotesCantBeGrantedTwiceToCandidatesInSameTerm /\ H_V
 
 \*** H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm
 THEOREM L_22 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLeader /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ Next => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, StaticQuorumsOverlap
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,RequestVoteAction)
   <1>1. TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ RequestVoteAction => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm' BY DEF TypeOK,RequestVoteAction,RequestVote,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,UpdateTermAction)
@@ -833,7 +1494,28 @@ THEOREM L_22 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLeader /\
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ HandleRequestVoteRequestAction => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm' BY DEF TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ HandleRequestVoteResponseAction => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,
+                        H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,
+                        NEW m \in requestVoteResponseMsgs,
+                        HandleRequestVoteResponse(m),
+                        NEW s \in Server',
+                        (/\ state[s] = Candidate
+                         /\ votesGranted[s] \in Quorum)'
+                 PROVE  (/\ ~\E m_1 \in (appendEntriesRequestMsgs) : 
+                                   m_1.mtype = AppendEntriesRequest /\ m_1.mterm = currentTerm[s]
+                         /\ ~\E m_1 \in (appendEntriesResponseMsgs) : 
+                                   m_1.mtype = AppendEntriesResponse /\ m_1.msuccess /\ m_1.mterm = currentTerm[s])'
+      BY DEF H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm, HandleRequestVoteResponseAction
+    <2>1. (~\E m_1 \in (appendEntriesRequestMsgs) : 
+                  m_1.mtype = AppendEntriesRequest /\ m_1.mterm = currentTerm[s])'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>2. (~\E m_1 \in (appendEntriesResponseMsgs) : 
+                  m_1.mtype = AppendEntriesResponse /\ m_1.msuccess /\ m_1.mterm = currentTerm[s])'
+      BY DEF ExistsVoteResponseOrGrantedQuorum, TypeOK,H_RequestVoteQuorumInTermImpliesNoAppendEntriesInTerm,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+    <2>3. QED
+      BY <2>1, <2>2
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ AcceptAppendEntriesRequestAppendAction => H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm
   \* (H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,AcceptAppendEntriesRequestLearnCommitAction)
@@ -845,7 +1527,7 @@ THEOREM L_22 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLeader /\
 
 \*** H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
 THEOREM L_23 == TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ Next => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, LenProperties, ElementOfSeq, EmptySeq, AppendProperties
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,RequestVoteAction)
   <1>1. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ RequestVoteAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,RequestVoteAction,RequestVote,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,UpdateTermAction)
@@ -853,11 +1535,55 @@ THEOREM L_23 == TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTer
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,BecomeLeaderAction)
   <1>3. TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ BecomeLeaderAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTerm,BecomeLeaderAction,BecomeLeader,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,ClientRequestAction)
-  <1>4. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ ClientRequestAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+  <1>4. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ ClientRequestAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,
+                        TRUE,
+                        NEW i \in Server,
+                        ClientRequest(i),
+                        NEW m \in appendEntriesRequestMsgs',
+                        (/\ m.mtype = AppendEntriesRequest
+                         /\ m.mentries # <<>>
+                         /\ state[m.msource] = Leader
+                         /\ currentTerm[m.msource] = m.mterm)'
+                 PROVE  (/\ Len(log[m.msource]) >= m.mprevLogIndex + 1
+                         /\ log[m.msource][m.mprevLogIndex + 1] = m.mentries[1]
+                         /\ m.mprevLogIndex > 0 => log[m.msource][m.mprevLogIndex] = m.mprevLogTerm)'
+      BY DEF ClientRequestAction, H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>1. (Len(log[m.msource]) >= m.mprevLogIndex + 1)'
+      BY DEF TypeOK,ClientRequestAction,ClientRequest,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>2. (log[m.msource][m.mprevLogIndex + 1] = m.mentries[1])'
+      BY DEF TypeOK,ClientRequestAction,ClientRequest,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>3. (m.mprevLogIndex > 0 => log[m.msource][m.mprevLogIndex] = m.mprevLogTerm)'
+      BY DEF TypeOK,ClientRequestAction,ClientRequest,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>4. QED
+      BY <2>1, <2>2, <2>3
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ AdvanceCommitIndexAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,AppendEntriesAction)
-  <1>6. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ AppendEntriesAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+  <1>6. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ AppendEntriesAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW m \in appendEntriesRequestMsgs',
+                        (/\ m.mtype = AppendEntriesRequest
+                         /\ m.mentries # <<>>
+                         /\ state[m.msource] = Leader
+                         /\ currentTerm[m.msource] = m.mterm)'
+                 PROVE  (/\ Len(log[m.msource]) >= m.mprevLogIndex + 1
+                         /\ log[m.msource][m.mprevLogIndex + 1] = m.mentries[1]
+                         /\ m.mprevLogIndex > 0 => log[m.msource][m.mprevLogIndex] = m.mprevLogTerm)'
+      BY DEF AppendEntriesAction, H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>1. (Len(log[m.msource]) >= m.mprevLogIndex + 1)'
+      BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>2. (log[m.msource][m.mprevLogIndex + 1] = m.mentries[1])'
+      BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>3. (m.mprevLogIndex > 0 => log[m.msource][m.mprevLogIndex] = m.mprevLogTerm)'
+      BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog
+    <2>4. QED
+      BY <2>1, <2>2, <2>3
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_AppendEntriesRequestLogEntriesMustBeInLeaderLog /\ HandleRequestVoteRequestAction => H_AppendEntriesRequestLogEntriesMustBeInLeaderLog' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_AppendEntriesRequestLogEntriesMustBeInLeaderLog,HandleRequestVoteResponseAction)
@@ -873,7 +1599,7 @@ THEOREM L_23 == TypeOK /\ H_CandidateWithVotesGrantedImpliesNoAppendEntriesInTer
 
 \*** H_LogMatchingBetweenAppendEntriesMsgs
 THEOREM L_24 == TypeOK /\ H_LogMatching /\ H_LogMatchingAppendEntries /\ H_LogMatchingBetweenAppendEntriesMsgs /\ Next => H_LogMatchingBetweenAppendEntriesMsgs'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7, LenProperties, ElementOfSeq, EmptySeq, AppendProperties, SubSeqProperties
   \* (H_LogMatchingBetweenAppendEntriesMsgs,RequestVoteAction)
   <1>1. TypeOK /\ H_LogMatchingBetweenAppendEntriesMsgs /\ RequestVoteAction => H_LogMatchingBetweenAppendEntriesMsgs' BY DEF TypeOK,RequestVoteAction,RequestVote,H_LogMatchingBetweenAppendEntriesMsgs,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_LogMatchingBetweenAppendEntriesMsgs,UpdateTermAction)
@@ -885,7 +1611,27 @@ THEOREM L_24 == TypeOK /\ H_LogMatching /\ H_LogMatchingAppendEntries /\ H_LogMa
   \* (H_LogMatchingBetweenAppendEntriesMsgs,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_LogMatchingBetweenAppendEntriesMsgs /\ AdvanceCommitIndexAction => H_LogMatchingBetweenAppendEntriesMsgs' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_LogMatchingBetweenAppendEntriesMsgs
   \* (H_LogMatchingBetweenAppendEntriesMsgs,AppendEntriesAction)
-  <1>6. TypeOK /\ H_LogMatching /\ H_LogMatchingAppendEntries /\ H_LogMatchingBetweenAppendEntriesMsgs /\ AppendEntriesAction => H_LogMatchingBetweenAppendEntriesMsgs' BY DEF TypeOK,H_LogMatching,H_LogMatchingAppendEntries,AppendEntriesAction,AppendEntries,H_LogMatchingBetweenAppendEntriesMsgs
+  <1>6. TypeOK /\ H_LogMatching /\ H_LogMatchingAppendEntries /\ H_LogMatchingBetweenAppendEntriesMsgs /\ AppendEntriesAction => H_LogMatchingBetweenAppendEntriesMsgs' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LogMatching,
+                        H_LogMatchingAppendEntries,
+                        H_LogMatchingBetweenAppendEntriesMsgs,
+                        TRUE,
+                        NEW i \in Server, NEW j \in Server,
+                        AppendEntries(i, j),
+                        NEW mi \in appendEntriesRequestMsgs', NEW mj \in appendEntriesRequestMsgs',
+                        (/\ mi.mtype = AppendEntriesRequest
+                         /\ mj.mtype = AppendEntriesRequest  
+                         /\ mi.mprevLogIndex > 0
+                         /\ mj.mprevLogIndex > 0
+                         /\ mi.mprevLogIndex = mj.mprevLogIndex
+                         /\ mi.mentries # <<>>
+                         /\ mj.mentries # <<>>
+                         /\ mi.mentries[1] = mj.mentries[1])'
+                 PROVE  (mi.mprevLogTerm = mj.mprevLogTerm)'
+      BY DEF AppendEntriesAction, H_LogMatchingBetweenAppendEntriesMsgs
+    <2> QED
+      BY DEF Min, TypeOK,H_LogMatching,H_LogMatchingAppendEntries,AppendEntriesAction,AppendEntries,H_LogMatchingBetweenAppendEntriesMsgs
   \* (H_LogMatchingBetweenAppendEntriesMsgs,HandleRequestVoteRequestAction)
   <1>7. TypeOK /\ H_LogMatchingBetweenAppendEntriesMsgs /\ HandleRequestVoteRequestAction => H_LogMatchingBetweenAppendEntriesMsgs' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_LogMatchingBetweenAppendEntriesMsgs,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_LogMatchingBetweenAppendEntriesMsgs,HandleRequestVoteResponseAction)
@@ -1126,9 +1872,37 @@ THEOREM L_31 == TypeOK /\ H_LogMatchingInAppendEntriesMsgsLeaders /\ H_LogMatchi
 THEOREM L_32 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm /\ H_OnePrimaryPerTerm /\ H_PrimaryHasEntriesItCreatedAppendEntries /\ H_PrimaryHasEntriesItCreated /\ Next => H_PrimaryHasEntriesItCreated'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_PrimaryHasEntriesItCreated,RequestVoteAction)
-  <1>1. TypeOK /\ H_PrimaryHasEntriesItCreated /\ RequestVoteAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,RequestVoteAction,RequestVote,H_PrimaryHasEntriesItCreated,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_PrimaryHasEntriesItCreated /\ RequestVoteAction => H_PrimaryHasEntriesItCreated' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_PrimaryHasEntriesItCreated,
+                        TRUE,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW i_1 \in Server', NEW j \in Server',
+                        (state[i_1] = Leader)'
+                 PROVE  (~(\E k \in DOMAIN log[j] :
+                             /\ log[j][k] = currentTerm[i_1]
+                             /\ ~\E ind \in DOMAIN log[i_1] : (ind = k /\ log[i_1][k] = log[j][k]) 
+                             ))'
+      BY DEF H_PrimaryHasEntriesItCreated, RequestVoteAction
+    <2> QED
+      BY DEF TypeOK,RequestVoteAction,RequestVote,H_PrimaryHasEntriesItCreated,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_PrimaryHasEntriesItCreated,UpdateTermAction)
-  <1>2. TypeOK /\ H_PrimaryHasEntriesItCreated /\ UpdateTermAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_PrimaryHasEntriesItCreated,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>2. TypeOK /\ H_PrimaryHasEntriesItCreated /\ UpdateTermAction => H_PrimaryHasEntriesItCreated' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_PrimaryHasEntriesItCreated,
+                        TRUE,
+                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
+                        UpdateTerm(m.mterm, m.mdest),
+                        NEW i \in Server', NEW j \in Server',
+                        (state[i] = Leader)'
+                 PROVE  (~(\E k \in DOMAIN log[j] :
+                             /\ log[j][k] = currentTerm[i]
+                             /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k]) 
+                             ))'
+      BY DEF H_PrimaryHasEntriesItCreated, UpdateTermAction
+    <2> QED
+      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_PrimaryHasEntriesItCreated,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_PrimaryHasEntriesItCreated,BecomeLeaderAction)
   <1>3. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm /\ H_PrimaryHasEntriesItCreated /\ BecomeLeaderAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTerm,BecomeLeaderAction,BecomeLeader,H_PrimaryHasEntriesItCreated
   \* (H_PrimaryHasEntriesItCreated,ClientRequestAction)
@@ -1142,7 +1916,21 @@ THEOREM L_32 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTer
   \* (H_PrimaryHasEntriesItCreated,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_PrimaryHasEntriesItCreated /\ HandleRequestVoteResponseAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_PrimaryHasEntriesItCreated,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_PrimaryHasEntriesItCreated,AcceptAppendEntriesRequestAppendAction)
-  <1>9. TypeOK /\ H_PrimaryHasEntriesItCreatedAppendEntries /\ H_PrimaryHasEntriesItCreated /\ AcceptAppendEntriesRequestAppendAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,H_PrimaryHasEntriesItCreatedAppendEntries,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_PrimaryHasEntriesItCreated
+  <1>9. TypeOK /\ H_PrimaryHasEntriesItCreatedAppendEntries /\ H_PrimaryHasEntriesItCreated /\ AcceptAppendEntriesRequestAppendAction => H_PrimaryHasEntriesItCreated' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_PrimaryHasEntriesItCreatedAppendEntries,
+                        H_PrimaryHasEntriesItCreated,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestAppend(m),
+                        NEW i \in Server', NEW j \in Server',
+                        (state[i] = Leader)'
+                 PROVE  (~(\E k \in DOMAIN log[j] :
+                             /\ log[j][k] = currentTerm[i]
+                             /\ ~\E ind \in DOMAIN log[i] : (ind = k /\ log[i][k] = log[j][k]) 
+                             ))'
+      BY DEF AcceptAppendEntriesRequestAppendAction, H_PrimaryHasEntriesItCreated
+    <2> QED
+      BY DEF LogOk, CanAppend, TypeOK,H_PrimaryHasEntriesItCreatedAppendEntries,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_PrimaryHasEntriesItCreated
   \* (H_PrimaryHasEntriesItCreated,AcceptAppendEntriesRequestLearnCommitAction)
   <1>10. TypeOK /\ H_PrimaryHasEntriesItCreated /\ AcceptAppendEntriesRequestLearnCommitAction => H_PrimaryHasEntriesItCreated' BY DEF TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_PrimaryHasEntriesItCreated
   \* (H_PrimaryHasEntriesItCreated,HandleAppendEntriesResponseAction)
@@ -1152,7 +1940,7 @@ THEOREM L_32 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyNoOtherLogsInTer
 
 \*** H_CommitIndexBoundValid
 THEOREM L_33 == TypeOK /\ H_CommitIndexBoundValid /\ Next => H_CommitIndexBoundValid'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7 DEF Max, Agree
   \* (H_CommitIndexBoundValid,RequestVoteAction)
   <1>1. TypeOK /\ H_CommitIndexBoundValid /\ RequestVoteAction => H_CommitIndexBoundValid' BY DEF TypeOK,RequestVoteAction,RequestVote,H_CommitIndexBoundValid,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
   \* (H_CommitIndexBoundValid,UpdateTermAction)
@@ -1162,7 +1950,17 @@ THEOREM L_33 == TypeOK /\ H_CommitIndexBoundValid /\ Next => H_CommitIndexBoundV
   \* (H_CommitIndexBoundValid,ClientRequestAction)
   <1>4. TypeOK /\ H_CommitIndexBoundValid /\ ClientRequestAction => H_CommitIndexBoundValid' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommitIndexBoundValid
   \* (H_CommitIndexBoundValid,AdvanceCommitIndexAction)
-  <1>5. TypeOK /\ H_CommitIndexBoundValid /\ AdvanceCommitIndexAction => H_CommitIndexBoundValid' BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_CommitIndexBoundValid
+  <1>5. TypeOK /\ H_CommitIndexBoundValid /\ AdvanceCommitIndexAction => H_CommitIndexBoundValid' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexBoundValid,
+                        TRUE,
+                        NEW i \in Server,
+                        AdvanceCommitIndex(i),
+                        NEW s \in Server'
+                 PROVE  (commitIndex[s] <= Len(log[s]))'
+      BY DEF AdvanceCommitIndexAction, H_CommitIndexBoundValid
+    <2> QED
+      BY DEF TypeOK,AdvanceCommitIndexAction,AdvanceCommitIndex,H_CommitIndexBoundValid
   \* (H_CommitIndexBoundValid,AppendEntriesAction)
   <1>6. TypeOK /\ H_CommitIndexBoundValid /\ AppendEntriesAction => H_CommitIndexBoundValid' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_CommitIndexBoundValid
   \* (H_CommitIndexBoundValid,HandleRequestVoteRequestAction)
@@ -1172,7 +1970,16 @@ THEOREM L_33 == TypeOK /\ H_CommitIndexBoundValid /\ Next => H_CommitIndexBoundV
   \* (H_CommitIndexBoundValid,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_CommitIndexBoundValid /\ AcceptAppendEntriesRequestAppendAction => H_CommitIndexBoundValid' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CommitIndexBoundValid
   \* (H_CommitIndexBoundValid,AcceptAppendEntriesRequestLearnCommitAction)
-  <1>10. TypeOK /\ H_CommitIndexBoundValid /\ AcceptAppendEntriesRequestLearnCommitAction => H_CommitIndexBoundValid' BY DEF TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_CommitIndexBoundValid
+  <1>10. TypeOK /\ H_CommitIndexBoundValid /\ AcceptAppendEntriesRequestLearnCommitAction => H_CommitIndexBoundValid' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexBoundValid,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestLearnCommit(m),
+                        NEW s \in Server'
+                 PROVE  (commitIndex[s] <= Len(log[s]))'
+      BY DEF AcceptAppendEntriesRequestLearnCommitAction, H_CommitIndexBoundValid
+    <2> QED
+      BY LenProperties DEF CanAppend, LogOk, Min, TypeOK,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_CommitIndexBoundValid
   \* (H_CommitIndexBoundValid,HandleAppendEntriesResponseAction)
   <1>11. TypeOK /\ H_CommitIndexBoundValid /\ HandleAppendEntriesResponseAction => H_CommitIndexBoundValid' BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,H_CommitIndexBoundValid
 <1>12. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11 DEF Next
@@ -1188,7 +1995,22 @@ THEOREM L_34 == TypeOK /\ H_LeaderMatchIndexValid /\ H_CommitIndexInAppendEntrie
   \* (H_CommitIndexCoveredOnQuorum,BecomeLeaderAction)
   <1>3. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ BecomeLeaderAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_CommitIndexCoveredOnQuorum
   \* (H_CommitIndexCoveredOnQuorum,ClientRequestAction)
-  <1>4. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ ClientRequestAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommitIndexCoveredOnQuorum
+  <1>4. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ ClientRequestAction => H_CommitIndexCoveredOnQuorum' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexCoveredOnQuorum,
+                        TRUE,
+                        NEW i \in Server,
+                        ClientRequest(i),
+                        NEW s \in Server',
+                        (commitIndex[s] > 0)'
+                 PROVE  (\E Q \in Quorum :
+                         \A t \in Q :
+                             /\ Len(log[s]) >= commitIndex[s] 
+                             /\ Len(log[t]) >= commitIndex[s] 
+                             /\ log[t][commitIndex[s]] = log[s][commitIndex[s]])'
+      BY DEF ClientRequestAction, H_CommitIndexCoveredOnQuorum
+    <2> QED
+      BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommitIndexCoveredOnQuorum
   \* (H_CommitIndexCoveredOnQuorum,AdvanceCommitIndexAction)
   <1>5. TypeOK /\ H_LeaderMatchIndexValid /\ H_CommitIndexCoveredOnQuorum /\ AdvanceCommitIndexAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,H_LeaderMatchIndexValid,AdvanceCommitIndexAction,AdvanceCommitIndex,H_CommitIndexCoveredOnQuorum
   \* (H_CommitIndexCoveredOnQuorum,AppendEntriesAction)
@@ -1198,9 +2020,39 @@ THEOREM L_34 == TypeOK /\ H_LeaderMatchIndexValid /\ H_CommitIndexInAppendEntrie
   \* (H_CommitIndexCoveredOnQuorum,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ HandleRequestVoteResponseAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CommitIndexCoveredOnQuorum,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CommitIndexCoveredOnQuorum,AcceptAppendEntriesRequestAppendAction)
-  <1>9. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ AcceptAppendEntriesRequestAppendAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CommitIndexCoveredOnQuorum
+  <1>9. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ AcceptAppendEntriesRequestAppendAction => H_CommitIndexCoveredOnQuorum' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexCoveredOnQuorum,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestAppend(m),
+                        NEW s \in Server',
+                        (commitIndex[s] > 0)'
+                 PROVE  (\E Q \in Quorum :
+                         \A t \in Q :
+                             /\ Len(log[s]) >= commitIndex[s] 
+                             /\ Len(log[t]) >= commitIndex[s] 
+                             /\ log[t][commitIndex[s]] = log[s][commitIndex[s]])'
+      BY DEF AcceptAppendEntriesRequestAppendAction, H_CommitIndexCoveredOnQuorum
+    <2> QED
+      BY DEF LogOk, CanAppend, TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_CommitIndexCoveredOnQuorum
   \* (H_CommitIndexCoveredOnQuorum,AcceptAppendEntriesRequestLearnCommitAction)
-  <1>10. TypeOK /\ H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\ H_LogMatching /\ H_CommitIndexCoveredOnQuorum /\ AcceptAppendEntriesRequestLearnCommitAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,H_LogMatching,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_CommitIndexCoveredOnQuorum
+  <1>10. TypeOK /\ H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\ H_LogMatching /\ H_CommitIndexCoveredOnQuorum /\ AcceptAppendEntriesRequestLearnCommitAction => H_CommitIndexCoveredOnQuorum' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,
+                        H_LogMatching,
+                        H_CommitIndexCoveredOnQuorum,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestLearnCommit(m),
+                        NEW s \in Server',
+                        (commitIndex[s] > 0)'
+                 PROVE  (\E Q \in Quorum :
+                         \A t \in Q :
+                             /\ Len(log[s]) >= commitIndex[s] 
+                             /\ Len(log[t]) >= commitIndex[s] 
+                             /\ log[t][commitIndex[s]] = log[s][commitIndex[s]])'
+      BY DEF AcceptAppendEntriesRequestLearnCommitAction, H_CommitIndexCoveredOnQuorum
+    <2> QED
+      BY DEF LogOk, CanAppend, TypeOK,H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,H_LogMatching,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_CommitIndexCoveredOnQuorum
   \* (H_CommitIndexCoveredOnQuorum,HandleAppendEntriesResponseAction)
   <1>11. TypeOK /\ H_CommitIndexCoveredOnQuorum /\ HandleAppendEntriesResponseAction => H_CommitIndexCoveredOnQuorum' BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,H_CommitIndexCoveredOnQuorum
 <1>12. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11 DEF Next
@@ -1331,7 +2183,23 @@ THEOREM L_38 == TypeOK /\ H_CommitIndexBoundValid /\ H_LeaderMatchIndexValid /\ 
   \* (H_NoLogDivergence,ClientRequestAction)
   <1>4. TypeOK /\ H_CommitIndexBoundValid /\ H_NoLogDivergence /\ ClientRequestAction => H_NoLogDivergence' BY DEF TypeOK,H_CommitIndexBoundValid,ClientRequestAction,ClientRequest,H_NoLogDivergence
   \* (H_NoLogDivergence,AdvanceCommitIndexAction)
-  <1>5. TypeOK /\ H_LeaderMatchIndexValid /\ H_CommitIndexCoveredOnQuorum /\ H_LogMatching /\ H_NoLogDivergence /\ AdvanceCommitIndexAction => H_NoLogDivergence' BY DEF TypeOK,H_LeaderMatchIndexValid,H_CommitIndexCoveredOnQuorum,H_LogMatching,AdvanceCommitIndexAction,AdvanceCommitIndex,H_NoLogDivergence
+  <1>5. TypeOK /\ H_LeaderMatchIndexValid /\ H_CommitIndexCoveredOnQuorum /\ H_LogMatching /\ H_NoLogDivergence /\ AdvanceCommitIndexAction => H_NoLogDivergence' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_LeaderMatchIndexValid,
+                        H_CommitIndexCoveredOnQuorum,
+                        H_LogMatching,
+                        H_NoLogDivergence,
+                        TRUE,
+                        NEW i \in Server,
+                        AdvanceCommitIndex(i),
+                        NEW s1 \in Server', NEW s2 \in Server',
+                        (s1 # s2)',
+                        NEW index \in ((DOMAIN log[s1]) \cap (DOMAIN log[s2]))',
+                        (index < commitIndex[s1] /\ index < commitIndex[s2])'
+                 PROVE  (log[s1][index] = log[s2][index])'
+      BY DEF AdvanceCommitIndexAction, H_NoLogDivergence
+    <2> QED
+      BY DEF Agree, TypeOK,H_LeaderMatchIndexValid,H_CommitIndexCoveredOnQuorum,H_LogMatching,AdvanceCommitIndexAction,AdvanceCommitIndex,H_NoLogDivergence
   \* (H_NoLogDivergence,AppendEntriesAction)
   <1>6. TypeOK /\ H_NoLogDivergence /\ AppendEntriesAction => H_NoLogDivergence' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_NoLogDivergence
   \* (H_NoLogDivergence,HandleRequestVoteRequestAction)
