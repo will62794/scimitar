@@ -1260,7 +1260,38 @@ THEOREM L_10 == TypeOK /\ H_CandidateInTermVotedForItself /\ Next => H_Candidate
   \* (H_CandidateInTermVotedForItself,AppendEntriesAction)
   <1>6. TypeOK /\ H_CandidateInTermVotedForItself /\ AppendEntriesAction => H_CandidateInTermVotedForItself' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_CandidateInTermVotedForItself
   \* (H_CandidateInTermVotedForItself,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_CandidateInTermVotedForItself /\ HandleRequestVoteRequestAction => H_CandidateInTermVotedForItself' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_CandidateInTermVotedForItself,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_CandidateInTermVotedForItself /\ HandleRequestVoteRequestAction => H_CandidateInTermVotedForItself'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateInTermVotedForItself,
+                        NEW m \in requestVoteRequestMsgs,
+                        HandleRequestVoteRequest(m),
+                        NEW s \in Server,
+                        (state[s] \in {Candidate, Leader})'
+                 PROVE  (votedFor[s] = s)'
+      BY DEF HandleRequestVoteRequestAction, H_CandidateInTermVotedForItself
+    <2>1. m.mdest \in Server /\ m.msource \in Server
+      BY DEF HandleRequestVoteRequest, TypeOK, RequestVoteRequestType
+    <2>2. state' = state
+      BY DEF HandleRequestVoteRequest
+    <2>3. state[s] \in {Candidate, Leader}
+      BY <2>2
+    <2>4. votedFor[s] = s
+      BY <2>3 DEF H_CandidateInTermVotedForItself
+    <2>5. CASE s # m.mdest
+      BY <2>1, <2>4, <2>5 DEF HandleRequestVoteRequest, TypeOK
+    <2>6. CASE s = m.mdest
+      <3>1. CASE votedFor[m.mdest] \in {Nil, m.msource}
+        <4>1. s = m.msource
+          BY <2>4, <2>6, <3>1
+        <4>2. votedFor'[s] \in {m.msource, votedFor[m.mdest]}
+          BY <2>1, <2>6 DEF HandleRequestVoteRequest, TypeOK, LastTerm, RequestVoteRequestType, RequestVoteResponseType, Terms, LogIndicesWithZero
+        <4>3. QED BY <4>1, <4>2, <2>4, <2>6
+      <3>2. CASE votedFor[m.mdest] \notin {Nil, m.msource}
+        <4>1. votedFor'[m.mdest] = votedFor[m.mdest]
+          BY <2>1, <3>2 DEF HandleRequestVoteRequest, TypeOK, LastTerm, RequestVoteRequestType, RequestVoteResponseType, Terms, LogIndicesWithZero
+        <4>2. QED BY <4>1, <2>4, <2>6
+      <3>3. QED BY <3>1, <3>2
+    <2>7. QED BY <2>5, <2>6
   \* (H_CandidateInTermVotedForItself,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_CandidateInTermVotedForItself /\ HandleRequestVoteResponseAction => H_CandidateInTermVotedForItself' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_CandidateInTermVotedForItself,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_CandidateInTermVotedForItself,AcceptAppendEntriesRequestAppendAction)
@@ -1276,11 +1307,101 @@ THEOREM L_10 == TypeOK /\ H_CandidateInTermVotedForItself /\ Next => H_Candidate
 THEOREM L_11 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ Next => H_VoteGrantedImpliesNodeSafeAtTerm'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,RequestVoteAction)
-  <1>1. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ RequestVoteAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,RequestVoteAction,RequestVote,H_VoteGrantedImpliesNodeSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ RequestVoteAction => H_VoteGrantedImpliesNodeSafeAtTerm'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_VoteGrantedImpliesNodeSafeAtTerm,
+                        NEW i \in Server,
+                        RequestVote(i),
+                        NEW s \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        NEW t \in (votesGranted[s])'
+                 PROVE  (currentTerm[t] >= currentTerm[s])'
+      BY DEF RequestVoteAction, H_VoteGrantedImpliesNodeSafeAtTerm
+    <2>1. CASE s = i
+      <3>1. votesGranted'[i] = {i}
+        BY DEF RequestVote, TypeOK
+      <3>2. t = i
+        BY <2>1, <3>1
+      <3>3. QED BY <2>1, <3>2 DEF RequestVote, TypeOK
+    <2>2. CASE s # i
+      <3>1. state[s] \in {Candidate, Leader}
+        BY <2>2 DEF RequestVote, TypeOK
+      <3>2. t \in votesGranted[s]
+        BY <2>2 DEF RequestVote, TypeOK
+      <3>3. currentTerm[t] >= currentTerm[s]
+        BY <3>1, <3>2 DEF H_VoteGrantedImpliesNodeSafeAtTerm
+      <3>4. CASE t = i
+        <4>1. currentTerm'[i] = currentTerm[i] + 1
+          BY DEF RequestVote, TypeOK
+        <4>2. currentTerm'[s] = currentTerm[s]
+          BY <2>2 DEF RequestVote, TypeOK
+        <4>3. QED BY <3>3, <3>4, <4>1, <4>2 DEF TypeOK
+      <3>5. CASE t # i
+        BY <2>2, <3>3, <3>5 DEF RequestVote, TypeOK
+      <3>6. QED BY <3>4, <3>5
+    <2>3. QED BY <2>1, <2>2
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,UpdateTermAction)
-  <1>2. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ UpdateTermAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_VoteGrantedImpliesNodeSafeAtTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>2. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ UpdateTermAction => H_VoteGrantedImpliesNodeSafeAtTerm'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_VoteGrantedImpliesNodeSafeAtTerm,
+                        NEW m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs,
+                        UpdateTerm(m.mterm, m.mdest),
+                        NEW s \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        NEW t \in (votesGranted[s])'
+                 PROVE  (currentTerm[t] >= currentTerm[s])'
+      BY DEF UpdateTermAction, H_VoteGrantedImpliesNodeSafeAtTerm
+    <2>1. m.mdest \in Server
+      BY DEF TypeOK, RequestVoteRequestType, RequestVoteResponseType, AppendEntriesRequestType, AppendEntriesResponseType
+    <2>2. CASE s = m.mdest
+      BY <2>2 DEF UpdateTerm, TypeOK
+    <2>3. CASE s # m.mdest
+      <3>1. state[s] \in {Candidate, Leader}
+        BY <2>1, <2>3 DEF UpdateTerm, TypeOK
+      <3>2. t \in votesGranted[s]
+        BY DEF UpdateTerm
+      <3>3. currentTerm[t] >= currentTerm[s]
+        BY <3>1, <3>2 DEF H_VoteGrantedImpliesNodeSafeAtTerm
+      <3>4. CASE t = m.mdest
+        <4>1. currentTerm'[t] = m.mterm
+          BY <2>1, <3>4 DEF UpdateTerm, TypeOK
+        <4>2. currentTerm'[s] = currentTerm[s]
+          BY <2>1, <2>3 DEF UpdateTerm, TypeOK
+        <4>3. m.mterm > currentTerm[t]
+          BY <3>4 DEF UpdateTerm
+        <4>4. t \in Server
+          BY DEF TypeOK, UpdateTerm
+        <4>5. currentTerm[t] \in Nat /\ currentTerm[s] \in Nat
+          BY <4>4 DEF TypeOK
+        <4>6. m.mterm \in Nat
+          BY DEF TypeOK, RequestVoteRequestType, RequestVoteResponseType, AppendEntriesRequestType, AppendEntriesResponseType
+        <4>7. m.mterm >= currentTerm[s]
+          BY <3>3, <4>3, <4>5, <4>6
+        <4>8. QED BY <4>1, <4>2, <4>7
+      <3>5. CASE t # m.mdest
+        BY <2>1, <2>3, <3>3, <3>5 DEF UpdateTerm, TypeOK
+      <3>6. QED BY <3>4, <3>5
+    <2>4. QED BY <2>2, <2>3
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ BecomeLeaderAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_VoteGrantedImpliesNodeSafeAtTerm
+  <1>3. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ BecomeLeaderAction => H_VoteGrantedImpliesNodeSafeAtTerm'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_VoteGrantedImpliesNodeSafeAtTerm,
+                        NEW i \in Server,
+                        BecomeLeader(i),
+                        NEW s \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        NEW t \in (votesGranted[s])'
+                 PROVE  (currentTerm[t] >= currentTerm[s])'
+      BY DEF BecomeLeaderAction, H_VoteGrantedImpliesNodeSafeAtTerm
+    <2>1. currentTerm' = currentTerm /\ votesGranted' = votesGranted
+      BY DEF BecomeLeader
+    <2>2. CASE s = i
+      BY <2>1, <2>2 DEF BecomeLeader, H_VoteGrantedImpliesNodeSafeAtTerm
+    <2>3. CASE s # i
+      <3>1. state[s] \in {Candidate, Leader}
+        BY <2>3 DEF BecomeLeader, TypeOK
+      <3>2. QED BY <2>1, <3>1 DEF H_VoteGrantedImpliesNodeSafeAtTerm
+    <2>4. QED BY <2>2, <2>3
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,ClientRequestAction)
   <1>4. TypeOK /\ H_VoteGrantedImpliesNodeSafeAtTerm /\ ClientRequestAction => H_VoteGrantedImpliesNodeSafeAtTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_VoteGrantedImpliesNodeSafeAtTerm
   \* (H_VoteGrantedImpliesNodeSafeAtTerm,AdvanceCommitIndexAction)
@@ -1318,11 +1439,137 @@ THEOREM L_11 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteGranted
 THEOREM L_12 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteInGrantedImpliesVotedFor /\ Next => H_VoteInGrantedImpliesVotedFor'
   <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_VoteInGrantedImpliesVotedFor,RequestVoteAction)
-  <1>1. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteInGrantedImpliesVotedFor /\ RequestVoteAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,RequestVoteAction,RequestVote,H_VoteInGrantedImpliesVotedFor,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>1. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteInGrantedImpliesVotedFor /\ RequestVoteAction => H_VoteInGrantedImpliesVotedFor'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
+                        H_VoteInGrantedImpliesVotedFor,
+                        RequestVoteAction,
+                        NEW s \in Server,
+                        NEW t \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        (t \in votesGranted[s])'
+                 PROVE  (currentTerm[t] = currentTerm[s] => votedFor[t] = s)'
+      BY DEF H_VoteInGrantedImpliesVotedFor
+    <2>1. PICK i \in Server : RequestVote(i)
+      BY DEF RequestVoteAction
+    <2>2. currentTerm[i] \in Nat
+      BY DEF TypeOK
+    <2>3. CASE s = i
+      <3>1. votesGranted'[i] = {i}
+        BY <2>1 DEF RequestVote, TypeOK
+      <3>2. t = i
+        BY <2>3, <3>1
+      <3>3. votedFor'[i] = i
+        BY <2>1 DEF RequestVote, TypeOK
+      <3> QED BY <2>3, <3>2, <3>3
+    <2>4. CASE s # i
+      <3>1. state'[s] = state[s]
+        BY <2>1, <2>4 DEF RequestVote, TypeOK
+      <3>2. state[s] \in {Candidate, Leader}
+        BY <3>1
+      <3>3. votesGranted'[s] = votesGranted[s]
+        BY <2>1, <2>4 DEF RequestVote, TypeOK
+      <3>4. t \in votesGranted[s]
+        BY <3>3
+      <3>5. currentTerm'[s] = currentTerm[s]
+        BY <2>1, <2>4 DEF RequestVote, TypeOK
+      <3>6. CASE t = i
+        <4>1. currentTerm'[t] = currentTerm[i] + 1
+          BY <3>6, <2>1, <2>2 DEF RequestVote, TypeOK
+        <4>2. currentTerm[i] >= currentTerm[s]
+          BY <3>2, <3>4, <3>6 DEF H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm
+        <4>3. currentTerm[s] \in Nat
+          BY DEF TypeOK
+        <4>4. currentTerm[i] + 1 > currentTerm[s]
+          BY <4>2, <4>3, <2>2
+        <4>5. currentTerm'[t] > currentTerm'[s]
+          BY <4>1, <4>4, <3>5
+        <4>6. currentTerm'[t] # currentTerm'[s]
+          BY <4>5, <4>3, <2>2
+        <4> QED BY <4>6
+      <3>7. CASE t # i
+        <4>1. currentTerm'[t] = currentTerm[t]
+          BY <3>7, <2>1 DEF RequestVote, TypeOK
+        <4>2. votedFor'[t] = votedFor[t]
+          BY <3>7, <2>1 DEF RequestVote, TypeOK
+        <4>3. currentTerm[t] = currentTerm[s] => votedFor[t] = s
+          BY <3>2, <3>4 DEF H_VoteInGrantedImpliesVotedFor
+        <4> QED BY <4>1, <4>2, <4>3, <3>5
+      <3> QED BY <3>6, <3>7
+    <2> QED BY <2>3, <2>4
   \* (H_VoteInGrantedImpliesVotedFor,UpdateTermAction)
-  <1>2. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteInGrantedImpliesVotedFor /\ UpdateTermAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,UpdateTermAction,UpdateTerm,H_VoteInGrantedImpliesVotedFor,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+  <1>2. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_VoteInGrantedImpliesVotedFor /\ UpdateTermAction => H_VoteInGrantedImpliesVotedFor'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,
+                        H_VoteInGrantedImpliesVotedFor,
+                        UpdateTermAction,
+                        NEW s \in Server,
+                        NEW t \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        (t \in votesGranted[s])'
+                 PROVE  (currentTerm[t] = currentTerm[s] => votedFor[t] = s)'
+      BY DEF H_VoteInGrantedImpliesVotedFor
+    <2>1. PICK m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m.mterm, m.mdest)
+      BY DEF UpdateTermAction
+    <2>2. m.mdest \in Server /\ m.mterm \in Nat
+      BY <2>1 DEF TypeOK, RequestVoteRequestType, RequestVoteResponseType, AppendEntriesRequestType, AppendEntriesResponseType
+    <2>3. s # m.mdest
+      BY <2>1, <2>2 DEF UpdateTerm, TypeOK
+    <2>4. state[s] \in {Candidate, Leader}
+      BY <2>1, <2>3 DEF UpdateTerm, TypeOK
+    <2>5. t \in votesGranted[s]
+      BY <2>1 DEF UpdateTerm
+    <2>6. CASE t = m.mdest
+      <3>1. currentTerm'[t] = m.mterm
+        BY <2>6, <2>1, <2>2 DEF UpdateTerm, TypeOK
+      <3>2. currentTerm'[s] = currentTerm[s]
+        BY <2>1, <2>2, <2>3 DEF UpdateTerm, TypeOK
+      <3>3. currentTerm[t] >= currentTerm[s]
+        BY <2>4, <2>5 DEF H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm
+      <3>4. m.mterm > currentTerm[t]
+        BY <2>6, <2>1 DEF UpdateTerm
+      <3>5. currentTerm[s] \in Nat /\ currentTerm[t] \in Nat
+        BY DEF TypeOK
+      <3>6. m.mterm > currentTerm[s]
+        BY <3>3, <3>4, <3>5, <2>2
+      <3> QED BY <3>1, <3>2, <3>6, <3>5, <2>2
+    <2>7. CASE t # m.mdest
+      <3>1. currentTerm'[t] = currentTerm[t]
+        BY <2>7, <2>1, <2>2 DEF UpdateTerm, TypeOK
+      <3>2. currentTerm'[s] = currentTerm[s]
+        BY <2>1, <2>2, <2>3 DEF UpdateTerm, TypeOK
+      <3>3. votedFor'[t] = votedFor[t]
+        BY <2>7, <2>1, <2>2 DEF UpdateTerm, TypeOK
+      <3>4. currentTerm[t] = currentTerm[s] => votedFor[t] = s
+        BY <2>4, <2>5 DEF H_VoteInGrantedImpliesVotedFor
+      <3> QED BY <3>1, <3>2, <3>3, <3>4
+    <2> QED BY <2>6, <2>7
   \* (H_VoteInGrantedImpliesVotedFor,BecomeLeaderAction)
-  <1>3. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ BecomeLeaderAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_VoteInGrantedImpliesVotedFor
+  <1>3. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ BecomeLeaderAction => H_VoteInGrantedImpliesVotedFor'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_VoteInGrantedImpliesVotedFor,
+                        BecomeLeaderAction,
+                        NEW s \in Server,
+                        NEW t \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        (t \in votesGranted[s])'
+                 PROVE  (currentTerm[t] = currentTerm[s] => votedFor[t] = s)'
+        BY DEF H_VoteInGrantedImpliesVotedFor
+    <2>1. PICK i \in Server : BecomeLeader(i)
+      BY DEF BecomeLeaderAction
+    <2>2. UNCHANGED <<currentTerm, votedFor, votesGranted>>
+      BY <2>1 DEF BecomeLeader
+    <2>3. t \in votesGranted[s]
+      BY <2>2
+    <2>4. state[s] \in {Candidate, Leader}
+      <3>1. CASE s = i
+        BY <3>1, <2>1 DEF BecomeLeader
+      <3>2. CASE s # i
+        BY <3>2, <2>1 DEF BecomeLeader, TypeOK
+      <3> QED BY <3>1, <3>2
+    <2>5. currentTerm[t] = currentTerm[s] => votedFor[t] = s
+      BY <2>3, <2>4 DEF H_VoteInGrantedImpliesVotedFor
+    <2> QED BY <2>2, <2>5
   \* (H_VoteInGrantedImpliesVotedFor,ClientRequestAction)
   <1>4. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ ClientRequestAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_VoteInGrantedImpliesVotedFor
   \* (H_VoteInGrantedImpliesVotedFor,AdvanceCommitIndexAction)
@@ -1330,9 +1577,72 @@ THEOREM L_12 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm
   \* (H_VoteInGrantedImpliesVotedFor,AppendEntriesAction)
   <1>6. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ AppendEntriesAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,AppendEntriesAction,AppendEntries,H_VoteInGrantedImpliesVotedFor
   \* (H_VoteInGrantedImpliesVotedFor,HandleRequestVoteRequestAction)
-  <1>7. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ HandleRequestVoteRequestAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_VoteInGrantedImpliesVotedFor,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>7. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ HandleRequestVoteRequestAction => H_VoteInGrantedImpliesVotedFor'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_VoteInGrantedImpliesVotedFor,
+                        HandleRequestVoteRequestAction,
+                        NEW s \in Server,
+                        NEW t \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        (t \in votesGranted[s])'
+                 PROVE  (currentTerm[t] = currentTerm[s] => votedFor[t] = s)'
+        BY DEF H_VoteInGrantedImpliesVotedFor
+    <2>1. PICK m \in requestVoteRequestMsgs : HandleRequestVoteRequest(m)
+      BY DEF HandleRequestVoteRequestAction
+    <2>2. m.mdest \in Server /\ m.msource \in Server
+      BY <2>1 DEF HandleRequestVoteRequest, TypeOK, RequestVoteRequestType
+    <2>3. UNCHANGED <<state, currentTerm, votesGranted>>
+      BY <2>1 DEF HandleRequestVoteRequest
+    <2>4. state[s] \in {Candidate, Leader} /\ t \in votesGranted[s]
+      BY <2>3
+    <2>5. currentTerm[t] = currentTerm[s] => votedFor[t] = s
+      BY <2>4 DEF H_VoteInGrantedImpliesVotedFor
+    <2>6. CASE t # m.mdest
+      BY <2>6, <2>5, <2>2, <2>1, <2>3 DEF HandleRequestVoteRequest, TypeOK
+    <2>7. CASE t = m.mdest
+      BY <2>7, <2>5, <2>2, <2>1, <2>3 DEF HandleRequestVoteRequest, TypeOK, LastTerm, RequestVoteRequestType
+    <2> QED BY <2>6, <2>7
   \* (H_VoteInGrantedImpliesVotedFor,HandleRequestVoteResponseAction)
-  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteInGrantedImpliesVotedFor /\ HandleRequestVoteResponseAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_VoteInGrantedImpliesVotedFor,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+  <1>8. TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_VoteInGrantedImpliesVotedFor /\ HandleRequestVoteResponseAction => H_VoteInGrantedImpliesVotedFor'
+    <2> SUFFICES ASSUME TypeOK,
+                        H_RequestVoteResponseTermsMatchSource,
+                        H_VoteInGrantedImpliesVotedFor,
+                        HandleRequestVoteResponseAction,
+                        NEW s \in Server,
+                        NEW t \in Server,
+                        (state[s] \in {Candidate, Leader})',
+                        (t \in votesGranted[s])'
+                 PROVE  (currentTerm[t] = currentTerm[s] => votedFor[t] = s)'
+        BY DEF H_VoteInGrantedImpliesVotedFor
+    <2>1. PICK m \in requestVoteResponseMsgs : HandleRequestVoteResponse(m)
+      BY DEF HandleRequestVoteResponseAction
+    <2>2. m.mdest \in Server /\ m.msource \in Server
+      BY <2>1 DEF HandleRequestVoteResponse, TypeOK, RequestVoteResponseType
+    <2>3. UNCHANGED <<state, currentTerm, votedFor>>
+      BY <2>1 DEF HandleRequestVoteResponse
+    <2>4. state[s] \in {Candidate, Leader}
+      BY <2>3
+    <2>5. CASE s # m.mdest
+      <3>1. votesGranted'[s] = votesGranted[s]
+        BY <2>5, <2>2, <2>1 DEF HandleRequestVoteResponse, TypeOK
+      <3>2. t \in votesGranted[s]
+        BY <3>1
+      <3> QED BY <3>2, <2>4, <2>3 DEF H_VoteInGrantedImpliesVotedFor
+    <2>6. CASE s = m.mdest
+      <3>1. CASE t \in votesGranted[s]
+        BY <3>1, <2>4, <2>3 DEF H_VoteInGrantedImpliesVotedFor
+      <3>2. CASE t \notin votesGranted[s]
+        <4>1. m.mvoteGranted /\ t = m.msource
+          BY <3>2, <2>6, <2>1, <2>2 DEF HandleRequestVoteResponse, TypeOK
+        <4>2. m.mterm = currentTerm[s]
+          BY <2>6, <2>1 DEF HandleRequestVoteResponse
+        <4>3. m.mvoteGranted /\ currentTerm[m.msource] = m.mterm => votedFor[m.msource] = m.mdest
+          BY <2>1 DEF H_RequestVoteResponseTermsMatchSource, HandleRequestVoteResponse, RequestVoteResponseType
+        <4>4. currentTerm[t] = currentTerm[s] => votedFor[t] = s
+          BY <4>1, <4>2, <4>3, <2>6
+        <4> QED BY <4>4, <2>3
+      <3> QED BY <3>1, <3>2
+    <2> QED BY <2>5, <2>6
   \* (H_VoteInGrantedImpliesVotedFor,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_VoteInGrantedImpliesVotedFor /\ AcceptAppendEntriesRequestAppendAction => H_VoteInGrantedImpliesVotedFor' BY DEF TypeOK,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_VoteInGrantedImpliesVotedFor
   \* (H_VoteInGrantedImpliesVotedFor,AcceptAppendEntriesRequestLearnCommitAction)
