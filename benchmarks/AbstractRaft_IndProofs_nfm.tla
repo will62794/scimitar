@@ -1,6 +1,7 @@
 ---- MODULE AbstractRaft_IndProofs_nfm ----
 EXTENDS AbstractRaft,TLAPS, FiniteSetTheorems
 
+
 \* LEMMA QuorumsExistForNonEmptySets ==
 \* ASSUME NEW S, IsFiniteSet(S), S # {}
 \* PROVE Quorum # {}
