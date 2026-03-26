@@ -15,6 +15,7 @@ import time
 import io
 import contextlib
 import os
+from collections import deque
 
 from mc import CTI
 import mc
@@ -415,16 +416,19 @@ class StructuredProof():
         if load_from_obj:
             self.load_from(load_from_obj)
 
-    def walk_proof_graph(self, curr_node, visit_fn=None, seen = set(), all_nodes=[]):
-        if visit_fn is not None:
-            visit_fn(curr_node)
-        seen.add(curr_node.expr)
-        all_nodes.append(curr_node)
-        for a in curr_node.children:
-            for c in curr_node.children[a]:
-                # print(c)
-                if c is not None and c.expr not in seen:
-                    self.walk_proof_graph(c, visit_fn, seen, all_nodes=all_nodes)
+    def walk_proof_graph(self, curr_node, visit_fn=None, frontier = deque(), seen = [], all_nodes=[]):
+        while len(frontier) > 0:
+            curr = frontier.popleft()
+            if curr.expr in [s.expr for s in seen]:
+                continue
+            seen.append(curr)
+            all_nodes.append(curr)
+            if visit_fn is not None:
+                visit_fn(curr)
+            for a in curr.children:
+                for c in curr.children[a]:
+                    if c.expr not in [s.expr for s in seen]:
+                        frontier.append(c)
 
     def to_tlaps_proof_skeleton(self, tlaps_proof_config, add_lemma_defs=None, seed=None, tag=None, workdir="benchmarks", include_typeok=True):
         """ Export proof graph obligations to TLAPS proof structure."""
@@ -444,9 +448,13 @@ class StructuredProof():
         lemma_source_map = {}
 
         nodes = []
-        seen = set()
-        self.walk_proof_graph(self.root, seen=seen, all_nodes=nodes)
+        seen = []
+        self.walk_proof_graph(self.root, frontier=deque([self.root]), seen=seen, all_nodes=nodes)
         # print(nodes)
+        # print("num nodes:", len(nodes))
+        # print("num seen:", len(seen))
+        # print("seen:", [n.expr for n in seen])
+        # print("seen:", [n.expr for n in seen])
 
         # Some proof graph info.
         spec_lines += "\n"
@@ -488,7 +496,11 @@ class StructuredProof():
         global_def_expands = []
         if "global_def_expands" in tlaps_proof_config:
             global_def_expands = tlaps_proof_config["global_def_expands"]
-        for ind,n in enumerate(nodes):
+
+        # for ind,n in enumerate(nodes):
+
+        # Nodes in 'seen' should be ordered by depth from root.
+        for ind,n in enumerate(reversed(seen)):
             # if len(n.children.keys()) == 0:
                 # continue
             # for a in n.children:
@@ -551,7 +563,7 @@ class StructuredProof():
         # Initiation. 
         spec_lines += "\* Initiation." 
         spec_lines += "\nTHEOREM Init => IndGlobal\n"
-        init_defs = ",".join([f"{n.expr}" for ind,n in enumerate(nodes)])
+        init_defs = ",".join([f"{n.expr}" for ind,n in enumerate(seen)])
         if len(assumes_name_list) > 0:
             spec_lines += "    <1> USE " + ",".join(assumes_name_list) + "\n"
         if len(global_def_expands) > 0:
@@ -559,14 +571,14 @@ class StructuredProof():
         for ind,n in enumerate(nodes):
             # Decomposed proof obligation for each oncjunction.
             spec_lines +=  f"    <1>{ind}. Init => {n.expr} BY DEF Init, {n.expr}, IndGlobal\n"
-        spec_lines += "    <1>a. QED BY " + ",".join([f"<1>{ind}" for ind in range(len(nodes))]) + " DEF IndGlobal\n"
+        spec_lines += "    <1>a. QED BY " + ",".join([f"<1>{ind}" for ind in range(len(seen))]) + " DEF IndGlobal\n"
         spec_lines += "\n"
 
 
         # Consecution.
         spec_lines += "\* Consecution.\n" 
         spec_lines += "THEOREM IndGlobal /\\ Next => IndGlobal'\n"
-        spec_lines += "  BY " + ",".join([f"L_{ind}" for ind,n in enumerate(nodes)]) + " DEF Next, IndGlobal\n"
+        spec_lines += "  BY " + ",".join([f"L_{ind}" for ind,n in enumerate(seen)]) + " DEF Next, IndGlobal\n"
 
         spec_lines += "\n"
         spec_lines += "===="
@@ -585,8 +597,8 @@ class StructuredProof():
 
         # Check all the obligations.
         nodes = []
-        seen = set()
-        self.walk_proof_graph(self.root, seen=seen, all_nodes=nodes)
+        seen = []
+        self.walk_proof_graph(self.root, frontier=deque([self.root]), seen=seen, all_nodes=nodes)
         modname = self.specname + "_ApaIndProofCheck"
         cmds = []
         node_exprs = []
@@ -708,8 +720,8 @@ class StructuredProof():
         spec_lines += f"EXTENDS {self.specname}\n"
 
         nodes = []
-        seen = set()
-        self.walk_proof_graph(self.root, seen=seen, all_nodes=nodes)
+        seen = []
+        self.walk_proof_graph(self.root, frontier=deque([self.root]), seen=seen, all_nodes=nodes)
         # print(nodes)
 
         stats = {}
