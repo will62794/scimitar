@@ -135,8 +135,33 @@ THEOREM L_1 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm 
                             /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
                             /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
       BY DEF H_QuorumsSafeAtTerms
+    <2>1. PICK i \in Server : RequestVote(i)
+      BY DEF RequestVoteAction
+    <2>2. s # i
+      BY <2>1 DEF RequestVote, TypeOK
+    <2>3. state[s] = Leader
+      BY <2>1, <2>2 DEF RequestVote, TypeOK
+    <2>4. PICK Q \in Quorum : \A t \in Q :
+            /\ currentTerm[t] >= currentTerm[s]
+            /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
+            /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader
+      BY <2>3 DEF H_QuorumsSafeAtTerms
+    <2>5. \A t \in Q :
+            /\ (currentTerm[t] >= currentTerm[s])'
+            /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+            /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+      <3> SUFFICES ASSUME NEW t \in Q
+           PROVE /\ (currentTerm[t] >= currentTerm[s])'
+                 /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+                 /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+        OBVIOUS
+      <3>1. CASE t = i
+        BY <3>1, <2>1, <2>2, <2>4 DEF RequestVote, TypeOK
+      <3>2. CASE t # i
+        BY <3>2, <2>1, <2>2, <2>4 DEF RequestVote, TypeOK
+      <3> QED BY <3>1, <3>2
     <2> QED
-      BY DEF TypeOK,RequestVoteAction,RequestVote,H_QuorumsSafeAtTerms,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType, LastTerm
+      BY <2>4, <2>5
   \* (H_QuorumsSafeAtTerms,UpdateTermAction)
   <1>2. TypeOK /\ H_QuorumsSafeAtTerms /\ UpdateTermAction => H_QuorumsSafeAtTerms' 
     <2> SUFFICES ASSUME TypeOK /\ H_QuorumsSafeAtTerms /\ UpdateTermAction,
@@ -148,8 +173,41 @@ THEOREM L_1 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm 
                             /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
                             /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
       BY DEF H_QuorumsSafeAtTerms
+    <2>1. PICK m \in requestVoteRequestMsgs \cup requestVoteResponseMsgs \cup appendEntriesRequestMsgs \cup appendEntriesResponseMsgs : UpdateTerm(m.mterm, m.mdest)
+      BY DEF UpdateTermAction
+    <2>2. m.mdest \in Server /\ m.mterm \in Nat
+      BY <2>1 DEF TypeOK, RequestVoteRequestType, RequestVoteResponseType, AppendEntriesRequestType, AppendEntriesResponseType
+    <2>3. s # m.mdest
+      BY <2>1, <2>2 DEF UpdateTerm, TypeOK
+    <2>4. state[s] = Leader
+      BY <2>1, <2>3 DEF UpdateTerm, TypeOK
+    <2>5. PICK Q \in Quorum : \A t \in Q :
+            /\ currentTerm[t] >= currentTerm[s]
+            /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
+            /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader
+      BY <2>4 DEF H_QuorumsSafeAtTerms
+    <2>6. \A t \in Q :
+            /\ (currentTerm[t] >= currentTerm[s])'
+            /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+            /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+      <3> SUFFICES ASSUME NEW t \in Q
+           PROVE /\ (currentTerm[t] >= currentTerm[s])'
+                 /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+                 /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+        OBVIOUS
+      <3>1. CASE t = m.mdest
+        <4>1. currentTerm'[t] = m.mterm
+          BY <3>1, <2>1, <2>2 DEF UpdateTerm, TypeOK
+        <4>2. currentTerm'[s] = currentTerm[s]
+          BY <2>1, <2>2, <2>3 DEF UpdateTerm, TypeOK
+        <4>3. m.mterm > currentTerm[s]
+          BY <3>1, <2>1, <2>2, <2>5 DEF UpdateTerm, TypeOK
+        <4> QED BY <4>1, <4>2, <4>3, <2>2 DEF TypeOK
+      <3>2. CASE t # m.mdest
+        BY <3>2, <2>1, <2>2, <2>3, <2>5 DEF UpdateTerm, TypeOK
+      <3> QED BY <3>1, <3>2
     <2> QED
-      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_QuorumsSafeAtTerms,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+      BY <2>5, <2>6
   \* (H_QuorumsSafeAtTerms,BecomeLeaderAction)
   <1>3. TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm /\ H_CandidateInTermVotedForItself /\ H_VoteInGrantedImpliesVotedFor /\ H_QuorumsSafeAtTerms /\ BecomeLeaderAction => H_QuorumsSafeAtTerms' 
     <2> SUFFICES ASSUME TypeOK,
@@ -168,8 +226,62 @@ THEOREM L_1 == TypeOK /\ H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm 
                             /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
                             /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
       BY DEF BecomeLeaderAction, H_QuorumsSafeAtTerms
-    <2> QED
-      BY DEF TypeOK,H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm,H_CandidateInTermVotedForItself,H_VoteInGrantedImpliesVotedFor,BecomeLeaderAction,BecomeLeader,H_QuorumsSafeAtTerms
+    <2>1. CASE s = i
+      <3>1. votesGranted[i] \in Quorum
+        BY DEF BecomeLeader
+      <3>2. \A t \in votesGranted[i] :
+              /\ (currentTerm[t] >= currentTerm[s])'
+              /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+              /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+        <4> SUFFICES ASSUME NEW t \in votesGranted[i]
+             PROVE /\ (currentTerm[t] >= currentTerm[s])'
+                   /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+                   /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+          OBVIOUS
+        <4>1. t \in Server
+          BY DEF TypeOK
+        <4>2. (currentTerm[t] >= currentTerm[s])'
+          BY <2>1, <4>1 DEF H_CandidateWithVotesGrantedInTermImplyVotersSafeAtTerm, BecomeLeader, TypeOK
+        <4>3. ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+          BY <2>1, <4>1 DEF H_VoteInGrantedImpliesVotedFor, BecomeLeader, TypeOK
+        <4>4. ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+          <5>1. CASE t = i
+            BY <5>1, <2>1 DEF BecomeLeader, TypeOK
+          <5>2. CASE t # i
+            BY <5>2, <2>1, <4>1 DEF H_CandidateInTermVotedForItself, H_VoteInGrantedImpliesVotedFor, BecomeLeader, TypeOK
+          <5> QED BY <5>1, <5>2
+        <4> QED BY <4>2, <4>3, <4>4
+      <3> QED BY <3>1, <3>2
+    <2>2. CASE s # i
+      <3>1. state[s] = Leader
+        BY <2>2 DEF BecomeLeader, TypeOK
+      <3>2. PICK Q \in Quorum : \A t \in Q :
+              /\ currentTerm[t] >= currentTerm[s]
+              /\ (currentTerm[t] = currentTerm[s]) => votedFor[t] = s
+              /\ (currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader
+        BY <3>1 DEF H_QuorumsSafeAtTerms
+      <3>3. \A t \in Q :
+              /\ (currentTerm[t] >= currentTerm[s])'
+              /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+              /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+        <4> SUFFICES ASSUME NEW t \in Q
+             PROVE /\ (currentTerm[t] >= currentTerm[s])'
+                   /\ ((currentTerm[t] = currentTerm[s]) => votedFor[t] = s)'
+                   /\ ((currentTerm[t] = currentTerm[s] /\ s # t) => state[t] # Leader)'
+          OBVIOUS
+        <4>1. CASE t = i
+          <5>1. votedFor[i] = i
+            BY DEF H_CandidateInTermVotedForItself, BecomeLeader
+          <5>2. currentTerm[i] = currentTerm[s] => votedFor[i] = s
+            BY <4>1, <3>2
+          <5>3. currentTerm[i] # currentTerm[s]
+            BY <5>1, <5>2, <2>2
+          <5> QED BY <5>3, <4>1, <3>2 DEF BecomeLeader, TypeOK
+        <4>2. CASE t # i
+          BY <4>2, <2>2, <3>2 DEF BecomeLeader, TypeOK
+        <4> QED BY <4>1, <4>2
+      <3> QED BY <3>2, <3>3
+    <2> QED BY <2>1, <2>2
   \* (H_QuorumsSafeAtTerms,ClientRequestAction)
   <1>4. TypeOK /\ H_QuorumsSafeAtTerms /\ ClientRequestAction => H_QuorumsSafeAtTerms' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_QuorumsSafeAtTerms
   \* (H_QuorumsSafeAtTerms,AdvanceCommitIndexAction)
@@ -2209,7 +2321,21 @@ THEOREM L_38 == TypeOK /\ H_CommitIndexBoundValid /\ H_LeaderMatchIndexValid /\ 
   \* (H_NoLogDivergence,AcceptAppendEntriesRequestAppendAction)
   <1>9. TypeOK /\ H_CommitIndexBoundValid /\ H_NoLogDivergence /\ AcceptAppendEntriesRequestAppendAction => H_NoLogDivergence' BY DEF TypeOK,H_CommitIndexBoundValid,AcceptAppendEntriesRequestAppendAction,AcceptAppendEntriesRequestAppend,H_NoLogDivergence
   \* (H_NoLogDivergence,AcceptAppendEntriesRequestLearnCommitAction)
-  <1>10. TypeOK /\ H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\ H_LogMatching /\ H_NoLogDivergence /\ AcceptAppendEntriesRequestLearnCommitAction => H_NoLogDivergence' BY DEF TypeOK,H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,H_LogMatching,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_NoLogDivergence
+  <1>10. TypeOK /\ H_CommitIndexInAppendEntriesImpliesCommittedEntryExists /\ H_LogMatching /\ H_NoLogDivergence /\ AcceptAppendEntriesRequestLearnCommitAction => H_NoLogDivergence' 
+    <2> SUFFICES ASSUME TypeOK,
+                        H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,
+                        H_LogMatching,
+                        H_NoLogDivergence,
+                        NEW m \in appendEntriesRequestMsgs,
+                        AcceptAppendEntriesRequestLearnCommit(m),
+                        NEW s1 \in Server', NEW s2 \in Server',
+                        (s1 # s2)',
+                        NEW index \in ((DOMAIN log[s1]) \cap (DOMAIN log[s2]))',
+                        (index < commitIndex[s1] /\ index < commitIndex[s2])'
+                 PROVE  (log[s1][index] = log[s2][index])'
+      BY DEF AcceptAppendEntriesRequestLearnCommitAction, H_NoLogDivergence
+    <2> QED
+      BY DEF TypeOK,H_CommitIndexInAppendEntriesImpliesCommittedEntryExists,H_LogMatching,AcceptAppendEntriesRequestLearnCommitAction,AcceptAppendEntriesRequestLearnCommit,H_NoLogDivergence
   \* (H_NoLogDivergence,HandleAppendEntriesResponseAction)
   <1>11. TypeOK /\ H_NoLogDivergence /\ HandleAppendEntriesResponseAction => H_NoLogDivergence' BY DEF TypeOK,HandleAppendEntriesResponseAction,HandleAppendEntriesResponse,H_NoLogDivergence
 <1>12. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11 DEF Next
@@ -2257,7 +2383,7 @@ THEOREM Init => IndGlobal
     <1>37. Init => H_RequestVoteResponseMsgsInTermUnique BY DEF Init, H_RequestVoteResponseMsgsInTermUnique, IndGlobal
     <1>38. Init => H_QuorumsSafeAtTerms BY DEF Init, H_QuorumsSafeAtTerms, IndGlobal
     <1>39. Init => H_RequestVoteRequestFromNodeImpliesSafeAtTerm BY DEF Init, H_RequestVoteRequestFromNodeImpliesSafeAtTerm, IndGlobal
-    <1>a. QED BY <1>0,<1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11,<1>12,<1>13,<1>14,<1>15,<1>16,<1>17,<1>18,<1>19,<1>20,<1>21,<1>22,<1>23,<1>24,<1>25,<1>26,<1>27,<1>28,<1>29,<1>30,<1>31,<1>32,<1>33,<1>34,<1>35,<1>36,<1>37,<1>38 DEF IndGlobal
+    <1>a. QED BY <1>0,<1>1,<1>2,<1>3,<1>4,<1>5,<1>6,<1>7,<1>8,<1>9,<1>10,<1>11,<1>12,<1>13,<1>14,<1>15,<1>16,<1>17,<1>18,<1>19,<1>20,<1>21,<1>22,<1>23,<1>24,<1>25,<1>26,<1>27,<1>28,<1>29,<1>30,<1>31,<1>32,<1>33,<1>34,<1>35,<1>36,<1>37,<1>38,<1>39 DEF IndGlobal
 
 \* Consecution.
 THEOREM IndGlobal /\ Next => IndGlobal'
