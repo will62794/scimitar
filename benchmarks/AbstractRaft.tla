@@ -3,7 +3,7 @@
 \* High level specification of Raft protocol without dynamic reconfiguration.
 \*
 
-EXTENDS Naturals, Integers, FiniteSets, Sequences, TLC, Apalache
+EXTENDS Naturals, Integers, FiniteSets, Sequences, TLC
 
 
 CONSTANTS 
@@ -240,20 +240,26 @@ CInit ==
     /\ MaxTerm = 3
     /\ InitTerm = 0
 
-\* Statement of type correctness tailored to Apalache. 
-ApaTypeOK ==
+\* \* Statement of type correctness tailored to Apalache. 
+\* ApaTypeOK ==
+\*     /\ currentTerm \in [Server -> Terms]
+\*     /\ state \in [Server -> {Secondary, Primary}]
+\*     \* Size of log generator should be at least as large as number of
+\*     \* servers and max length of logs.
+\*     /\ log = Gen(CServerInitSize)
+\*     /\ \A s \in Server : \A i \in DOMAIN log[s] : log[s][i] \in Terms
+\*     /\ \A s \in Server : Len(log[s]) <= MaxLogLen
+\*     /\ DOMAIN log = Server
+\*     \* I believe this should constraint 'committed' to be a set of size 3,
+\*     \* with elements of the appropriate type.
+\*     /\ immediatelyCommitted = Gen(3)
+\*     /\ \A c \in immediatelyCommitted : c \in (LogIndices \X Terms)
+
+TypeOK == 
     /\ currentTerm \in [Server -> Terms]
     /\ state \in [Server -> {Secondary, Primary}]
-    \* Size of log generator should be at least as large as number of
-    \* servers and max length of logs.
-    /\ log = Gen(CServerInitSize)
-    /\ \A s \in Server : \A i \in DOMAIN log[s] : log[s][i] \in Terms
-    /\ \A s \in Server : Len(log[s]) <= MaxLogLen
-    /\ DOMAIN log = Server
-    \* I believe this should constraint 'committed' to be a set of size 3,
-    \* with elements of the appropriate type.
-    /\ immediatelyCommitted = Gen(3)
-    /\ \A c \in immediatelyCommitted : c \in (LogIndices \X Terms)
+    /\ log \in [Server -> Seq(Terms)]
+    /\ immediatelyCommitted \in SUBSET (LogIndices \X Terms)
 
 \* 
 \* Helper lemmas.
@@ -418,7 +424,7 @@ HumanDecompInd ==
     /\ H_UniformLogEntries
 
 HumanDecompIndWithApaTypeOK ==
-    /\ ApaTypeOK
+    \* /\ ApaTypeOK
     /\ HumanDecompInd   
 
 HumanDecompInd_WithConstraint == StateConstraint => HumanDecompInd

@@ -15,11 +15,6 @@ nAvgSubsetSize == 3
 \* Set of all subsets of a set of size <= k.
 kOrSmallerSubset(k, S) == UNION {(kSubset(n, S)) : n \in 0..k}
 
-TypeOK == 
-    /\ currentTerm \in [Server -> Terms]
-    /\ state \in [Server -> {Secondary, Primary}]
-    /\ log \in [Server -> BoundedSeq(Terms, MaxLogLen)]
-    /\ immediatelyCommitted \in SUBSET (LogIndices \X Terms)
 
 TypeOKSmallCommitted == 
     /\ currentTerm \in [Server -> Terms]
