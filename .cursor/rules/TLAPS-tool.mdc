@@ -5,10 +5,11 @@ alwaysApply: true
 You can invoke the TLA+ proof system (TLAPS) to check correctness of a proof obligation in a TLA+ spec file <spec> with command
 
 ```
-/usr/local/bin/tlapm --threads 6 --toolbox <proof_obl_line> <proof_obl_line> <spec>
+/usr/local/bin/tlapm --threads 8 --toolbox <proof_obl_line> <proof_obl_line> <spec>
 ```
 
-You can run the tools a few time to understand the output format which returns status about the obligations proven or failed. you can also use the `--stretch` flag to control the time spent on checking the proof if needed to expand timeouts.
+You can run the tools a few time to understand the output format which returns status about the obligations proven or failed. you can also use the `--stretch` flag to control the time spent on checking the proof if needed to expand timeouts. In general, try not to push stretch to values higher than 3, trying to rely on decomposition instead
+when possible.
 
 ## Decomposing proofs
 
