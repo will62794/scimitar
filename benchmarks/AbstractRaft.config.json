@@ -37,5 +37,21 @@
     "tlc_specific_spec": true,
     "try_final_minimize": false,
     "simulate"  :  true,
-    "actions": []
+    "actions": [],
+    "tlaps_proof_config": {
+        "assumes": [
+            "IsFiniteSet(Server) /\\ Cardinality(Server) > 1",
+            "Nil \\notin Server",
+            "(Primary # Server)",
+            "Server = Server",
+            "Quorums(Server) \\subseteq SUBSET Server /\\ {} \\notin Quorums(Server) /\\ Quorums(Server) # {} /\\ \\A s \\in Server : {s} \\notin Quorums(Server)",
+            "MaxLogLen \\in Nat",
+            "MaxTerm \\in Nat /\\ InitTerm \\in Nat"
+        ],
+        "lemma_def_expands":{
+            "Safety": ["H_StateMachineSafety"]
+        },
+        "action_def_expands":{
+        }
+    }
 }
