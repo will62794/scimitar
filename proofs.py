@@ -476,7 +476,7 @@ class StructuredProof():
 
         spec_lines += "\nIndGlobal == \n"
         spec_lines += f"  /\\ TypeOK\n"
-        for n in nodes:
+        for n in seen:
             spec_lines += f"  /\\ {n.expr}\n"
 
         assume_spec_lines = ""
@@ -489,7 +489,8 @@ class StructuredProof():
         # Create a separate node for TypeOK to include as proof obligation.
         if include_typeok:
             typeok_node = StructuredProofNode("H_TypeOK", "TypeOK")
-            nodes = [typeok_node] + nodes
+            # Make nodes in 'seen' ordered by depth from root.
+            seen = [typeok_node] + list(reversed(seen))
 
         all_var_slices = []
         proof_obligation_lines = ""
@@ -499,8 +500,7 @@ class StructuredProof():
 
         # for ind,n in enumerate(nodes):
 
-        # Nodes in 'seen' should be ordered by depth from root.
-        for ind,n in enumerate(reversed(seen)):
+        for ind,n in enumerate(seen):
             # if len(n.children.keys()) == 0:
                 # continue
             # for a in n.children:
@@ -568,7 +568,7 @@ class StructuredProof():
             spec_lines += "    <1> USE " + ",".join(assumes_name_list) + "\n"
         if len(global_def_expands) > 0:
             spec_lines += "<1> USE DEF " + ",".join(global_def_expands) + "\n"
-        for ind,n in enumerate(nodes):
+        for ind,n in enumerate(seen):
             # Decomposed proof obligation for each oncjunction.
             spec_lines +=  f"    <1>{ind}. Init => {n.expr} BY DEF Init, {n.expr}, IndGlobal\n"
         spec_lines += "    <1>a. QED BY " + ",".join([f"<1>{ind}" for ind in range(len(seen))]) + " DEF IndGlobal\n"
