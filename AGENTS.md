@@ -1,6 +1,5 @@
----
-alwaysApply: true
----
+
+# Running the TLA+ Proof System (Tool)
 
 You can invoke the TLA+ proof system (TLAPS) to check correctness of a proof obligation in a TLA+ spec file <spec> with command
 
