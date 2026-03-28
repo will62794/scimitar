@@ -12,6 +12,8 @@ You can run the tools a few time to understand the output format which returns s
 
 Also, whenever you run the tlapm tool, try to record its output durably to a file somewhere, so that if you need to grep for failures/status info, you don't need to re-run the tool again. In addition, be careful to make sure you include the correct line numbers when checking a sub-obligation within a larger hierarchical proof. Don't leave out missing lines at the end.
 
+And, please do not use OMITTED to skip over proof obligations and leave them unproven.
+
 ## Decomposing proofs
 
 If a proof obligation is unable to be proven automatically, you can try decomposing it into smaller steps and then trying to get the smaller steps to go through automatically. You can apply this process recursively until the proof obligations are small enough to be proven automatically.
