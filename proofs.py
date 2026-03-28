@@ -1028,13 +1028,13 @@ class StructuredProof():
             # if node.expr not in lemmas_to_show_for_graph_diff and self.specname == "AsyncRaft":
             #     texbl = "\phantom{\Huge" + "\emph{" + label + "}}"
             # else:
-            texbl = "\Huge" + "\emph{" + label + "}"
+            texbl = "\huge" + "\emph{" + label + "}"
         else:
             label = "L_{" + str(self.dotnode_ind) + "}"
             self.dotnode_ind += 1
             texbl = f"${label}$"
 
-        dot.node(node.expr, color=color, fillcolor="green!50", shape="box", font="\Huge", style=style, penwidth=penwidth, label=label, texlbl=texbl)
+        dot.node(node.expr, color=color, fillcolor="green!50", shape="box", font="\huge", style=style, penwidth=penwidth, label=label, texlbl=texbl)
         seen.add(node.expr)
 
         actions_to_always_show = {
@@ -1045,7 +1045,11 @@ class StructuredProof():
             # "BecomeLeaderAction"
             "RMChooseToAbortAction": "RMChooseAbortAction",
             "RMRcvAbortMsgAction": "RMRcvAbortMsgAction",
-            "RMRcvCommitMsgAction": "RMRcvCommitMsgAction"
+            "RMRcvCommitMsgAction": "RMRcvCommitMsgAction",
+            "RMPrepareAction": "RMPrepareAction",
+            "TMRcvPreparedAction": "TMRcvPreparedAction",
+            "TMCommitAction": "TMCommitAction",
+            "TMAbortAction": "TMAbortAction"
         }
 
         edges_to_highlight = [
