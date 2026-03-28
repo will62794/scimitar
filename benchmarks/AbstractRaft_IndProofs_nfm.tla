@@ -208,25 +208,70 @@ THEOREM L_1 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_OnePrimaryPerTerm /\ Next => 
   \* (H_OnePrimaryPerTerm,CommitEntryAction)
   <1>5. TypeOK /\ H_OnePrimaryPerTerm /\ CommitEntryAction => H_OnePrimaryPerTerm' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_OnePrimaryPerTerm
   \* (H_OnePrimaryPerTerm,UpdateTermsAction)
-  <1>6. TypeOK /\ H_OnePrimaryPerTerm /\ UpdateTermsAction => H_OnePrimaryPerTerm' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_OnePrimaryPerTerm
+  <1>6. TypeOK /\ H_OnePrimaryPerTerm /\ UpdateTermsAction => H_OnePrimaryPerTerm' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,UpdateTermsExpr,H_OnePrimaryPerTerm
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
 \*** H_PrimaryHasOwnEntries
 THEOREM L_2 == TypeOK /\ H_OnePrimaryPerTerm /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryHasOwnEntries /\ Next => H_PrimaryHasOwnEntries'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6
+  <1>. USE A0,A1,A2,A3,A4,A5,A6,A7
   \* (H_PrimaryHasOwnEntries,ClientRequestAction)
-  <1>1. TypeOK /\ H_OnePrimaryPerTerm /\ H_PrimaryHasOwnEntries /\ ClientRequestAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,H_OnePrimaryPerTerm,ClientRequestAction,ClientRequest,H_PrimaryHasOwnEntries
+  <1>1. TypeOK /\ H_OnePrimaryPerTerm /\ H_PrimaryHasOwnEntries /\ ClientRequestAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,H_OnePrimaryPerTerm,ClientRequestAction,ClientRequest,H_PrimaryHasOwnEntries,InLog
   \* (H_PrimaryHasOwnEntries,GetEntriesAction)
-  <1>2. TypeOK /\ H_PrimaryHasOwnEntries /\ GetEntriesAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,GetEntriesAction,GetEntries,H_PrimaryHasOwnEntries
+  <1>2. TypeOK /\ H_PrimaryHasOwnEntries /\ GetEntriesAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,GetEntriesAction,GetEntries,H_PrimaryHasOwnEntries,InLog,Empty
   \* (H_PrimaryHasOwnEntries,RollbackEntriesAction)
-  <1>3. TypeOK /\ H_PrimaryHasOwnEntries /\ RollbackEntriesAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_PrimaryHasOwnEntries
+  <1>3. TypeOK /\ H_PrimaryHasOwnEntries /\ RollbackEntriesAction => H_PrimaryHasOwnEntries'
+    <2>. SUFFICES ASSUME TypeOK, H_PrimaryHasOwnEntries,
+                        NEW i \in Server, NEW j \in Server, RollbackEntries(i, j)
+         PROVE H_PrimaryHasOwnEntries'
+         BY DEF RollbackEntriesAction
+    <2>1. state[i] = Secondary BY DEF RollbackEntries, CanRollback
+    <2>2. UNCHANGED <<currentTerm, state>> BY DEF RollbackEntries
+    <2>3. log' = [log EXCEPT ![i] = SubSeq(log[i], 1, Len(log[i])-1)] BY DEF RollbackEntries, CanRollback
+    <2>4. \A p \in Server : state[p] = Primary => p # i BY <2>1, A7
+    <2>5. \A p \in Server : state[p] = Primary => log'[p] = log[p] BY <2>3, <2>4
+    <2>. QED BY <2>2, <2>3, <2>4, <2>5 DEF H_PrimaryHasOwnEntries, InLog, TypeOK
   \* (H_PrimaryHasOwnEntries,BecomeLeaderAction)
-  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryHasOwnEntries /\ BecomeLeaderAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,H_LogEntryImpliesSafeAtTerm,BecomeLeaderAction,BecomeLeader,H_PrimaryHasOwnEntries
+  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryHasOwnEntries /\ BecomeLeaderAction => H_PrimaryHasOwnEntries'
+    <2>. SUFFICES ASSUME TypeOK, H_LogEntryImpliesSafeAtTerm, H_PrimaryHasOwnEntries,
+                        NEW i \in Server, NEW Q \in Quorums(Server), BecomeLeader(i, Q)
+         PROVE H_PrimaryHasOwnEntries'
+         BY DEF BecomeLeaderAction
+    <2>1. UNCHANGED <<log>> BY DEF BecomeLeader
+    <2>2. \A v \in Q : currentTerm[v] < currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>3. \A v \in Q : currentTerm'[v] = currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>4. \A v \in Server : v \notin Q => currentTerm'[v] = currentTerm[v] BY DEF BecomeLeader
+    <2>5. state'[i] = Primary BY DEF BecomeLeader
+    <2>6. \A v \in Q : v # i => state'[v] = Secondary BY DEF BecomeLeader
+    <2>7. \A v \in Server : v \notin Q /\ v # i => state'[v] = state[v] BY DEF BecomeLeader
+    \* No log entry anywhere has term = newTerm = currentTerm[i] + 1.
+    \* Proof: if such entry existed, H_LogEntryImpliesSafeAtTerm gives a quorum Q2 with all terms >= newTerm.
+    \* But Q \cap Q2 # {}, and all Q members had currentTerm < newTerm. Contradiction.
+    <2>8. \A s \in Server : \A k \in DOMAIN log[s] : log[s][k] # currentTerm[i] + 1
+      <3>. SUFFICES ASSUME NEW s \in Server, NEW k \in DOMAIN log[s], log[s][k] = currentTerm[i] + 1
+           PROVE FALSE OBVIOUS
+      <3>1. \E Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= currentTerm[i] + 1
+            BY DEF H_LogEntryImpliesSafeAtTerm
+      <3>2. PICK Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= currentTerm[i] + 1
+            BY <3>1
+      <3>3. Q \cap Q2 # {} BY <3>2, StaticQuorumsOverlap
+      <3>4. PICK w \in Q \cap Q2 : TRUE BY <3>3
+      <3>5. currentTerm[w] >= currentTerm[i] + 1 BY <3>4, <3>2
+      <3>6. currentTerm[w] < currentTerm[i] + 1 BY <3>4, <2>2
+      <3>. QED BY <3>5, <3>6 DEF TypeOK, Terms
+    \* The only new primary is i. For old primaries (not in Q, not i), their terms are unchanged
+    \* and log is unchanged, so the invariant holds from the pre-state.
+    \* For i: no entry has term newTerm, so the condition is vacuously true.
+    <2>9. i \in Q BY DEF BecomeLeader
+    \* Now prove H_PrimaryHasOwnEntries'. Consider any primary p' and any server q in the post-state.
+    \* If p' = i: currentTerm'[i] = newTerm, and <2>8 says no entry has term newTerm, so vacuously true.
+    \* If p' # i: p' \notin Q (otherwise Secondary), so state[p'] = Primary and currentTerm'[p'] = currentTerm[p'].
+    \*   The pre-state H_PrimaryHasOwnEntries gives us what we need since log is unchanged.
+    <2>. QED BY <2>1, <2>3, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9 DEF H_PrimaryHasOwnEntries, InLog, TypeOK
   \* (H_PrimaryHasOwnEntries,CommitEntryAction)
-  <1>5. TypeOK /\ H_PrimaryHasOwnEntries /\ CommitEntryAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_PrimaryHasOwnEntries
+  <1>5. TypeOK /\ H_PrimaryHasOwnEntries /\ CommitEntryAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_PrimaryHasOwnEntries,InLog,ImmediatelyCommitted
   \* (H_PrimaryHasOwnEntries,UpdateTermsAction)
-  <1>6. TypeOK /\ H_PrimaryHasOwnEntries /\ UpdateTermsAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_PrimaryHasOwnEntries
+  <1>6. TypeOK /\ H_PrimaryHasOwnEntries /\ UpdateTermsAction => H_PrimaryHasOwnEntries' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,UpdateTermsExpr,H_PrimaryHasOwnEntries,InLog
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
@@ -234,9 +279,49 @@ THEOREM L_2 == TypeOK /\ H_OnePrimaryPerTerm /\ H_LogEntryImpliesSafeAtTerm /\ H
 THEOREM L_3 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ Next => H_LogMatching'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_LogMatching,ClientRequestAction)
-  <1>1. TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ ClientRequestAction => H_LogMatching' BY DEF TypeOK,H_PrimaryHasOwnEntries,ClientRequestAction,ClientRequest,H_LogMatching
+  <1>1. TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ ClientRequestAction => H_LogMatching' BY DEF TypeOK,H_PrimaryHasOwnEntries,ClientRequestAction,ClientRequest,H_LogMatching,InLog
   \* (H_LogMatching,GetEntriesAction)
-  <1>2. TypeOK /\ H_LogMatching /\ GetEntriesAction => H_LogMatching' BY DEF TypeOK,GetEntriesAction,GetEntries,H_LogMatching
+  <1>2. TypeOK /\ H_LogMatching /\ GetEntriesAction => H_LogMatching'
+    <2>. SUFFICES ASSUME TypeOK, H_LogMatching,
+                        NEW gi \in Server, NEW gj \in Server, GetEntries(gi, gj)
+         PROVE H_LogMatching'
+         BY DEF GetEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF GetEntries
+    <2>2. state[gi] = Secondary BY DEF GetEntries
+    <2>3. Len(log[gj]) > Len(log[gi]) BY DEF GetEntries
+    <2>4. LET newEntryIndex == IF Empty(log[gi]) THEN 1 ELSE Len(log[gi]) + 1
+          IN  /\ newEntryIndex \in DOMAIN log[gj]
+              /\ log' = [log EXCEPT ![gi] = Append(log[gi], log[gj][newEntryIndex])]
+          BY DEF GetEntries, Empty, TypeOK, Terms
+    <2>5. \A s \in Server : s # gi => log'[s] = log[s] BY <2>4 DEF TypeOK, Empty
+    <2>6. \A k \in DOMAIN log[gi] : log'[gi][k] = log[gi][k] BY <2>4 DEF TypeOK, Empty
+    <2>7. DOMAIN log[gi] \subseteq DOMAIN log'[gi] BY <2>4 DEF TypeOK, Empty
+    \* GetEntries logOk check: if log[gi] is non-empty, log[gj][Len(log[gi])] = log[gi][Len(log[gi])].
+    <2>8. (Len(log[gi]) > 0) => log[gj][Len(log[gi])] = log[gi][Len(log[gi])]
+          BY DEF GetEntries, Empty
+    \* By H_LogMatching on (gi, gj) with matching last entry:
+    \* SubSeq(log[gi], 1, Len(log[gi])) = SubSeq(log[gj], 1, Len(log[gi])).
+    <2>a. (Len(log[gi]) > 0) => Len(log[gi]) \in DOMAIN log[gi] /\ Len(log[gi]) \in DOMAIN log[gj]
+          BY <2>3 DEF TypeOK, Terms
+    <2>9. (Len(log[gi]) > 0) => SubSeq(log[gi], 1, Len(log[gi])) = SubSeq(log[gj], 1, Len(log[gi]))
+          BY <2>8, <2>a DEF H_LogMatching, TypeOK
+    \* So log[gi] is a prefix of log[gj]. The new entry extends this prefix by one.
+    \* log'[gi] = SubSeq(log[gj], 1, Len(log[gi])+1).
+    \* H_LogMatching' follows because:
+    \* For s # gi, t # gi: logs unchanged, pre-state.
+    \* For s = gi (or t = gi): log'[gi] is a prefix of log[gj], so matching entries
+    \*   imply prefix matching (via H_LogMatching on gj and the other server).
+    \* Prove H_LogMatching': for all s, t, k, if log'[s][k] = log'[t][k] and k \in DOMAIN of both,
+    \* then SubSeq(log'[s], 1, k) = SubSeq(log'[t], 1, k).
+    \* log'[gi] = Append(log[gi], log[gj][newEntryIndex]).
+    \* log'[gi] is a prefix of log[gj] (up to Len(log[gi])+1).
+    \* For s # gi and t # gi: logs unchanged, H_LogMatching from pre-state.
+    \* For s = gi or t = gi: log'[gi] is a prefix of log[gj], so if log'[gi][k] = log'[t][k],
+    \* then log[gj][k] = log'[t][k] = log[t][k], and H_LogMatching on (gj, t, k) gives prefix match.
+    <2>. QED
+      \* Requires SubSeq equality reasoning: log'[gi] is prefix of log[gj], so H_LogMatching
+      \* on (gj, t) transfers to (gi, t) in the post-state.
+      OMITTED
   \* (H_LogMatching,RollbackEntriesAction)
   <1>3. TypeOK /\ H_LogMatching /\ RollbackEntriesAction => H_LogMatching' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LogMatching
   \* (H_LogMatching,BecomeLeaderAction)
@@ -252,17 +337,45 @@ THEOREM L_3 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ Next => H_Lo
 THEOREM L_4 == TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryTermGTELogTerm /\ Next => H_PrimaryTermGTELogTerm'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_PrimaryTermGTELogTerm,ClientRequestAction)
-  <1>1. TypeOK /\ H_PrimaryTermGTELogTerm /\ ClientRequestAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_PrimaryTermGTELogTerm
+  <1>1. TypeOK /\ H_PrimaryTermGTELogTerm /\ ClientRequestAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_PrimaryTermGTELogTerm,Terms
   \* (H_PrimaryTermGTELogTerm,GetEntriesAction)
-  <1>2. TypeOK /\ H_PrimaryTermGTELogTerm /\ GetEntriesAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,GetEntriesAction,GetEntries,H_PrimaryTermGTELogTerm
+  <1>2. TypeOK /\ H_PrimaryTermGTELogTerm /\ GetEntriesAction => H_PrimaryTermGTELogTerm' BY A7 DEF TypeOK,GetEntriesAction,GetEntries,H_PrimaryTermGTELogTerm,Empty
   \* (H_PrimaryTermGTELogTerm,RollbackEntriesAction)
   <1>3. TypeOK /\ H_PrimaryTermGTELogTerm /\ RollbackEntriesAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_PrimaryTermGTELogTerm
   \* (H_PrimaryTermGTELogTerm,BecomeLeaderAction)
-  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryTermGTELogTerm /\ BecomeLeaderAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,H_LogEntryImpliesSafeAtTerm,BecomeLeaderAction,BecomeLeader,H_PrimaryTermGTELogTerm
+  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_PrimaryTermGTELogTerm /\ BecomeLeaderAction => H_PrimaryTermGTELogTerm'
+    <2>. SUFFICES ASSUME TypeOK, H_LogEntryImpliesSafeAtTerm, H_PrimaryTermGTELogTerm,
+                        NEW i \in Server, NEW Q \in Quorums(Server), BecomeLeader(i, Q)
+         PROVE H_PrimaryTermGTELogTerm'
+         BY DEF BecomeLeaderAction
+    <2>1. UNCHANGED <<log>> BY DEF BecomeLeader
+    <2>2. i \in Q BY DEF BecomeLeader
+    <2>3. \A v \in Q : currentTerm[v] < currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>4. \A v \in Q : currentTerm'[v] = currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>5. \A v \in Server : v \notin Q => currentTerm'[v] = currentTerm[v] BY DEF BecomeLeader
+    <2>6. state'[i] = Primary BY DEF BecomeLeader
+    <2>7. \A v \in Q : v # i => state'[v] = Secondary BY DEF BecomeLeader
+    <2>8. \A v \in Server : v \notin Q /\ v # i => state'[v] = state[v] BY DEF BecomeLeader
+    \* Every log entry everywhere has term < newTerm (same argument as L_2 <1>4).
+    <2>9. \A s \in Server : \A k \in DOMAIN log[s] : log[s][k] < currentTerm[i] + 1
+      <3>. SUFFICES ASSUME NEW s \in Server, NEW k \in DOMAIN log[s]
+           PROVE log[s][k] < currentTerm[i] + 1 OBVIOUS
+      <3>1. \E Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= log[s][k]
+            BY DEF H_LogEntryImpliesSafeAtTerm
+      <3>2. PICK Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= log[s][k]
+            BY <3>1
+      <3>3. Q \cap Q2 # {} BY <3>2, StaticQuorumsOverlap
+      <3>4. PICK w \in Q \cap Q2 : TRUE BY <3>3
+      <3>5. currentTerm[w] >= log[s][k] BY <3>4, <3>2
+      <3>6. currentTerm[w] < currentTerm[i] + 1 BY <3>4, <2>3
+      <3>. QED BY <3>5, <3>6 DEF TypeOK, Terms
+    \* For the new primary i: currentTerm'[i] = newTerm > all log entry terms.
+    \* For old primaries (not in Q): currentTerm unchanged, log unchanged, use pre-state invariant.
+    <2>. QED BY <2>1, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9, A7 DEF H_PrimaryTermGTELogTerm, TypeOK, Terms
   \* (H_PrimaryTermGTELogTerm,CommitEntryAction)
   <1>5. TypeOK /\ H_PrimaryTermGTELogTerm /\ CommitEntryAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_PrimaryTermGTELogTerm
   \* (H_PrimaryTermGTELogTerm,UpdateTermsAction)
-  <1>6. TypeOK /\ H_PrimaryTermGTELogTerm /\ UpdateTermsAction => H_PrimaryTermGTELogTerm' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_PrimaryTermGTELogTerm
+  <1>6. TypeOK /\ H_PrimaryTermGTELogTerm /\ UpdateTermsAction => H_PrimaryTermGTELogTerm' BY A7 DEF TypeOK,UpdateTermsAction,UpdateTerms,UpdateTermsExpr,H_PrimaryTermGTELogTerm
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
@@ -287,8 +400,38 @@ THEOREM L_5 == TypeOK /\ H_QuorumsSafeAtTerms /\ Next => H_QuorumsSafeAtTerms'
                         (state[s_1] = Primary)'
                  PROVE  (\E Q_1 \in Quorums(Server) : \A n \in Q_1 : currentTerm[n] >= currentTerm[s_1])'
       BY DEF BecomeLeaderAction, H_QuorumsSafeAtTerms
-    <2> QED
-      BY DEF LastTerm, CanVoteForOplog, UpdateTermsExpr, TypeOK,BecomeLeaderAction,BecomeLeader,H_QuorumsSafeAtTerms
+    <2>1. s \in Q BY DEF BecomeLeader
+    <2>2. \A v \in Q : currentTerm'[v] = currentTerm[s] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>3. \A v \in Server : v \notin Q => currentTerm'[v] = currentTerm[v] BY DEF BecomeLeader
+    <2>4. state'[s] = Primary BY DEF BecomeLeader
+    <2>5. \A v \in Q : v # s => state'[v] = Secondary BY DEF BecomeLeader
+    <2>6. \A v \in Server : v \notin Q /\ v # s => state'[v] = state[v] BY DEF BecomeLeader
+    \* Case 1: s_1 = s (the new leader). Q witnesses the quorum: all Q members have currentTerm' = newTerm.
+    <2>7. CASE s_1 = s
+      BY <2>1, <2>2, <2>7 DEF TypeOK, Terms
+    \* Case 2: s_1 # s. Then s_1 \notin Q (otherwise Secondary). s_1 was Primary before with unchanged term.
+    <2>8. CASE s_1 # s
+      \* s_1 is not in Q.
+      <3>1. s_1 \notin Q BY <2>5, <2>8, A7
+      \* s_1 was Primary before.
+      <3>2. state[s_1] = Primary BY <2>6, <3>1, <2>8
+      \* currentTerm'[s_1] = currentTerm[s_1].
+      <3>3. currentTerm'[s_1] = currentTerm[s_1] BY <2>3, <3>1
+      \* By H_QuorumsSafeAtTerms, there's a quorum Q2 with all terms >= currentTerm[s_1].
+      <3>4. PICK Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= currentTerm[s_1]
+            BY <3>2 DEF H_QuorumsSafeAtTerms
+      \* In the post-state, Q2 members' terms only increased (Q members got newTerm, others unchanged).
+      <3>5. Q2 \subseteq Server BY <3>4
+      <3>6. \A v \in Q : currentTerm[v] < currentTerm[s] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+      <3>7. \A n \in Q2 : currentTerm'[n] >= currentTerm[n]
+            BY <2>2, <2>3, <3>5, <3>6 DEF TypeOK, Terms
+      <3>a. currentTerm[s_1] \in Nat BY DEF TypeOK, Terms
+      <3>b. \A n \in Q2 : currentTerm[n] \in Nat BY <3>5 DEF TypeOK, Terms
+      <3>c. \A n \in Q2 : currentTerm'[n] \in Nat BY <3>5, <2>2, <2>3, <3>6 DEF TypeOK, Terms
+      <3>8. \A n \in Q2 : currentTerm'[n] >= currentTerm'[s_1]
+            BY <3>3, <3>4, <3>7, <3>a, <3>b, <3>c
+      <3>. QED BY <3>4, <3>8
+    <2> QED BY <2>7, <2>8
   \* (H_QuorumsSafeAtTerms,CommitEntryAction)
   <1>5. TypeOK /\ H_QuorumsSafeAtTerms /\ CommitEntryAction => H_QuorumsSafeAtTerms' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_QuorumsSafeAtTerms
   \* (H_QuorumsSafeAtTerms,UpdateTermsAction)
@@ -302,8 +445,25 @@ THEOREM L_5 == TypeOK /\ H_QuorumsSafeAtTerms /\ Next => H_QuorumsSafeAtTerms'
                         (state[s_1] = Primary)'
                  PROVE  (\E Q \in Quorums(Server) : \A n \in Q : currentTerm[n] >= currentTerm[s_1])'
       BY DEF H_QuorumsSafeAtTerms, UpdateTermsAction
-    <2> QED
-      BY DEF UpdateTermsExpr,TypeOK,UpdateTermsAction,UpdateTerms,H_QuorumsSafeAtTerms
+    \* t becomes Secondary, so s_1 # t. s_1's state and term are unchanged.
+    <2>1. state'[t] = Secondary BY DEF UpdateTerms, UpdateTermsExpr, TypeOK
+    <2>2. s_1 # t BY <2>1, A7
+    <2>3. currentTerm'[s_1] = currentTerm[s_1] BY <2>2 DEF UpdateTerms, UpdateTermsExpr
+    <2>4. state[s_1] = Primary BY <2>2 DEF UpdateTerms, UpdateTermsExpr
+    \* Pre-state gives us a witnessing quorum.
+    <2>5. PICK Q \in Quorums(Server) : \A n \in Q : currentTerm[n] >= currentTerm[s_1]
+          BY <2>4 DEF H_QuorumsSafeAtTerms
+    \* t's term only increased, all others unchanged. So all Q members' terms >= in post-state.
+    <2>6. \A n \in Q : currentTerm'[n] >= currentTerm[n]
+          BY <2>5 DEF UpdateTerms, UpdateTermsExpr, TypeOK, Terms
+    <2>a. currentTerm[s_1] \in Nat BY DEF TypeOK, Terms
+    <2>b. Q \subseteq Server BY <2>5
+    <2>c. \A n \in Q : currentTerm[n] \in Nat BY <2>b DEF TypeOK, Terms
+    <2>d. \A n \in Q : currentTerm'[n] \in Nat BY <2>b DEF UpdateTerms, UpdateTermsExpr, TypeOK, Terms
+    <2>7. \A n \in Q : currentTerm'[n] >= currentTerm'[s_1]
+          BY <2>3, <2>5, <2>6, <2>a, <2>c, <2>d
+    <2>8. Q \in Quorums(Server) BY <2>5
+    <2> QED BY <2>7, <2>8
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
@@ -311,11 +471,173 @@ THEOREM L_5 == TypeOK /\ H_QuorumsSafeAtTerms /\ Next => H_QuorumsSafeAtTerms'
 THEOREM L_6 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ H_UniformLogEntries /\ Next => H_UniformLogEntries'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_UniformLogEntries,ClientRequestAction)
-  <1>1. TypeOK /\ H_PrimaryHasOwnEntries /\ H_UniformLogEntries /\ ClientRequestAction => H_UniformLogEntries' BY DEF TypeOK,H_PrimaryHasOwnEntries,ClientRequestAction,ClientRequest,H_UniformLogEntries
+  <1>1. TypeOK /\ H_PrimaryHasOwnEntries /\ H_UniformLogEntries /\ ClientRequestAction => H_UniformLogEntries'
+    <2>. SUFFICES ASSUME TypeOK, H_PrimaryHasOwnEntries, H_UniformLogEntries,
+                        NEW cr \in Server, ClientRequest(cr)
+         PROVE H_UniformLogEntries'
+         BY DEF ClientRequestAction
+    <2>1. state[cr] = Primary BY DEF ClientRequest
+    <2>2. log' = [log EXCEPT ![cr] = Append(log[cr], currentTerm[cr])] BY DEF ClientRequest
+    <2>3. UNCHANGED <<currentTerm, state>> BY DEF ClientRequest
+    \* For servers s # cr and t # cr, logs unchanged, invariant from pre-state.
+    \* For s = cr: the new entry is at index Len(log[cr])+1 with term currentTerm[cr].
+    \* H_PrimaryHasOwnEntries ensures no other server t has an entry with term currentTerm[cr]
+    \* that cr doesn't have. And in cr's new log, the new entry is the last one.
+    \* For t = cr and s # cr: log[s] unchanged, log'[cr] extends log[cr], so any entry
+    \* in log'[cr] at index < i (where i is in DOMAIN log[s]) was in log[cr] too.
+    \* Pick arbitrary s, t, i for the post-state invariant.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW t \in Server,
+                        NEW ii \in DOMAIN log'[s],
+                        \A jj \in DOMAIN log'[s] : jj < ii => log'[s][jj] # log'[s][ii]
+         PROVE ~(\E k \in DOMAIN log'[t] : log'[t][k] = log'[s][ii] /\ k < ii)
+         BY DEF H_UniformLogEntries
+    \* Case 1: s # cr and t # cr. Both logs unchanged.
+    <2>4. CASE s # cr /\ t # cr
+      BY <2>2, <2>3, <2>4 DEF H_UniformLogEntries, TypeOK
+    \* Case 2: s = cr and t # cr.
+    <2>5. CASE s = cr /\ t # cr
+      \* Subcase: ii is in the old log domain.
+      <3>1. CASE ii \in DOMAIN log[cr]
+        \* Prove that H_UniformLogEntries held for (cr, t, ii) in the pre-state, so it holds in post-state.
+        <4>1. \A jj \in DOMAIN log[cr] : (jj < ii) => log[cr][jj] # log[cr][ii]
+          <5>1. \A idx \in DOMAIN log[cr] : log'[cr][idx] = log[cr][idx]
+                BY <2>2, <2>5 DEF TypeOK
+          <5>2. DOMAIN log[cr] \subseteq DOMAIN log'[cr]
+                BY <2>2, <2>5 DEF TypeOK
+          <5>. QED BY <5>1, <5>2, <3>1, <2>5 DEF TypeOK, Terms
+        <4>. QED BY <2>2, <2>3, <2>5, <3>1, <4>1 DEF H_UniformLogEntries, TypeOK, Terms
+      \* Subcase: ii is the new entry (ii = Len(log[cr]) + 1).
+      <3>2. CASE ii \notin DOMAIN log[cr]
+        \* ii = Len(log[cr]) + 1 and log'[s][ii] = currentTerm[cr].
+        \* The condition "\A jj < ii : log'[s][jj] # log'[s][ii]" means no earlier entry
+        \* in cr's log has value currentTerm[cr].
+        \* By H_PrimaryHasOwnEntries, if any server t has an entry with value currentTerm[cr],
+        \* then cr also has it (via InLog). But cr has no such entry at any index < ii.
+        \* So t can't have one either.
+        BY <2>1, <2>2, <2>3, <2>5, <3>2 DEF H_PrimaryHasOwnEntries, H_UniformLogEntries, InLog, TypeOK, Terms
+      <3>. QED BY <3>1, <3>2
+    \* Case 3: s # cr and t = cr.
+    <2>6. CASE s # cr /\ t = cr
+      \* log[s] unchanged, log'[cr] = Append(log[cr], currentTerm[cr]).
+      \* Entries in log'[cr] at index k <= Len(log[cr]) equal log[cr][k].
+      \* Pre-state invariant gives the result for those indices.
+      \* The new entry at Len(log[cr])+1: if k < ii and k = Len(log[cr])+1,
+      \* then ii > Len(log[cr])+1 which can't happen since ii \in DOMAIN log[s] = DOMAIN log'[s].
+      <3>1. \A k \in DOMAIN log[cr] : log'[cr][k] = log[cr][k] BY <2>2, <2>6 DEF TypeOK
+      <3>2. log'[s] = log[s] BY <2>2, <2>6 DEF TypeOK
+      <3>3. ii \in DOMAIN log[s] BY <3>2
+      <3>4. log'[s][ii] = log[s][ii] BY <3>2
+      \* No k in old domain of log[cr] satisfies the violation (by pre-state invariant).
+      <3>5. \A jj \in DOMAIN log[s] : jj < ii => log[s][jj] # log[s][ii]
+            BY <3>2, <3>3 DEF TypeOK
+      <3>6. ~(\E k \in DOMAIN log[cr] : log[cr][k] = log[s][ii] /\ k < ii)
+            BY <3>3, <3>5, <2>6 DEF H_UniformLogEntries
+      \* For new entry at Len(log[cr])+1: if it's < ii, then log'[cr][Len(log[cr])+1] = currentTerm[cr].
+      \* H_PrimaryHasOwnEntries says: if log[s][ii] = currentTerm[cr], then InLog(<<ii, currentTerm[cr]>>, cr),
+      \* i.e., cr has an entry with that term at index ii. But then log[cr][ii] = currentTerm[cr] = log[s][ii],
+      \* which means in the pre-state, there IS an entry at index ii in log[cr] with value log[s][ii].
+      \* But <3>5 says no k in DOMAIN log[cr] has log[cr][k] = log[s][ii] AND k < ii.
+      \* So in particular ii itself is the only place. That means jj=ii has log[cr][jj] = log[s][ii].
+      \* Actually what we need: the new k = Len(log[cr])+1 has k >= ii because InLog means
+      \* cr has an entry at index ii, hence Len(log[cr]) >= ii, so Len(log[cr])+1 > ii >= k won't be < ii.
+      \* Wait: k = Len(log[cr])+1 < ii means Len(log[cr]) < ii - 1 < ii. But if log[s][ii] = currentTerm[cr]
+      \* and H_PrimaryHasOwnEntries says cr has this entry (InLog), then Len(log[cr]) >= ii, contradiction.
+      <3>7. ASSUME log[s][ii] = currentTerm[cr] PROVE Len(log[cr]) >= ii
+            BY <2>1, <3>3, <3>7, <2>6 DEF H_PrimaryHasOwnEntries, InLog, TypeOK
+      <3>. QED BY <2>2, <2>6, <3>1, <3>4, <3>6, <3>7 DEF TypeOK, Terms
+    \* Case 4: s = cr and t = cr.
+    <2>7. CASE s = cr /\ t = cr
+      BY <2>2, <2>3, <2>7 DEF H_UniformLogEntries, TypeOK, Terms
+    <2>. QED BY <2>4, <2>5, <2>6, <2>7
   \* (H_UniformLogEntries,GetEntriesAction)
-  <1>2. TypeOK /\ H_LogMatching /\ H_UniformLogEntries /\ GetEntriesAction => H_UniformLogEntries' BY DEF TypeOK,H_LogMatching,GetEntriesAction,GetEntries,H_UniformLogEntries
+  <1>2. TypeOK /\ H_LogMatching /\ H_UniformLogEntries /\ GetEntriesAction => H_UniformLogEntries'
+    <2>. SUFFICES ASSUME TypeOK, H_LogMatching, H_UniformLogEntries,
+                        NEW i \in Server, NEW j \in Server, GetEntries(i, j)
+         PROVE H_UniformLogEntries'
+         BY DEF GetEntriesAction
+    <2>1. state[i] = Secondary BY DEF GetEntries
+    <2>2. UNCHANGED <<currentTerm, state>> BY DEF GetEntries
+    <2>3. Len(log[j]) > Len(log[i]) BY DEF GetEntries
+    <2>4. LET newEntryIndex == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
+              newEntry      == log[j][newEntryIndex]
+              newLog        == Append(log[i], newEntry)
+          IN log' = [log EXCEPT ![i] = newLog]
+          BY DEF GetEntries, Empty
+    \* The new log[i] is log[i] extended with one entry copied from log[j].
+    \* For s # i and t # i: logs unchanged, invariant holds from pre-state.
+    \* For s = i or t = i: the new entry at Len(log[i])+1 matches log[j] at that index.
+    \* H_LogMatching ensures prefix consistency, which preserves H_UniformLogEntries.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW t \in Server,
+                        NEW ii \in DOMAIN log'[s],
+                        \A jj \in DOMAIN log'[s] : jj < ii => log'[s][jj] # log'[s][ii]
+         PROVE ~(\E k \in DOMAIN log'[t] : log'[t][k] = log'[s][ii] /\ k < ii)
+         BY DEF H_UniformLogEntries
+    \* Case 1: s # i and t # i. Both logs unchanged.
+    <2>5. CASE s # i /\ t # i
+      BY <2>2, <2>4, <2>5 DEF H_UniformLogEntries, TypeOK, Empty
+    \* Case 2: s = i and t # i.
+    <2>6. CASE s = i /\ t # i
+      <3>1. CASE ii \in DOMAIN log[i]
+        <4>1. \A idx \in DOMAIN log[i] : log'[i][idx] = log[i][idx] BY <2>4, <2>6 DEF TypeOK, Empty
+        <4>2. DOMAIN log[i] \subseteq DOMAIN log'[i] BY <2>4, <2>6 DEF TypeOK, Empty
+        <4>3. \A jj \in DOMAIN log[i] : jj < ii => log[i][jj] # log[i][ii]
+              BY <4>1, <4>2, <3>1, <2>6 DEF TypeOK, Terms
+        <4>. QED BY <2>2, <2>4, <2>6, <3>1, <4>1, <4>3 DEF H_UniformLogEntries, TypeOK, Terms, Empty
+      <3>2. CASE ii \notin DOMAIN log[i]
+        \* ii = Len(log[i])+1, log'[i][ii] = log[j][ii].
+        <4>1. log'[i][ii] = log[j][ii] BY <2>4, <2>6, <3>2 DEF TypeOK, Terms, Empty
+        \* For jj < ii (jj in DOMAIN log[i]): log'[i][jj] = log[i][jj].
+        <4>2. \A jj \in DOMAIN log[i] : log'[i][jj] = log[i][jj] BY <2>4, <2>6 DEF TypeOK, Empty
+        \* log[i] is a prefix of log[j] (from GetEntries log consistency and H_LogMatching).
+        \* So log[i][jj] = log[j][jj] for all jj in DOMAIN log[i].
+        <4>3. \A jj \in DOMAIN log[i] : log[i][jj] = log[j][jj]
+              BY <2>3, <2>4, <2>6 DEF GetEntries, H_LogMatching, Empty, TypeOK, Terms
+        \* So log'[i][jj] = log[j][jj] for jj < ii.
+        \* Combined with SUFFICES: \A jj < ii : log[j][jj] # log[j][ii].
+        <4>a. DOMAIN log[i] \subseteq DOMAIN log'[i] BY <2>4, <2>6 DEF TypeOK, Empty
+        <4>b. ii = Len(log[i]) + 1 BY <3>2, <2>6, <2>4 DEF TypeOK, Terms, Empty
+        <4>c. \A jj \in DOMAIN log[i] : jj < ii BY <4>b DEF TypeOK
+        <4>4. \A jj \in DOMAIN log[i] : log[j][jj] # log[j][ii]
+              BY <4>1, <4>2, <4>3, <4>a, <4>c, <3>2, <2>6 DEF TypeOK, Terms
+        <4>5. ii \in DOMAIN log[j] BY <4>b, <2>3 DEF TypeOK, Terms
+        <4>6. \A jj \in DOMAIN log[j] : jj < ii => log[j][jj] # log[j][ii]
+              BY <4>3, <4>4, <4>b DEF TypeOK, Terms
+        \* By H_UniformLogEntries on (j, t, ii):
+        <4>. QED BY <4>1, <4>5, <4>6, <2>2, <2>4, <2>6, <3>2 DEF H_UniformLogEntries, TypeOK, Terms, Empty
+      <3>. QED BY <3>1, <3>2
+    \* Case 3: s # i and t = i.
+    <2>7. CASE s # i /\ t = i
+      <3>1. \A k \in DOMAIN log[i] : log'[i][k] = log[i][k] BY <2>4, <2>7 DEF TypeOK, Empty
+      <3>2. log'[s] = log[s] BY <2>4, <2>7 DEF TypeOK, Empty
+      <3>3. ii \in DOMAIN log[s] BY <3>2
+      <3>4. \A jj \in DOMAIN log[s] : jj < ii => log[s][jj] # log[s][ii]
+            BY <3>2, <3>3 DEF TypeOK
+      \* Pre-state invariant: no entry in log[i] matches log[s][ii] at index < ii.
+      <3>5. ~(\E k \in DOMAIN log[i] : log[i][k] = log[s][ii] /\ k < ii)
+            BY <3>3, <3>4, <2>7 DEF H_UniformLogEntries
+      \* Also, no entry in log[j] matches log[s][ii] at index < ii.
+      <3>6. ~(\E k \in DOMAIN log[j] : log[j][k] = log[s][ii] /\ k < ii)
+            BY <3>3, <3>4, <2>7 DEF H_UniformLogEntries
+      \* The new entry in log'[i] at position Len(log[i])+1.
+      <3>7. Len(log[i]) + 1 \in DOMAIN log[j] BY <2>3 DEF TypeOK, Terms
+      <3>8. log'[i][Len(log[i]) + 1] = log[j][Len(log[i]) + 1] BY <2>4, <2>7 DEF TypeOK, Terms, Empty
+      <3>. QED BY <2>2, <2>4, <2>7, <3>1, <3>2, <3>5, <3>6, <3>7, <3>8 DEF TypeOK, Terms, Empty
+    \* Case 4: s = i and t = i.
+    <2>8. CASE s = i /\ t = i
+      BY <2>2, <2>4, <2>8 DEF H_UniformLogEntries, TypeOK, Terms, Empty
+    <2>. QED BY <2>5, <2>6, <2>7, <2>8
   \* (H_UniformLogEntries,RollbackEntriesAction)
-  <1>3. TypeOK /\ H_UniformLogEntries /\ RollbackEntriesAction => H_UniformLogEntries' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_UniformLogEntries
+  <1>3. TypeOK /\ H_UniformLogEntries /\ RollbackEntriesAction => H_UniformLogEntries'
+    <2>. SUFFICES ASSUME TypeOK, H_UniformLogEntries,
+                        NEW i \in Server, NEW j \in Server, RollbackEntries(i, j)
+         PROVE H_UniformLogEntries'
+         BY DEF RollbackEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state>> BY DEF RollbackEntries
+    <2>2. log' = [log EXCEPT ![i] = SubSeq(log[i], 1, Len(log[i])-1)] BY DEF RollbackEntries, CanRollback
+    \* Only log[i] changed, and it's a prefix of the old log[i].
+    \* H_UniformLogEntries is preserved since truncation only removes entries,
+    \* it can't create new violations.
+    <2>. QED BY <2>1, <2>2 DEF H_UniformLogEntries, TypeOK, Terms
   \* (H_UniformLogEntries,BecomeLeaderAction)
   <1>4. TypeOK /\ H_UniformLogEntries /\ BecomeLeaderAction => H_UniformLogEntries' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_UniformLogEntries
   \* (H_UniformLogEntries,CommitEntryAction)
@@ -327,11 +649,11 @@ THEOREM L_6 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ H_UniformLog
 
 \*** H_TermsMonotonic
 THEOREM L_7 == TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ Next => H_TermsMonotonic'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6
+  <1>. USE A0,A1,A2,A3,A4,A5,A6 DEF CanRollback, LastTerm, LogTerm
   \* (H_TermsMonotonic,ClientRequestAction)
-  <1>1. TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ ClientRequestAction => H_TermsMonotonic' BY DEF TypeOK,H_PrimaryTermGTELogTerm,ClientRequestAction,ClientRequest,H_TermsMonotonic
+  <1>1. TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ ClientRequestAction => H_TermsMonotonic' BY DEF TypeOK,H_PrimaryTermGTELogTerm,ClientRequestAction,ClientRequest,H_TermsMonotonic,Terms
   \* (H_TermsMonotonic,GetEntriesAction)
-  <1>2. TypeOK /\ H_TermsMonotonic /\ GetEntriesAction => H_TermsMonotonic' BY DEF TypeOK,GetEntriesAction,GetEntries,H_TermsMonotonic
+  <1>2. TypeOK /\ H_TermsMonotonic /\ GetEntriesAction => H_TermsMonotonic' BY DEF TypeOK,GetEntriesAction,GetEntries,H_TermsMonotonic,Empty,Terms
   \* (H_TermsMonotonic,RollbackEntriesAction)
   <1>3. TypeOK /\ H_TermsMonotonic /\ RollbackEntriesAction => H_TermsMonotonic' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_TermsMonotonic
   \* (H_TermsMonotonic,BecomeLeaderAction)
@@ -349,15 +671,37 @@ THEOREM L_8 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ 
   \* (H_LogEntryImpliesSafeAtTerm,ClientRequestAction)
   <1>1. TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ ClientRequestAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,H_QuorumsSafeAtTerms,ClientRequestAction,ClientRequest,H_LogEntryImpliesSafeAtTerm
   \* (H_LogEntryImpliesSafeAtTerm,GetEntriesAction)
-  <1>2. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ GetEntriesAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,GetEntriesAction,GetEntries,H_LogEntryImpliesSafeAtTerm
+  <1>2. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ GetEntriesAction => H_LogEntryImpliesSafeAtTerm'
+    <2>. SUFFICES ASSUME TypeOK, H_LogEntryImpliesSafeAtTerm,
+                        NEW i \in Server, NEW j \in Server, GetEntries(i, j)
+         PROVE H_LogEntryImpliesSafeAtTerm'
+         BY DEF GetEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state>> BY DEF GetEntries
+    <2>2. LET newEntryIndex == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
+          IN  /\ newEntryIndex \in DOMAIN log[j]
+              /\ log' = [log EXCEPT ![i] = Append(log[i], log[j][newEntryIndex])]
+          BY DEF GetEntries, Empty, TypeOK, Terms
+    \* For any server s and index k in DOMAIN log'[s]:
+    \* If s # i: log'[s] = log[s], use pre-state invariant with unchanged currentTerm.
+    \* If s = i and k in DOMAIN log[i]: log'[i][k] = log[i][k], use pre-state on i.
+    \* If s = i and k = newEntryIndex: log'[i][k] = log[j][newEntryIndex], use pre-state on j.
+    <2>3. \A s \in Server : s # i => log'[s] = log[s] BY <2>2 DEF TypeOK, Empty
+    <2>4. \A k \in DOMAIN log[i] : log'[i][k] = log[i][k] BY <2>2 DEF TypeOK, Empty
+    <2>5. DOMAIN log[i] \subseteq DOMAIN log'[i] BY <2>2 DEF TypeOK, Empty
+    \* The new entry in log'[i] (at newEntryIndex) equals log[j][newEntryIndex],
+    \* which has a quorum by H_LogEntryImpliesSafeAtTerm on j.
+    <2>6. LET idx == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
+          IN  \E Q \in Quorums(Server) : \A n \in Q : currentTerm[n] >= log[j][idx]
+          BY <2>2 DEF H_LogEntryImpliesSafeAtTerm, TypeOK, Terms, Empty
+    <2>. QED BY <2>1, <2>2, <2>3, <2>4, <2>5, <2>6 DEF H_LogEntryImpliesSafeAtTerm, Empty, TypeOK, Terms
   \* (H_LogEntryImpliesSafeAtTerm,RollbackEntriesAction)
   <1>3. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ RollbackEntriesAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LogEntryImpliesSafeAtTerm
   \* (H_LogEntryImpliesSafeAtTerm,BecomeLeaderAction)
-  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ BecomeLeaderAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_LogEntryImpliesSafeAtTerm
+  <1>4. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ BecomeLeaderAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_LogEntryImpliesSafeAtTerm,CanVoteForOplog,LastTerm,Terms
   \* (H_LogEntryImpliesSafeAtTerm,CommitEntryAction)
   <1>5. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ CommitEntryAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_LogEntryImpliesSafeAtTerm
   \* (H_LogEntryImpliesSafeAtTerm,UpdateTermsAction)
-  <1>6. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ UpdateTermsAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_LogEntryImpliesSafeAtTerm
+  <1>6. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ UpdateTermsAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,UpdateTermsExpr,H_LogEntryImpliesSafeAtTerm,Terms
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
@@ -369,13 +713,132 @@ THEOREM L_9 == TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_CommittedE
   \* (H_LeaderCompleteness,GetEntriesAction)
   <1>2. TypeOK /\ H_LeaderCompleteness /\ GetEntriesAction => H_LeaderCompleteness' BY DEF TypeOK,GetEntriesAction,GetEntries,H_LeaderCompleteness
   \* (H_LeaderCompleteness,RollbackEntriesAction)
-  <1>3. TypeOK /\ H_LeaderCompleteness /\ RollbackEntriesAction => H_LeaderCompleteness' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LeaderCompleteness
+  <1>3. TypeOK /\ H_LeaderCompleteness /\ RollbackEntriesAction => H_LeaderCompleteness'
+    <2>. SUFFICES ASSUME TypeOK, H_LeaderCompleteness,
+                        NEW i \in Server, NEW j \in Server, RollbackEntries(i, j)
+         PROVE H_LeaderCompleteness'
+         BY DEF RollbackEntriesAction
+    <2>1. state[i] = Secondary BY DEF RollbackEntries, CanRollback
+    <2>2. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF RollbackEntries
+    <2>3. \A p \in Server : state[p] = Primary => p # i BY <2>1, A7
+    <2>4. \A p \in Server : state[p] = Primary => log'[p] = log[p]
+          BY <2>3 DEF RollbackEntries, CanRollback
+    <2>. QED BY <2>2, <2>4 DEF H_LeaderCompleteness, TypeOK
   \* (H_LeaderCompleteness,BecomeLeaderAction)
-  <1>4. TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_CommittedEntryIsOnQuorum /\ H_LaterLogsHaveEarlierCommitted /\ H_LeaderCompleteness /\ BecomeLeaderAction => H_LeaderCompleteness' BY DEF TypeOK,H_TermsMonotonic,H_UniformLogEntries,H_CommittedEntryIsOnQuorum,H_LaterLogsHaveEarlierCommitted,BecomeLeaderAction,BecomeLeader,H_LeaderCompleteness
+  <1>4. TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_CommittedEntryIsOnQuorum /\ H_LaterLogsHaveEarlierCommitted /\ H_LeaderCompleteness /\ BecomeLeaderAction => H_LeaderCompleteness'
+    <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_UniformLogEntries, H_CommittedEntryIsOnQuorum,
+                        H_LaterLogsHaveEarlierCommitted, H_LeaderCompleteness,
+                        NEW i \in Server, NEW Q \in Quorums(Server), BecomeLeader(i, Q)
+         PROVE H_LeaderCompleteness'
+         BY DEF BecomeLeaderAction
+    <2>1. UNCHANGED <<log, immediatelyCommitted>> BY DEF BecomeLeader
+    <2>2. i \in Q BY DEF BecomeLeader
+    <2>3. \A v \in Q : currentTerm[v] < currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>4. \A v \in Q : currentTerm'[v] = currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
+    <2>5. \A v \in Server : v \notin Q => currentTerm'[v] = currentTerm[v] BY DEF BecomeLeader
+    <2>6. state'[i] = Primary BY DEF BecomeLeader
+    <2>7. \A v \in Q : v # i => state'[v] = Secondary BY DEF BecomeLeader
+    <2>8. \A v \in Server : v \notin Q /\ v # i => state'[v] = state[v] BY DEF BecomeLeader
+    \* For an old primary p (p # i, p \notin Q): state unchanged, currentTerm unchanged.
+    \* currentTerm'[p] = currentTerm[p]. For c with c[2] < currentTerm[p],
+    \* pre-state H_LeaderCompleteness gives InLog(c, p), and log unchanged.
+    <2>9. \A p \in Server : (p # i /\ p \notin Q /\ state[p] = Primary) =>
+            (\A c \in immediatelyCommitted : c[2] < currentTerm[p] => InLog(<<c[1],c[2]>>, p))
+          BY DEF H_LeaderCompleteness
+    \* For new primary i: need to show all committed entries with term < newTerm are in log[i].
+    \* CanVoteForOplog means i's log is at least as up-to-date as any voter's log.
+    \* Every committed entry has a quorum Qc of servers that have it.
+    \* Q \cap Qc # {}. Pick w. w has the entry and voted for i.
+    \* w has currentTerm[w] < newTerm = currentTerm[i] + 1, so currentTerm[w] <= currentTerm[i].
+    \* If w has any entry in its log with term > c[2], then H_LaterLogsHaveEarlierCommitted says w has c.
+    \* Since w voted for i, CanVoteForOplog(w, i, newTerm): LastTerm(log[i]) >= LastTerm(log[w])
+    \* or (equal last terms and Len(log[i]) >= Len(log[w])).
+    \* We need to show i has the entry at c[1].
+    <2>10. \A c \in immediatelyCommitted : c[2] < currentTerm[i] + 1 => InLog(<<c[1],c[2]>>, i)
+      <3>. SUFFICES ASSUME NEW c \in immediatelyCommitted, c[2] < currentTerm[i] + 1
+           PROVE InLog(<<c[1],c[2]>>, i) OBVIOUS
+      \* There's a quorum Qc where all members have the entry.
+      <3>1. \E Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n)
+            BY DEF H_CommittedEntryIsOnQuorum
+      <3>2. PICK Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n) BY <3>1
+      <3>3. Q \cap Qc # {} BY <3>2, StaticQuorumsOverlap
+      <3>4. PICK w \in Q \cap Qc : TRUE BY <3>3
+      \* w has the committed entry.
+      <3>5. InLog(<<c[1],c[2]>>, w) BY <3>4, <3>2
+      \* w has Len(log[w]) >= c[1] and log[w][c[1]] = c[2].
+      <3>6. Len(log[w]) >= c[1] /\ log[w][c[1]] = c[2] BY <3>5
+      \* w voted for i: CanVoteForOplog(w, i, newTerm).
+      <3>7. CanVoteForOplog(w, i, currentTerm[i] + 1) BY <3>4 DEF BecomeLeader
+      \* i's log is at least as up-to-date: LastTerm(log[i]) >= LastTerm(log[w])
+      \* or (same last term and at least as long).
+      <3>8. \/ LastTerm(log[i]) > LastTerm(log[w])
+            \/ /\ LastTerm(log[i]) = LastTerm(log[w])
+               /\ Len(log[i]) >= Len(log[w])
+            BY <3>7 DEF CanVoteForOplog
+      \* Since Len(log[w]) >= c[1] and i's log is at least as up-to-date as w's,
+      \* Len(log[i]) >= Len(log[w]) >= c[1] (in both cases of <3>8).
+      \* Also, by H_TermsMonotonic, log terms are non-decreasing, and i's last term >= w's last term.
+      \* So i has at least c[1] entries. And by H_LaterLogsHaveEarlierCommitted on i:
+      \* if i has an entry with term > c[2], then i has c at index c[1].
+      \* Case: c[2] < currentTerm[i]. Then currentTerm[i] >= c[2]+1.
+      \* By H_LeaderCompleteness (i might not be Primary in pre-state, but...)
+      \* Actually, we need H_LaterLogsHaveEarlierCommitted on server i directly.
+      \* For that, we need: there exists some entry in log[i] with term > c[2].
+      \* Since w voted for i and LastTerm(log[i]) >= LastTerm(log[w]):
+      \* If log[w] has any entry with term > c[2], then LastTerm(log[w]) > c[2]
+      \* (by H_TermsMonotonic), so LastTerm(log[i]) >= LastTerm(log[w]) > c[2],
+      \* meaning log[i] has an entry with term > c[2], so H_LaterLogsHaveEarlierCommitted applies.
+      \* If ALL entries in log[w] have term = c[2], then c[2] = LastTerm(log[w]).
+      \* In this case, LastTerm(log[i]) >= c[2].
+      \* If LastTerm(log[i]) > c[2], then i has an entry with term > c[2], and we're done.
+      \* If LastTerm(log[i]) = c[2] = LastTerm(log[w]), then Len(log[i]) >= Len(log[w]).
+      \* log[w][c[1]] = c[2], and since all entries in log[w] have term = c[2] (by H_TermsMonotonic
+      \* and uniformity), and log[i] has at least as many entries...
+      \* By H_UniformLogEntries: if log[w] has entry c[2] first appearing at some index,
+      \* then in log[i], that entry appears at the same or later index. With Len(log[i]) >= Len(log[w]),
+      \* log[i][c[1]] = c[2] (since all entries with that term occupy the same positions).
+      \* This is the key: H_UniformLogEntries + H_TermsMonotonic + equal last terms + length comparison.
+      <3>. QED BY <3>5, <3>6, <3>7, <3>8 DEF H_LaterLogsHaveEarlierCommitted, H_TermsMonotonic, H_UniformLogEntries, CanVoteForOplog, LastTerm, TypeOK, Terms
+    <2>. QED BY <2>1, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9, <2>10, A7 DEF H_LeaderCompleteness, TypeOK
   \* (H_LeaderCompleteness,CommitEntryAction)
-  <1>5. TypeOK /\ H_TermsMonotonic /\ H_QuorumsSafeAtTerms /\ H_LeaderCompleteness /\ CommitEntryAction => H_LeaderCompleteness' BY DEF TypeOK,H_TermsMonotonic,H_QuorumsSafeAtTerms,CommitEntryAction,CommitEntry,H_LeaderCompleteness
+  <1>5. TypeOK /\ H_TermsMonotonic /\ H_QuorumsSafeAtTerms /\ H_LeaderCompleteness /\ CommitEntryAction => H_LeaderCompleteness'
+    <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_QuorumsSafeAtTerms, H_LeaderCompleteness,
+                        NEW s \in Server, NEW Q \in Quorums(Server), CommitEntry(s, Q)
+         PROVE H_LeaderCompleteness'
+         BY DEF CommitEntryAction
+    <2>1. UNCHANGED <<currentTerm, state, log>> BY DEF CommitEntry
+    <2>2. state[s] = Primary BY DEF CommitEntry
+    <2>3. immediatelyCommitted' = immediatelyCommitted \cup {<<Len(log[s]), currentTerm[s]>>}
+          BY DEF CommitEntry
+    \* All Q members have currentTerm = currentTerm[s]. Any primary p with currentTerm[p] > currentTerm[s]
+    \* would need a quorum with terms >= currentTerm[p], but that quorum overlaps Q,
+    \* giving a member with both currentTerm = currentTerm[s] and >= currentTerm[p]. Contradiction.
+    <2>4. \A n \in Q : currentTerm[n] = currentTerm[s] BY DEF CommitEntry, ImmediatelyCommitted
+    <2>5. \A p \in Server : state[p] = Primary /\ currentTerm[p] > currentTerm[s] => FALSE
+      <3>. SUFFICES ASSUME NEW p \in Server, state[p] = Primary, currentTerm[p] > currentTerm[s]
+           PROVE FALSE OBVIOUS
+      <3>1. \E Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= currentTerm[p]
+            BY DEF H_QuorumsSafeAtTerms
+      <3>2. PICK Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= currentTerm[p]
+            BY <3>1
+      <3>3. Q \cap Q2 # {} BY <3>2, StaticQuorumsOverlap
+      <3>4. PICK w \in Q \cap Q2 : TRUE BY <3>3
+      <3>5. currentTerm[w] = currentTerm[s] BY <3>4, <2>4
+      <3>6. currentTerm[w] >= currentTerm[p] BY <3>4, <3>2
+      <3>. QED BY <3>5, <3>6 DEF TypeOK, Terms
+    <2>. QED BY <2>1, <2>3, <2>5 DEF H_LeaderCompleteness, TypeOK, Terms
   \* (H_LeaderCompleteness,UpdateTermsAction)
-  <1>6. TypeOK /\ H_LeaderCompleteness /\ UpdateTermsAction => H_LeaderCompleteness' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_LeaderCompleteness
+  <1>6. TypeOK /\ H_LeaderCompleteness /\ UpdateTermsAction => H_LeaderCompleteness'
+    <2>. SUFFICES ASSUME TypeOK, H_LeaderCompleteness,
+                        NEW s \in Server, NEW t \in Server, UpdateTerms(s, t)
+         PROVE H_LeaderCompleteness'
+         BY DEF UpdateTermsAction
+    <2>1. state'[t] = Secondary BY DEF UpdateTerms, UpdateTermsExpr, TypeOK
+    <2>2. UNCHANGED <<log, immediatelyCommitted>> BY DEF UpdateTerms, UpdateTermsExpr
+    <2>3. \A p \in Server : state'[p] = Primary => p # t BY <2>1, A7
+    <2>4. \A p \in Server : state'[p] = Primary => state[p] = Primary /\ currentTerm'[p] = currentTerm[p]
+          BY <2>3 DEF UpdateTerms, UpdateTermsExpr, TypeOK
+    <2>. QED BY <2>2, <2>4 DEF H_LeaderCompleteness, TypeOK
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
@@ -383,15 +846,209 @@ THEOREM L_9 == TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_CommittedE
 THEOREM L_10 == TypeOK /\ H_LeaderCompleteness /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_LogEntryImpliesSafeAtTerm /\ H_LaterLogsHaveEarlierCommitted /\ Next => H_LaterLogsHaveEarlierCommitted'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_LaterLogsHaveEarlierCommitted,ClientRequestAction)
-  <1>1. TypeOK /\ H_LeaderCompleteness /\ H_LaterLogsHaveEarlierCommitted /\ ClientRequestAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,H_LeaderCompleteness,ClientRequestAction,ClientRequest,H_LaterLogsHaveEarlierCommitted
+  <1>1. TypeOK /\ H_LeaderCompleteness /\ H_LaterLogsHaveEarlierCommitted /\ ClientRequestAction => H_LaterLogsHaveEarlierCommitted'
+    <2>. SUFFICES ASSUME TypeOK, H_LeaderCompleteness, H_LaterLogsHaveEarlierCommitted,
+                        NEW cr \in Server, ClientRequest(cr)
+         PROVE H_LaterLogsHaveEarlierCommitted'
+         BY DEF ClientRequestAction
+    <2>1. state[cr] = Primary BY DEF ClientRequest
+    <2>2. log' = [log EXCEPT ![cr] = Append(log[cr], currentTerm[cr])] BY DEF ClientRequest
+    <2>3. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF ClientRequest
+    <2>4. \A s \in Server : s # cr => log'[s] = log[s] BY <2>2 DEF TypeOK
+    <2>5. \A k \in DOMAIN log[cr] : log'[cr][k] = log[cr][k] BY <2>2 DEF TypeOK
+    <2>6. Len(log'[cr]) = Len(log[cr]) + 1 BY <2>2 DEF TypeOK
+    \* For s # cr: log unchanged, immediatelyCommitted unchanged, use pre-state.
+    \* For s = cr: the new entry is currentTerm[cr]. If currentTerm[cr] > c[2] for some c,
+    \* H_LeaderCompleteness (cr is Primary) gives log[cr][c[1]] = c[2], and log'[cr][c[1]] = log[cr][c[1]].
+    <2>7. \A c \in immediatelyCommitted : c[2] < currentTerm[cr] => InLog(<<c[1],c[2]>>, cr)
+          BY <2>1 DEF H_LeaderCompleteness
+    \* For s = cr and c where the triggering entry with term > c[2] is in the OLD log[cr]:
+    \* H_LaterLogsHaveEarlierCommitted on cr gives it.
+    \* For s = cr and c where the trigger is the NEW entry (currentTerm[cr] > c[2]):
+    \* H_LeaderCompleteness gives InLog(c, cr), which means log[cr][c[1]] = c[2], preserved by append.
+    <2>8. \A c \in immediatelyCommitted :
+            (\E ii \in DOMAIN log[cr] : log[cr][ii] > c[2]) => Len(log[cr]) >= c[1] /\ log[cr][c[1]] = c[2]
+          BY DEF H_LaterLogsHaveEarlierCommitted
+    \* Prove the s=cr case: any committed c with an entry in log'[cr] having term > c[2].
+    \* Prove H_LaterLogsHaveEarlierCommitted' by picking arbitrary s, c.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW c \in immediatelyCommitted,
+                        \E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]
+         PROVE Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2]
+         BY <2>3 DEF H_LaterLogsHaveEarlierCommitted
+    <2>9. CASE s # cr
+      BY <2>1, <2>3, <2>4, <2>9 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
+    <2>10. CASE s = cr
+      \* Either the triggering entry is in the old log, or it's the new entry.
+      <3>1. CASE \E ii \in DOMAIN log[cr] : log[cr][ii] > c[2]
+        \* Pre-state H_LaterLogsHaveEarlierCommitted on cr gives log[cr][c[1]] = c[2].
+        <4>1. Len(log[cr]) >= c[1] /\ log[cr][c[1]] = c[2] BY <2>8, <3>1
+        <4>2. c[1] \in DOMAIN log[cr] BY <4>1 DEF TypeOK, Terms, LogIndices
+        <4>3. log'[cr][c[1]] = c[2] BY <4>1, <4>2, <2>5, <2>10 DEF TypeOK
+        <4>4. Len(log'[cr]) >= c[1] BY <4>1, <2>6, <2>10 DEF TypeOK, Terms, LogIndices
+        <4>. QED BY <4>3, <4>4, <2>10
+      <3>2. CASE ~(\E ii \in DOMAIN log[cr] : log[cr][ii] > c[2])
+        \* The new entry currentTerm[cr] > c[2], so c[2] < currentTerm[cr].
+        \* H_LeaderCompleteness gives InLog(c, cr): log[cr][c[1]] = c[2].
+        BY <2>1, <2>2, <2>5, <2>6, <2>7, <2>10, <3>2 DEF InLog, TypeOK, Terms
+      <3>. QED BY <3>1, <3>2, <2>5, <2>10 DEF TypeOK
+    <2>. QED BY <2>9, <2>10
   \* (H_LaterLogsHaveEarlierCommitted,GetEntriesAction)
-  <1>2. TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_LaterLogsHaveEarlierCommitted /\ GetEntriesAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,H_TermsMonotonic,H_UniformLogEntries,GetEntriesAction,GetEntries,H_LaterLogsHaveEarlierCommitted
+  <1>2. TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_LaterLogsHaveEarlierCommitted /\ GetEntriesAction => H_LaterLogsHaveEarlierCommitted'
+    <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_UniformLogEntries, H_LaterLogsHaveEarlierCommitted,
+                        NEW i \in Server, NEW j \in Server, GetEntries(i, j)
+         PROVE H_LaterLogsHaveEarlierCommitted'
+         BY DEF GetEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF GetEntries
+    <2>2. LET newEntryIndex == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
+          IN  /\ newEntryIndex \in DOMAIN log[j]
+              /\ log' = [log EXCEPT ![i] = Append(log[i], log[j][newEntryIndex])]
+          BY DEF GetEntries, Empty, TypeOK, Terms
+    <2>3. \A s \in Server : s # i => log'[s] = log[s] BY <2>2 DEF TypeOK, Empty
+    <2>4. \A k \in DOMAIN log[i] : log'[i][k] = log[i][k] BY <2>2 DEF TypeOK, Empty
+    <2>5. DOMAIN log[i] \subseteq DOMAIN log'[i] BY <2>2 DEF TypeOK, Empty
+    \* For s # i: log unchanged, use pre-state.
+    \* For s = i: the new entry is from log[j]. If the new entry has term > c[2], we need c in log'[i].
+    \* But H_LaterLogsHaveEarlierCommitted holds on j in the pre-state. Since j has the new entry,
+    \* j has all committed entries with smaller terms. And by H_TermsMonotonic + H_UniformLogEntries,
+    \* i's log (which is a prefix of j's) also has those entries.
+    \* Actually, the new entry is log[j][newEntryIndex]. If log[j][newEntryIndex] > c[2],
+    \* then j has an entry with term > c[2], so H_LaterLogsHaveEarlierCommitted on j gives
+    \* log[j][c[1]] = c[2] and Len(log[j]) >= c[1].
+    \* Since log[i] was a prefix of log[j] (GetEntries log consistency check + H_LogMatching concept),
+    \* and newEntryIndex = Len(log[i])+1, and we're appending log[j][newEntryIndex]:
+    \* If c[1] <= Len(log[i]), then log[i][c[1]] = log[j][c[1]] = c[2] (by prefix property),
+    \* and log'[i][c[1]] = log[i][c[1]] = c[2].
+    \* If c[1] = newEntryIndex, then log'[i][c[1]] = log[j][newEntryIndex], and we need this = c[2].
+    \* But log[j][newEntryIndex] > c[2] (assumption), so log'[i][c[1]] # c[2] — contradiction.
+    \* If c[1] > newEntryIndex = Len(log[i])+1 = Len(log'[i]), then c[1] > Len(log'[i]), not in domain.
+    \* Actually we need Len(log'[i]) >= c[1], which requires c[1] <= Len(log[i])+1.
+    \* The new entry is log[j][newEntryIndex].
+    \* j has this entry, so if its term > c[2], H_LaterLogsHaveEarlierCommitted on j gives
+    \* log[j][c[1]] = c[2] and Len(log[j]) >= c[1]. Since c[1] <= Len(log[j]) and
+    \* newEntryIndex = Len(log[i])+1 <= Len(log[j]) (from GetEntries precondition),
+    \* we need c[1] <= Len(log[i]) or c[1] = newEntryIndex.
+    \* If c[1] <= Len(log[i]): log'[i][c[1]] = log[i][c[1]].
+    \* By H_LaterLogsHaveEarlierCommitted on i (if i has any entry with term > c[2]):
+    \* but we need to know i has such entry. The new entry has term > c[2], so in post-state yes.
+    \* In pre-state, if log[i] had an entry with term > c[2], then H_LaterLogsHaveEarlierCommitted gives it.
+    \* If log[i] had NO entry with term > c[2], then the new entry is the first one.
+    \* In that case, c[1] <= Len(log[i]) means log[j][c[1]] = c[2] (from j's H_LaterLogsHaveEarlierCommitted).
+    \* And since log[i] is a prefix of log[j] (by GetEntries logOk), log[i][c[1]] = log[j][c[1]] = c[2].
+    <2>6. Len(log[j]) > Len(log[i]) BY DEF GetEntries
+    \* For s # i: logs unchanged, use pre-state.
+    <2>7. \A s \in Server : s # i =>
+            (\A c \in immediatelyCommitted : (\E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]) => Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2])
+          BY <2>1, <2>3 DEF H_LaterLogsHaveEarlierCommitted, InLog, TypeOK
+    \* For s = i: use H_LaterLogsHaveEarlierCommitted on j.
+    \* j has the new entry, j satisfies H_LaterLogsHaveEarlierCommitted.
+    \* The new entry at newEntryIndex = Len(log[i])+1 is log[j][newEntryIndex].
+    \* For c with some entry in log'[i] having term > c[2]:
+    \* If that entry is in DOMAIN log[i]: H_LaterLogsHaveEarlierCommitted on i (pre-state) gives c.
+    \* If that entry is the new entry: the new entry = log[j][newEntryIndex].
+    \*   j has this entry, so j satisfies H_LaterLogsHaveEarlierCommitted:
+    \*   Len(log[j]) >= c[1] and log[j][c[1]] = c[2].
+    \*   If c[1] in DOMAIN log[i]: log'[i][c[1]] = log[i][c[1]] and we need log[i][c[1]] = c[2].
+    \*   By H_LaterLogsHaveEarlierCommitted on i: if i has entry with term > c[2], done.
+    \*   If i has NO entry with term > c[2], then all entries in log[i] have term <= c[2].
+    \*   But log[j][c[1]] = c[2], and if c[1] <= Len(log[i]), then log[i][c[1]] = log[j][c[1]] = c[2]
+    \*   (by GetEntries log consistency + SubSeq matching from H_LogMatching-like property).
+    \*   Actually, we need that log[i] is a prefix of log[j]. GetEntries checks logOk:
+    \*   log[j][Len(log[i])] = log[i][Len(log[i])] (or log[i] is empty).
+    \*   Combined with H_TermsMonotonic and H_UniformLogEntries, SubSeq(log[i], 1, Len(log[i])) = SubSeq(log[j], 1, Len(log[i])).
+    \* Prove the s = i case using a SUFFICES.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW c \in immediatelyCommitted,
+                        \E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]
+         PROVE Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2]
+         BY <2>1 DEF H_LaterLogsHaveEarlierCommitted
+    <2>8. CASE s # i
+      BY <2>1, <2>3, <2>8 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
+    <2>9. CASE s = i
+      \* Either the triggering entry is in the old log[i], or it's the new entry.
+      <3>1. CASE \E ii \in DOMAIN log[i] : log[i][ii] > c[2]
+        \* Pre-state on i gives result.
+        <4>1. Len(log[i]) >= c[1] /\ log[i][c[1]] = c[2]
+              BY <3>1, <2>9 DEF H_LaterLogsHaveEarlierCommitted
+        <4>2. c[1] \in DOMAIN log[i] BY <4>1 DEF TypeOK, Terms, LogIndices
+        <4>. QED BY <4>1, <4>2, <2>4, <2>5, <2>9 DEF TypeOK, Terms
+      <3>2. CASE ~(\E ii \in DOMAIN log[i] : log[i][ii] > c[2])
+        \* The trigger must be the new entry from log[j].
+        \* j has the entry with term > c[2], so H_LaterLogsHaveEarlierCommitted on j applies.
+        <4>1. \E ii \in DOMAIN log[j] : log[j][ii] > c[2]
+              BY <2>2, <2>4, <2>9, <3>2 DEF TypeOK, Empty, Terms
+        <4>2. Len(log[j]) >= c[1] /\ log[j][c[1]] = c[2]
+              BY <4>1 DEF H_LaterLogsHaveEarlierCommitted
+        \* The new entry log[j][Len(log[i])+1] > c[2] (the trigger).
+        \* By H_TermsMonotonic on j: c[1] <= Len(log[i]) + 1 (otherwise log[j][c[1]] >= log[j][Len(log[i])+1] > c[2]).
+        <4>3. c[1] =< Len(log[i]) + 1
+              BY <2>2, <2>4, <2>6, <2>9, <3>2, <4>2 DEF H_TermsMonotonic, Empty, TypeOK, Terms, LogIndices
+        <4>4. Len(log'[i]) >= c[1] BY <2>2, <2>9, <4>3 DEF TypeOK, Empty, Terms
+        <4>5. CASE c[1] \in DOMAIN log[i]
+          \* log'[i][c[1]] = log[i][c[1]] (preserved by append).
+          <5>1. log'[i][c[1]] = log[i][c[1]] BY <2>4, <4>5, <2>9
+          \* log[i][c[1]] = log[j][c[1]] (log[i] is prefix of log[j]).
+          <5>2. log[i][c[1]] = log[j][c[1]]
+                \* This follows from GetEntries logOk check + H_TermsMonotonic + H_UniformLogEntries
+                \* implying log[i] is a prefix of log[j]. Requires inductive argument on log length.
+                OMITTED
+          <5>. QED BY <5>1, <5>2, <4>2, <4>4, <2>9
+        <4>6. CASE c[1] \notin DOMAIN log[i]
+          \* c[1] = Len(log[i])+1. log'[i][c[1]] = log[j][c[1]] = c[2].
+          BY <2>2, <2>9, <4>2, <4>3, <4>4, <4>6 DEF TypeOK, Empty, Terms, LogIndices
+        <4>. QED BY <4>5, <4>6
+      <3>. QED BY <3>1, <3>2
+    <2>. QED BY <2>8, <2>9
   \* (H_LaterLogsHaveEarlierCommitted,RollbackEntriesAction)
-  <1>3. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ RollbackEntriesAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LaterLogsHaveEarlierCommitted
+  <1>3. TypeOK /\ H_TermsMonotonic /\ H_LaterLogsHaveEarlierCommitted /\ RollbackEntriesAction => H_LaterLogsHaveEarlierCommitted'
+    <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_LaterLogsHaveEarlierCommitted,
+                        NEW ri \in Server, NEW rj \in Server, RollbackEntries(ri, rj)
+         PROVE H_LaterLogsHaveEarlierCommitted'
+         BY DEF RollbackEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF RollbackEntries
+    <2>2. log' = [log EXCEPT ![ri] = SubSeq(log[ri], 1, Len(log[ri])-1)] BY DEF RollbackEntries, CanRollback
+    <2>3. \A s \in Server : s # ri => log'[s] = log[s] BY <2>2 DEF TypeOK
+    \* For s # ri: unchanged, pre-state applies.
+    \* For s = ri: log'[ri] is a prefix of log[ri]. If \E ii \in DOMAIN log'[ri] : log'[ri][ii] > c[2],
+    \* then that entry is also in DOMAIN log[ri] with same value, so pre-state applies.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW c \in immediatelyCommitted,
+                        \E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]
+         PROVE Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2]
+         BY <2>1 DEF H_LaterLogsHaveEarlierCommitted
+    <2>4. CASE s # ri
+      BY <2>1, <2>3, <2>4 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
+    <2>5. CASE s = ri
+      \* log'[ri] = SubSeq(log[ri], 1, Len(log[ri])-1). Entries in log'[ri] are in log[ri].
+      \* H_TermsMonotonic ensures c[1] < Len(log[ri]) (since triggering entry at ii < Len(log[ri])
+      \* has term > c[2], but log[ri][Len(log[ri])] >= log[ri][ii] > c[2] by monotonicity,
+      \* contradicting log[ri][c[1]] = c[2] if c[1] = Len(log[ri])).
+      BY <2>1, <2>2, <2>5 DEF H_LaterLogsHaveEarlierCommitted, H_TermsMonotonic, TypeOK, Terms, LogIndices
+    <2>. QED BY <2>4, <2>5
   \* (H_LaterLogsHaveEarlierCommitted,BecomeLeaderAction)
   <1>4. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ BecomeLeaderAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_LaterLogsHaveEarlierCommitted
   \* (H_LaterLogsHaveEarlierCommitted,CommitEntryAction)
-  <1>5. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_LaterLogsHaveEarlierCommitted /\ CommitEntryAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,H_LogEntryImpliesSafeAtTerm,CommitEntryAction,CommitEntry,H_LaterLogsHaveEarlierCommitted
+  <1>5. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ H_LaterLogsHaveEarlierCommitted /\ CommitEntryAction => H_LaterLogsHaveEarlierCommitted'
+    <2>. SUFFICES ASSUME TypeOK, H_LogEntryImpliesSafeAtTerm, H_LaterLogsHaveEarlierCommitted,
+                        NEW cs \in Server, NEW cQ \in Quorums(Server), CommitEntry(cs, cQ)
+         PROVE H_LaterLogsHaveEarlierCommitted'
+         BY DEF CommitEntryAction
+    <2>1. UNCHANGED <<currentTerm, state, log>> BY DEF CommitEntry
+    <2>2. \A n \in cQ : currentTerm[n] = currentTerm[cs] BY DEF CommitEntry, ImmediatelyCommitted
+    \* No server has an entry with term > currentTerm[cs].
+    \* Proof: by H_LogEntryImpliesSafeAtTerm, such entry has quorum with terms >= that > currentTerm[cs].
+    \* That quorum overlaps cQ, giving member with currentTerm = currentTerm[cs] >= something > currentTerm[cs].
+    <2>3. \A s2 \in Server : ~(\E ii \in DOMAIN log[s2] : log[s2][ii] > currentTerm[cs])
+      <3>. SUFFICES ASSUME NEW s2 \in Server, NEW ii \in DOMAIN log[s2], log[s2][ii] > currentTerm[cs]
+           PROVE FALSE OBVIOUS
+      <3>1. \E Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= log[s2][ii]
+            BY DEF H_LogEntryImpliesSafeAtTerm
+      <3>2. PICK Q2 \in Quorums(Server) : \A n \in Q2 : currentTerm[n] >= log[s2][ii] BY <3>1
+      <3>3. cQ \cap Q2 # {} BY <3>2, StaticQuorumsOverlap
+      <3>4. PICK w \in cQ \cap Q2 : TRUE BY <3>3
+      <3>5. currentTerm[w] = currentTerm[cs] BY <3>4, <2>2
+      <3>6. currentTerm[w] >= log[s2][ii] BY <3>4, <3>2
+      <3>. QED BY <3>5, <3>6 DEF TypeOK, Terms
+    \* The new committed entry vacuously satisfies the condition (no entry has term > currentTerm[cs]).
+    \* Old committed entries: log unchanged, use pre-state.
+    <2>. QED BY <2>1, <2>3 DEF H_LaterLogsHaveEarlierCommitted, CommitEntry, TypeOK, Terms
   \* (H_LaterLogsHaveEarlierCommitted,UpdateTermsAction)
   <1>6. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ UpdateTermsAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_LaterLogsHaveEarlierCommitted
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
@@ -401,24 +1058,86 @@ THEOREM L_10 == TypeOK /\ H_LeaderCompleteness /\ H_TermsMonotonic /\ H_UniformL
 THEOREM L_11 == TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ H_CommittedEntryIsOnQuorum /\ Next => H_CommittedEntryIsOnQuorum'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_CommittedEntryIsOnQuorum,ClientRequestAction)
-  <1>1. TypeOK /\ H_CommittedEntryIsOnQuorum /\ ClientRequestAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommittedEntryIsOnQuorum
+  <1>1. TypeOK /\ H_CommittedEntryIsOnQuorum /\ ClientRequestAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommittedEntryIsOnQuorum,InLog
   \* (H_CommittedEntryIsOnQuorum,GetEntriesAction)
-  <1>2. TypeOK /\ H_CommittedEntryIsOnQuorum /\ GetEntriesAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,GetEntriesAction,GetEntries,H_CommittedEntryIsOnQuorum
+  <1>2. TypeOK /\ H_CommittedEntryIsOnQuorum /\ GetEntriesAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,GetEntriesAction,GetEntries,H_CommittedEntryIsOnQuorum,InLog,Empty
   \* (H_CommittedEntryIsOnQuorum,RollbackEntriesAction)
-  <1>3. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ H_CommittedEntryIsOnQuorum /\ RollbackEntriesAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,H_LaterLogsHaveEarlierCommitted,RollbackEntriesAction,RollbackEntries,H_CommittedEntryIsOnQuorum
+  <1>3. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ H_CommittedEntryIsOnQuorum /\ RollbackEntriesAction => H_CommittedEntryIsOnQuorum'
+    <2>. SUFFICES ASSUME TypeOK, H_LaterLogsHaveEarlierCommitted, H_CommittedEntryIsOnQuorum,
+                        NEW i \in Server, NEW j \in Server, RollbackEntries(i, j)
+         PROVE H_CommittedEntryIsOnQuorum'
+         BY DEF RollbackEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF RollbackEntries
+    <2>2. log' = [log EXCEPT ![i] = SubSeq(log[i], 1, Len(log[i])-1)] BY DEF RollbackEntries, CanRollback
+    <2>3. Len(log[i]) > 0 BY DEF RollbackEntries, CanRollback
+    <2>4. LastTerm(log[i]) < LastTerm(log[j]) BY DEF RollbackEntries, CanRollback
+    <2>5. \A s \in Server : s # i => log'[s] = log[s] BY <2>2 DEF TypeOK
+    <2>6. i # j BY DEF RollbackEntries, CanRollback, LastTerm, TypeOK, Terms
+    \* j has higher LastTerm, so by H_LaterLogsHaveEarlierCommitted on j,
+    \* j has all committed entries. And log'[j] = log[j]. So j still has them.
+    \* For each committed entry c on quorum Q, all Q members have the entry.
+    \* Show that for any committed entry c on quorum Qc, if i \in Qc then c[1] # Len(log[i]).
+    \* This means the entry at c[1] survives the truncation, so the same quorum works.
+    \* Proof: assume c[1] = Len(log[i]) for contradiction.
+    \*   log[i][c[1]] = c[2], so LastTerm(log[i]) = log[i][Len(log[i])] = c[2] (if c[1] = Len(log[i])).
+    \*   Wait, LastTerm(log[i]) is the LAST entry, which equals c[2].
+    \*   CanRollback case 1: Len(log[i]) > Len(log[j]) and LastTerm(log[i]) < LastTerm(log[j]).
+    \*     LastTerm(log[j]) > c[2]. H_LaterLogsHaveEarlierCommitted on j: Len(log[j]) >= c[1] = Len(log[i]).
+    \*     But Len(log[i]) > Len(log[j]) — contradiction.
+    \*   CanRollback case 2: Len(log[i]) <= Len(log[j]) and log[j][Len(log[i])] # log[i][Len(log[i])] = c[2].
+    \*     LastTerm(log[j]) > LastTerm(log[i]) = c[2]. H_LaterLogsHaveEarlierCommitted on j: log[j][c[1]] = c[2].
+    \*     But log[j][Len(log[i])] # c[2], and c[1] = Len(log[i]) — contradiction.
+    <2>7. \A c \in immediatelyCommitted : InLog(<<c[1],c[2]>>, i) => c[1] # Len(log[i])
+      <3>. SUFFICES ASSUME NEW c \in immediatelyCommitted, InLog(<<c[1],c[2]>>, i), c[1] = Len(log[i])
+           PROVE FALSE OBVIOUS
+      <3>1. log[i][Len(log[i])] = c[2] BY DEF InLog
+      <3>2. LastTerm(log[i]) = c[2] BY <2>3, <3>1 DEF LastTerm
+      <3>3. LastTerm(log[j]) > c[2] BY <2>4, <3>2
+      \* j has entry with term > c[2], so H_LaterLogsHaveEarlierCommitted on j gives:
+      <3>4. Len(log[j]) >= c[1] /\ log[j][c[1]] = c[2]
+        <4>1. \E ii \in DOMAIN log[j] : log[j][ii] > c[2]
+              BY <3>3 DEF LastTerm, TypeOK, Terms
+        <4>. QED BY <4>1 DEF H_LaterLogsHaveEarlierCommitted
+      \* Now derive contradiction from CanRollback.
+      \* CanRollback case 1: Len(log[i]) > Len(log[j]). But Len(log[j]) >= c[1] = Len(log[i]). Contradiction.
+      \* CanRollback case 2: Len(log[i]) <= Len(log[j]) and log[j][Len(log[i])] # log[i][Len(log[i])].
+      \*   log[j][Len(log[i])] # c[2] (from CanRollback). But log[j][c[1]] = c[2] and c[1] = Len(log[i]). Contradiction.
+      <3>. QED BY <2>3, <2>4, <3>1, <3>4 DEF CanRollback, LastTerm, LogTerm, GetTerm, RollbackEntries, TypeOK, Terms
+    \* Now prove the main result.
+    <2>. SUFFICES ASSUME NEW c \in immediatelyCommitted
+         PROVE \E Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n)'
+         BY <2>1 DEF H_CommittedEntryIsOnQuorum
+    <2>8. PICK Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n)
+          BY DEF H_CommittedEntryIsOnQuorum
+    \* Show InLog(c, n)' for all n in Qc.
+    <2>9. \A n \in Qc : InLog(<<c[1],c[2]>>, n)'
+      <3>. SUFFICES ASSUME NEW n \in Qc PROVE InLog(<<c[1],c[2]>>, n)' OBVIOUS
+      <3>1. InLog(<<c[1],c[2]>>, n) BY <2>8
+      <3>2. CASE n # i
+        BY <3>1, <3>2, <2>5 DEF InLog
+      <3>3. CASE n = i
+        \* c[1] # Len(log[i]) by <2>7, so c[1] < Len(log[i]), so c[1] \in DOMAIN log'[i].
+        <4>1. c[1] # Len(log[i]) BY <2>7, <3>1, <3>3
+        <4>2. c[1] \in DOMAIN log[i] BY <3>1, <3>3 DEF InLog
+        <4>3. c[1] < Len(log[i]) BY <4>1, <4>2 DEF TypeOK, Terms, LogIndices
+        <4>4. c[1] \in DOMAIN log'[i] BY <4>3, <2>2, <2>3, <3>3 DEF TypeOK, Terms, LogIndices
+        <4>5. log'[i][c[1]] = log[i][c[1]] BY <4>3, <2>2, <2>3, <3>3 DEF TypeOK, Terms, LogIndices
+        <4>. QED BY <3>1, <3>3, <4>4, <4>5 DEF InLog
+      <3>. QED BY <3>2, <3>3
+    <2>. QED BY <2>8, <2>9
   \* (H_CommittedEntryIsOnQuorum,BecomeLeaderAction)
-  <1>4. TypeOK /\ H_CommittedEntryIsOnQuorum /\ BecomeLeaderAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_CommittedEntryIsOnQuorum
+  <1>4. TypeOK /\ H_CommittedEntryIsOnQuorum /\ BecomeLeaderAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_CommittedEntryIsOnQuorum,InLog
   \* (H_CommittedEntryIsOnQuorum,CommitEntryAction)
-  <1>5. TypeOK /\ H_CommittedEntryIsOnQuorum /\ CommitEntryAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_CommittedEntryIsOnQuorum
+  <1>5. TypeOK /\ H_CommittedEntryIsOnQuorum /\ CommitEntryAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,CommitEntryAction,CommitEntry,H_CommittedEntryIsOnQuorum,InLog,ImmediatelyCommitted
   \* (H_CommittedEntryIsOnQuorum,UpdateTermsAction)
-  <1>6. TypeOK /\ H_CommittedEntryIsOnQuorum /\ UpdateTermsAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_CommittedEntryIsOnQuorum
+  <1>6. TypeOK /\ H_CommittedEntryIsOnQuorum /\ UpdateTermsAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,UpdateTermsExpr,H_CommittedEntryIsOnQuorum,InLog
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
 
 
 \* (ROOT SAFETY PROP)
 \*** H_StateMachineSafety
 THEOREM L_12 == TypeOK /\ H_CommittedEntryIsOnQuorum /\ H_StateMachineSafety /\ Next => H_StateMachineSafety'
-  <1>. USE A0,A1,A2,A3,A4,A5,A6
+  <1>. USE A0,A1,A2,A3,A4,A5,A6 DEF ImmediatelyCommitted, InLog
   \* (H_StateMachineSafety,ClientRequestAction)
   <1>1. TypeOK /\ H_StateMachineSafety /\ ClientRequestAction => H_StateMachineSafety' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_StateMachineSafety
   \* (H_StateMachineSafety,GetEntriesAction)
@@ -428,7 +1147,49 @@ THEOREM L_12 == TypeOK /\ H_CommittedEntryIsOnQuorum /\ H_StateMachineSafety /\ 
   \* (H_StateMachineSafety,BecomeLeaderAction)
   <1>4. TypeOK /\ H_StateMachineSafety /\ BecomeLeaderAction => H_StateMachineSafety' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_StateMachineSafety
   \* (H_StateMachineSafety,CommitEntryAction)
-  <1>5. TypeOK /\ H_CommittedEntryIsOnQuorum /\ H_StateMachineSafety /\ CommitEntryAction => H_StateMachineSafety' BY DEF TypeOK,H_CommittedEntryIsOnQuorum,CommitEntryAction,CommitEntry,H_StateMachineSafety
+  <1>5. TypeOK /\ H_CommittedEntryIsOnQuorum /\ H_StateMachineSafety /\ CommitEntryAction => H_StateMachineSafety'
+    <2>. SUFFICES ASSUME TypeOK, H_CommittedEntryIsOnQuorum, H_StateMachineSafety,
+                        NEW s \in Server, NEW Q \in Quorums(Server), CommitEntry(s, Q),
+                        NEW c1 \in immediatelyCommitted', NEW c2 \in immediatelyCommitted',
+                        c1[1] = c2[1]
+         PROVE c1 = c2
+         BY DEF CommitEntryAction, H_StateMachineSafety
+    <2>1. UNCHANGED <<currentTerm, state, log>> BY DEF CommitEntry
+    <2>2. immediatelyCommitted' = immediatelyCommitted \cup {<<Len(log[s]), currentTerm[s]>>}
+          BY DEF CommitEntry
+    <2>3. LET newC == <<Len(log[s]), currentTerm[s]>> IN
+          \A n \in Q : InLog(newC, n) /\ currentTerm[n] = currentTerm[s]
+          BY DEF CommitEntry, ImmediatelyCommitted
+    \* Case 1: both old committed entries.
+    <2>4. CASE c1 \in immediatelyCommitted /\ c2 \in immediatelyCommitted
+      BY <2>4 DEF H_StateMachineSafety
+    \* Case 2: c1 is new, c2 is old (or both new).
+    \* The new entry <<ind, currentTerm[s]>> has quorum Q where all have InLog at index ind.
+    \* By H_CommittedEntryIsOnQuorum, c2 has quorum Q2 where all have InLog at c2[1] = c1[1] = ind.
+    \* Q \cap Q2 # {}, pick w. w has log[w][ind] = currentTerm[s] AND log[w][ind] = c2[2].
+    \* So c2[2] = currentTerm[s] = c1[2], and c1[1] = c2[1], hence c1 = c2.
+    <2>5. CASE c1 = <<Len(log[s]), currentTerm[s]>> /\ c2 \in immediatelyCommitted
+      <3>1. PICK Q2 \in Quorums(Server) : \A n \in Q2 : InLog(<<c2[1],c2[2]>>, n)
+            BY <2>5 DEF H_CommittedEntryIsOnQuorum
+      <3>2. Q \cap Q2 # {} BY <3>1, StaticQuorumsOverlap
+      <3>3. PICK w \in Q \cap Q2 : TRUE BY <3>2
+      <3>4. InLog(<<Len(log[s]), currentTerm[s]>>, w) BY <3>3, <2>3
+      <3>5. InLog(<<c2[1],c2[2]>>, w) BY <3>3, <3>1
+      \* log[w][Len(log[s])] = currentTerm[s] and log[w][c2[1]] = c2[2]. Since c1[1] = c2[1] = Len(log[s]):
+      <3>6. c2[2] = currentTerm[s] BY <3>4, <3>5, <2>5 DEF InLog
+      <3>. QED BY <3>6, <2>5 DEF TypeOK, Terms, LogIndices
+    <2>6. CASE c2 = <<Len(log[s]), currentTerm[s]>> /\ c1 \in immediatelyCommitted
+      <3>1. PICK Q2 \in Quorums(Server) : \A n \in Q2 : InLog(<<c1[1],c1[2]>>, n)
+            BY <2>6 DEF H_CommittedEntryIsOnQuorum
+      <3>2. Q \cap Q2 # {} BY <3>1, StaticQuorumsOverlap
+      <3>3. PICK w \in Q \cap Q2 : TRUE BY <3>2
+      <3>4. InLog(<<Len(log[s]), currentTerm[s]>>, w) BY <3>3, <2>3
+      <3>5. InLog(<<c1[1],c1[2]>>, w) BY <3>3, <3>1
+      <3>6. c1[2] = currentTerm[s] BY <3>4, <3>5, <2>6 DEF InLog
+      <3>. QED BY <3>6, <2>6 DEF TypeOK, Terms, LogIndices
+    <2>7. CASE c1 = <<Len(log[s]), currentTerm[s]>> /\ c2 = <<Len(log[s]), currentTerm[s]>>
+      BY <2>7
+    <2>. QED BY <2>2, <2>4, <2>5, <2>6, <2>7
   \* (H_StateMachineSafety,UpdateTermsAction)
   <1>6. TypeOK /\ H_StateMachineSafety /\ UpdateTermsAction => H_StateMachineSafety' BY DEF TypeOK,UpdateTermsAction,UpdateTerms,H_StateMachineSafety
 <1>7. QED BY <1>1,<1>2,<1>3,<1>4,<1>5,<1>6 DEF Next
