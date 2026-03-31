@@ -1130,260 +1130,144 @@ THEOREM L_10 == TypeOK /\ H_LeaderCompleteness /\ H_TermsMonotonic /\ H_UniformL
   \* (H_LaterLogsHaveEarlierCommitted,GetEntriesAction)
   <1>2. TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_LaterLogsHaveEarlierCommitted /\ GetEntriesAction => H_LaterLogsHaveEarlierCommitted'
     <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_UniformLogEntries, H_LaterLogsHaveEarlierCommitted,
-                        NEW i \in Server, NEW j \in Server, GetEntries(i, j)
+                        NEW gi \in Server, NEW gj \in Server, GetEntries(gi, gj)
          PROVE H_LaterLogsHaveEarlierCommitted'
          BY DEF GetEntriesAction
     <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF GetEntries
-    <2>2. LET newEntryIndex == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
-          IN  /\ newEntryIndex \in DOMAIN log[j]
-              /\ log' = [log EXCEPT ![i] = Append(log[i], log[j][newEntryIndex])]
-          BY DEF GetEntries, Empty, TypeOK, Terms
-    <2>3. \A s \in Server : s # i => log'[s] = log[s] BY <2>2 DEF TypeOK, Empty
-    <2>4. \A k \in DOMAIN log[i] : log'[i][k] = log[i][k] BY <2>2 DEF TypeOK, Empty
-    <2>5. DOMAIN log[i] \subseteq DOMAIN log'[i] BY <2>2 DEF TypeOK, Empty
-    \* For s # i: log unchanged, use pre-state.
-    \* For s = i: the new entry is from log[j]. If the new entry has term > c[2], we need c in log'[i].
-    \* But H_LaterLogsHaveEarlierCommitted holds on j in the pre-state. Since j has the new entry,
-    \* j has all committed entries with smaller terms. And by H_TermsMonotonic + H_UniformLogEntries,
-    \* i's log (which is a prefix of j's) also has those entries.
-    \* Actually, the new entry is log[j][newEntryIndex]. If log[j][newEntryIndex] > c[2],
-    \* then j has an entry with term > c[2], so H_LaterLogsHaveEarlierCommitted on j gives
-    \* log[j][c[1]] = c[2] and Len(log[j]) >= c[1].
-    \* Since log[i] was a prefix of log[j] (GetEntries log consistency check + H_LogMatching concept),
-    \* and newEntryIndex = Len(log[i])+1, and we're appending log[j][newEntryIndex]:
-    \* If c[1] <= Len(log[i]), then log[i][c[1]] = log[j][c[1]] = c[2] (by prefix property),
-    \* and log'[i][c[1]] = log[i][c[1]] = c[2].
-    \* If c[1] = newEntryIndex, then log'[i][c[1]] = log[j][newEntryIndex], and we need this = c[2].
-    \* But log[j][newEntryIndex] > c[2] (assumption), so log'[i][c[1]] # c[2] — contradiction.
-    \* If c[1] > newEntryIndex = Len(log[i])+1 = Len(log'[i]), then c[1] > Len(log'[i]), not in domain.
-    \* Actually we need Len(log'[i]) >= c[1], which requires c[1] <= Len(log[i])+1.
-    \* The new entry is log[j][newEntryIndex].
-    \* j has this entry, so if its term > c[2], H_LaterLogsHaveEarlierCommitted on j gives
-    \* log[j][c[1]] = c[2] and Len(log[j]) >= c[1]. Since c[1] <= Len(log[j]) and
-    \* newEntryIndex = Len(log[i])+1 <= Len(log[j]) (from GetEntries precondition),
-    \* we need c[1] <= Len(log[i]) or c[1] = newEntryIndex.
-    \* If c[1] <= Len(log[i]): log'[i][c[1]] = log[i][c[1]].
-    \* By H_LaterLogsHaveEarlierCommitted on i (if i has any entry with term > c[2]):
-    \* but we need to know i has such entry. The new entry has term > c[2], so in post-state yes.
-    \* In pre-state, if log[i] had an entry with term > c[2], then H_LaterLogsHaveEarlierCommitted gives it.
-    \* If log[i] had NO entry with term > c[2], then the new entry is the first one.
-    \* In that case, c[1] <= Len(log[i]) means log[j][c[1]] = c[2] (from j's H_LaterLogsHaveEarlierCommitted).
-    \* And since log[i] is a prefix of log[j] (by GetEntries logOk), log[i][c[1]] = log[j][c[1]] = c[2].
-    <2>6. Len(log[j]) > Len(log[i]) BY DEF GetEntries
-    \* For s # i: logs unchanged, use pre-state.
-    <2>7. \A s \in Server : s # i =>
-            (\A c \in immediatelyCommitted : (\E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]) => Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2])
-          BY <2>1, <2>3 DEF H_LaterLogsHaveEarlierCommitted, InLog, TypeOK
-    \* For s = i: use H_LaterLogsHaveEarlierCommitted on j.
-    \* j has the new entry, j satisfies H_LaterLogsHaveEarlierCommitted.
-    \* The new entry at newEntryIndex = Len(log[i])+1 is log[j][newEntryIndex].
-    \* For c with some entry in log'[i] having term > c[2]:
-    \* If that entry is in DOMAIN log[i]: H_LaterLogsHaveEarlierCommitted on i (pre-state) gives c.
-    \* If that entry is the new entry: the new entry = log[j][newEntryIndex].
-    \*   j has this entry, so j satisfies H_LaterLogsHaveEarlierCommitted:
-    \*   Len(log[j]) >= c[1] and log[j][c[1]] = c[2].
-    \*   If c[1] in DOMAIN log[i]: log'[i][c[1]] = log[i][c[1]] and we need log[i][c[1]] = c[2].
-    \*   By H_LaterLogsHaveEarlierCommitted on i: if i has entry with term > c[2], done.
-    \*   If i has NO entry with term > c[2], then all entries in log[i] have term <= c[2].
-    \*   But log[j][c[1]] = c[2], and if c[1] <= Len(log[i]), then log[i][c[1]] = log[j][c[1]] = c[2]
-    \*   (by GetEntries log consistency + SubSeq matching from H_LogMatching-like property).
-    \*   Actually, we need that log[i] is a prefix of log[j]. GetEntries checks logOk:
-    \*   log[j][Len(log[i])] = log[i][Len(log[i])] (or log[i] is empty).
-    \*   Combined with H_TermsMonotonic and H_UniformLogEntries, SubSeq(log[i], 1, Len(log[i])) = SubSeq(log[j], 1, Len(log[i])).
-    \* Prove the s = i case using a SUFFICES.
-    <2>. SUFFICES ASSUME NEW s \in Server, NEW c \in immediatelyCommitted,
-                        \E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]
-         PROVE Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2]
-         BY <2>1 DEF H_LaterLogsHaveEarlierCommitted
-    <2>8. CASE s # i
-      BY <2>1, <2>3, <2>8 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
-    <2>9. CASE s = i
-      \* Either the triggering entry is in the old log[i], or it's the new entry.
-      <3>1. CASE \E ii \in DOMAIN log[i] : log[i][ii] > c[2]
-        \* Pre-state on i gives result.
-        <4>1. Len(log[i]) >= c[1] /\ log[i][c[1]] = c[2]
-              BY <3>1, <2>9 DEF H_LaterLogsHaveEarlierCommitted
-        <4>2. c[1] \in DOMAIN log[i] BY <4>1 DEF TypeOK, Terms, LogIndices
-        <4>. QED BY <4>1, <4>2, <2>4, <2>5, <2>9 DEF TypeOK, Terms
-      <3>2. CASE ~(\E ii \in DOMAIN log[i] : log[i][ii] > c[2])
-        \* The trigger must be the new entry from log[j].
-        \* j has the entry with term > c[2], so H_LaterLogsHaveEarlierCommitted on j applies.
-        <4>1. \E ii \in DOMAIN log[j] : log[j][ii] > c[2]
-              BY <2>2, <2>4, <2>9, <3>2 DEF TypeOK, Empty, Terms
-        <4>2. Len(log[j]) >= c[1] /\ log[j][c[1]] = c[2]
-              BY <4>1 DEF H_LaterLogsHaveEarlierCommitted
-        \* The new entry log[j][Len(log[i])+1] > c[2] (the trigger).
-        \* By H_TermsMonotonic on j: c[1] <= Len(log[i]) + 1 (otherwise log[j][c[1]] >= log[j][Len(log[i])+1] > c[2]).
-        <4>3. c[1] =< Len(log[i]) + 1
-              BY <2>2, <2>4, <2>6, <2>9, <3>2, <4>2 DEF H_TermsMonotonic, Empty, TypeOK, Terms, LogIndices
-        <4>4. Len(log'[i]) >= c[1] BY <2>2, <2>9, <4>3 DEF TypeOK, Empty, Terms
-        <4>5. CASE c[1] \in DOMAIN log[i]
-          \* log'[i][c[1]] = log[i][c[1]] (preserved by append).
-          <5>1. log'[i][c[1]] = log[i][c[1]] BY <2>4, <4>5, <2>9
-          \* log[i][c[1]] = log[j][c[1]] (log[i] is prefix of log[j]).
-          \* log[i] is a prefix of log[j]: GetEntries logOk + H_TermsMonotonic + H_UniformLogEntries.
-          <5>a. (Len(log[i]) > 0) => log[j][Len(log[i])] = log[i][Len(log[i])]
-                BY DEF GetEntries, Empty
-          <5>b. \A kk \in DOMAIN log[i] : log[i][kk] =< c[2]
-                BY <3>2, <2>9 DEF TypeOK, Terms
-          \* If log[i][c[1]] < c[2] = log[j][c[1]], derive contradiction.
-          \* log[j][Len(log[i])] = log[i][Len(log[i])] (logOk). By H_TermsMonotonic on j,
-          \* log[j][c[1]] <= log[j][Len(log[i])] = log[i][Len(log[i])] <= c[2] (by <5>b).
-          \* But log[j][c[1]] = c[2], so log[j][Len(log[i])] >= c[2], meaning log[i][Len(log[i])] >= c[2].
-          \* Combined with <5>b: log[i][Len(log[i])] = c[2]. So log[j][Len(log[i])] = c[2].
-          \* By H_TermsMonotonic on j: log[j][c[1]] <= log[j][Len(log[i])] when c[1] <= Len(log[i]).
-          \* So c[2] = log[j][c[1]] <= log[j][Len(log[i])] = c[2]. Equality throughout.
-          \* By H_TermsMonotonic on i: log[i][c[1]] <= log[i][Len(log[i])] = c[2].
-          \* We need log[i][c[1]] = c[2]. Suppose log[i][c[1]] < c[2].
-          \* Then log[j] has entry c[2] at c[1] but log[i] has a different (smaller) entry.
-          \* By H_UniformLogEntries on (j, i, c[1]): if no earlier entry in log[j] has term c[2],
-          \* then log[i] can't have c[2] at index < c[1]. But the question is about c[1] itself.
-          \* Actually by H_UniformLogEntries on (j, i, Len(log[i])): log[j] has c[2] at Len(log[i]),
-          \* and if all earlier entries in log[j] differ from c[2], then log[i] has no c[2] at index < Len(log[i]).
-          \* But log[i][Len(log[i])] = c[2]. H_UniformLogEntries doesn't directly give us c[1].
-          \* The actual proof: by H_TermsMonotonic on i, the entries form a non-decreasing sequence.
-          \* log[i][Len(log[i])] = c[2] = max term. So all entries at index > some threshold have term c[2].
-          \* Similarly for j. If log[i][c[1]] < c[2] but log[j][c[1]] = c[2], then j has c[2]
-          \* starting earlier than i. By H_UniformLogEntries, if c[2] first appears at index k in j's log,
-          \* then no other log has c[2] at index < k. Since i has c[2] at Len(log[i]) and j has c[2] at c[1] < Len(log[i]),
-          \* the "first appearance" in j is at some index <= c[1]. H_UniformLogEntries would then say
-          \* log[i] can't have c[2] at index < that first appearance. But log[i] has c[2] at Len(log[i])
-          \* which is >= c[1] >= first appearance. So that's consistent.
-          \* Hmm, this is getting circular. Let me just provide more facts to the prover.
-          <5>c. Len(log[i]) > 0 BY <4>5 DEF TypeOK
-          <5>d. Len(log[i]) \in DOMAIN log[j] BY <2>6, <5>c DEF TypeOK, Terms
-          <5>e. log[i][Len(log[i])] = log[j][Len(log[i])] BY <5>a, <5>c
-          <5>f. c[1] =< Len(log[i]) BY <4>5 DEF TypeOK
-          <5>2. log[i][c[1]] = log[j][c[1]]
-            <6>1. CASE c[1] = Len(log[i])
-              BY <6>1, <5>e
-            <6>2. CASE c[1] # Len(log[i])
-              <7>1. c[1] < Len(log[i]) BY <6>2, <5>f DEF TypeOK, Terms, LogIndices
-              <7>2. c[1] \in DOMAIN log[j] BY <7>1, <2>6 DEF TypeOK, Terms, LogIndices
-              <7>3. log[j][c[1]] =< log[j][Len(log[i])]
-                    BY <7>1, <7>2, <5>d DEF H_TermsMonotonic, TypeOK, Terms
-              <7>4. log[i][Len(log[i])] = c[2]
-                    BY <7>3, <5>b, <5>c, <5>e, <4>2 DEF TypeOK, Terms
-              \* Suppose log[i][c[1]] < c[2]. Then c[2] first appears in log[i] after c[1].
-              \* By H_TermsMonotonic on i: all entries at index <= c[1] have term <= log[i][c[1]] < c[2].
-              <7>5. \A kk \in DOMAIN log[i] : kk =< c[1] => log[i][kk] =< log[i][c[1]]
-                    BY <7>1, <4>5 DEF H_TermsMonotonic, TypeOK, Terms
-              \* So no entry in log[i] at index <= c[1] has term c[2].
-              \* But log[i][Len(log[i])] = c[2] and Len(log[i]) > c[1], so c[2] appears in log[i].
-              \* By H_UniformLogEntries: the first index in log[i] with term c[2] determines
-              \* that no other log has c[2] at an earlier index.
-              \* Since all entries in log[i] at index <= c[1] are < c[2] (if log[i][c[1]] < c[2]),
-              \* the first occurrence of c[2] in log[i] is at some fi > c[1].
-              \* H_UniformLogEntries on (i, j, fi): ~\E k \in DOMAIN log[j] : log[j][k] = c[2] /\ k < fi.
-              \* But log[j][c[1]] = c[2] and c[1] < fi. Contradiction.
-              \* Assume log[i][c[1]] # c[2] for contradiction.
-              <7>6. SUFFICES ASSUME log[i][c[1]] # c[2] PROVE FALSE
-                    BY <4>2 \* If log[i][c[1]] = c[2] = log[j][c[1]], done.
-              <7>7. log[i][c[1]] < c[2] BY <7>6, <5>b, <4>5 DEF TypeOK, Terms
-              \* All entries at index <= c[1] have term < c[2] (by H_TermsMonotonic + <7>7).
-              <7>8. \A kk \in DOMAIN log[i] : kk =< c[1] => log[i][kk] < c[2]
-                    BY <7>5, <7>7, <4>5 DEF TypeOK, Terms
-              \* log[i] has c[2] at Len(log[i]) > c[1]. Pick the smallest index fi > c[1] with term c[2].
-              \* By H_TermsMonotonic, fi exists (Len(log[i]) works) and \A kk < fi : log[i][kk] # c[2].
-              \* H_UniformLogEntries on (i, j, fi): ~\E k \in DOMAIN log[j] : log[j][k] = c[2] /\ k < fi.
-              \* But c[1] < fi and log[j][c[1]] = c[2]. Contradiction.
-              \* Len(log[i]) has term c[2], but all entries <= c[1] have term < c[2].
-              \* So there exists some index fi > c[1] with log[i][fi] = c[2] and all earlier entries # c[2].
-              \* Use H_UniformLogEntries on (j, i, c[1]):
-              \* log[j][c[1]] = c[2]. The condition: \A kk \in DOMAIN log[j] : kk < c[1] => log[j][kk] # c[2].
-              \* By H_TermsMonotonic on j: log[j][kk] <= log[j][c[1]] = c[2] for kk <= c[1].
-              \* Actually we need STRICT inequality for kk < c[1].
-              \* By H_TermsMonotonic: log[j][kk] <= log[j][c[1]] = c[2]. Could have log[j][kk] = c[2].
-              \* So the H_UniformLogEntries precondition might not hold.
-              \*
-              \* Different approach: use H_UniformLogEntries on (j, i, c[1]) with the conclusion direction.
-              \* H_UniformLogEntries says: for s=j, t=i, ii=c[1]:
-              \*   if \A jj \in DOMAIN log[j] : jj < c[1] => log[j][jj] # log[j][c[1]],
-              \*   then ~\E k \in DOMAIN log[i] : log[i][k] = log[j][c[1]] /\ k < c[1].
-              \* But this only tells us about log[i] entries at index < c[1] matching c[2].
-              \* We need log[i][c[1]] = c[2], which is about index c[1] itself, not < c[1].
-              \*
-              \* Try: use H_UniformLogEntries on (i, j, Len(log[i])):
-              \* s=i, t=j, ii=Len(log[i]). log[i][Len(log[i])] = c[2].
-              \* Condition: \A jj \in DOMAIN log[i] : jj < Len(log[i]) => log[i][jj] # c[2].
-              \* Since all entries <= c[1] are < c[2] (<7>8), we need entries at c[1]+1..Len(log[i])-1 # c[2].
-              \* We don't know this.
-              \*
-              \* Let me try yet another approach: use H_TermsMonotonic + H_UniformLogEntries on (j, i, c[1]).
-              \* If \A jj < c[1] in DOMAIN log[j] : log[j][jj] # c[2]:
-              \*   H_UniformLogEntries says ~\E k \in DOMAIN log[i] : log[i][k] = c[2] /\ k < c[1].
-              \*   Since all log[i] entries at k <= c[1] have term <= log[i][c[1]] < c[2] (by <7>7, <7>5),
-              \*   trivially no entry at k < c[1] has term c[2]. No new info.
-              \* If \E jj < c[1] in DOMAIN log[j] : log[j][jj] = c[2]:
-              \*   Then by H_TermsMonotonic on j, all entries from jj..c[1] have term >= c[2].
-              \*   And log[j][c[1]] = c[2]. So log[j][jj] = c[2] for all jj..c[1] entries >= c[2],
-              \*   but they're also <= c[2] by TermsMonotonic (since later entry = c[2]). So all = c[2].
-              \*
-              \* This means in j's log, entries from some index through c[1] all have term c[2].
-              \* H_UniformLogEntries on (j, i, smallest index with c[2] in j):
-              \*   That first index fj has all earlier entries in j different from c[2].
-              \*   So ~\E k \in DOMAIN log[i] : log[i][k] = c[2] /\ k < fj.
-              \*   Since fj <= c[1] and log[i][c[1]] < c[2], this is trivially satisfied.
-              \*   Still no help for log[i][c[1]].
-              \*
-              \* I believe this step genuinely requires H_LogMatching or an inductive argument.
-              \* Since neither is available, let me OMIT and note the dependency.
-              \* Use c[1]+1 boundary argument (same as L_9).
-              <7>9. c[1] + 1 \in DOMAIN log[i] BY <7>1, <5>c DEF TypeOK, Terms, LogIndices
-              <7>10. log[i][c[1]+1] >= log[i][c[1]] BY <7>9, <4>5 DEF H_TermsMonotonic, TypeOK, Terms
-              <7>11. log[i][c[1]+1] =< c[2] BY <3>2, <7>9 DEF TypeOK, Terms
-              <7>12. CASE log[i][c[1]+1] = c[2]
-                \* Boundary at c[1]+1. All entries at index <= c[1] are < c[2] # c[2].
-                \* H_UniformLogEntries(i, j, c[1]+1): no k < c[1]+1 in log[j] has c[2].
-                \* But log[j][c[1]] = c[2] and c[1] < c[1]+1. Contradiction.
-                BY <7>8, <7>9, <7>12, <4>2 DEF H_UniformLogEntries, TypeOK, Terms, LogIndices
-              <7>13. CASE log[i][c[1]+1] # c[2]
-                <8>1. log[i][c[1]+1] < c[2] BY <7>11, <7>13, <7>9 DEF TypeOK, Terms, LogIndices
-                <8>2. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] < c[2]
-                      BY <7>8, <7>9, <7>10, <8>1 DEF H_TermsMonotonic, TypeOK, Terms
-                <8>3. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] # c[2]
-                      BY <8>2 DEF TypeOK, Terms
-                \* All entries at index <= c[1]+1 are # c[2], log[i] has c[2] somewhere after.
-                \* Same argument as <5>12 in L_9.
-                <8>4. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] =< log[i][c[1]+1]
-                      BY <7>9 DEF H_TermsMonotonic, TypeOK, Terms
-                \* Same as <6>. QED in L_9 <5>12: expand to c[1]+2 check.
-                <8>5. c[1] + 1 = Len(log[i]) \/ c[1] + 2 =< Len(log[i]) BY <7>1 DEF TypeOK, Terms, LogIndices
-                <8>6. CASE c[1] + 1 = Len(log[i])
-                  \* c[1]+1 is the last entry. log[i][Len(log[i])] = c[2]. Contradicts <7>13>.
-                  BY <8>6, <7>4, <7>13 DEF LastTerm, TypeOK, Terms
-                <8>7. CASE c[1] + 2 =< Len(log[i])
-                  <9>1. c[1] + 2 \in DOMAIN log[i] BY <8>7 DEF TypeOK, Terms, LogIndices
-                  <9>2. log[i][c[1]+2] =< c[2] BY <3>2, <9>1 DEF TypeOK, Terms
-                  <9>3. CASE log[i][c[1]+2] = c[2]
-                    \* Boundary at c[1]+2. All entries at index <= c[1]+1 are # c[2].
-                    BY <8>3, <9>1, <9>3, <4>2 DEF H_UniformLogEntries, TypeOK, Terms, LogIndices
-                  <9>4. CASE log[i][c[1]+2] # c[2]
-                    \* c[1]+2 < Len(log[i]). But c[1]+2 in DOMAIN and log[i][c[1]+2] < c[2].
-                    \* Extend: all entries <= c[1]+2 are < c[2]. Then c[1]+3...
-                    \* With bounded logs, this terminates.
-                    <10>1. log[i][c[1]+2] < c[2] BY <9>2, <9>4, <9>1 DEF TypeOK, Terms, LogIndices
-                    <10>2. \A kk \in DOMAIN log[i] : kk =< c[1]+2 => log[i][kk] < c[2]
-                           BY <8>3, <8>4, <9>1, <10>1 DEF H_TermsMonotonic, TypeOK, Terms
-                    <10>3. \A kk \in DOMAIN log[i] : kk =< c[1]+2 => log[i][kk] # c[2]
-                           BY <10>2 DEF TypeOK, Terms
-                    <10>4. c[1] + 2 = Len(log[i]) \/ c[1] + 3 =< Len(log[i]) BY <8>7, <10>1 DEF TypeOK, Terms, LogIndices
-                    <10>5. CASE c[1] + 2 = Len(log[i])
-                      BY <10>5, <7>4, <9>4 DEF LastTerm, TypeOK, Terms
-                    <10>6. CASE c[1] + 3 =< Len(log[i])
-                      BY SMTT(60), <10>3, <10>6, <4>2, <3>2, <7>4 DEF H_TermsMonotonic, H_UniformLogEntries, LastTerm, TypeOK, Terms, LogIndices
-                    <10>. QED BY <10>4, <10>5, <10>6
-                  <9>. QED BY <9>3, <9>4
-                <8>. QED BY <8>5, <8>6, <8>7
-              <7>. QED BY <7>12, <7>13
-            <6>. QED BY <6>1, <6>2
-          <5>. QED BY <5>1, <5>2, <4>2, <4>4, <2>9
-        <4>6. CASE c[1] \notin DOMAIN log[i]
-          \* c[1] = Len(log[i])+1. log'[i][c[1]] = log[j][c[1]] = c[2].
-          BY <2>2, <2>9, <4>2, <4>3, <4>4, <4>6 DEF TypeOK, Empty, Terms, LogIndices
-        <4>. QED BY <4>5, <4>6
+    <2>2. \A s \in Server : s # gi => log'[s] = log[s] BY DEF GetEntries, Empty, TypeOK
+    <2>3. \A k \in DOMAIN log[gi] : log'[gi][k] = log[gi][k] BY DEF GetEntries, Empty, TypeOK
+    <2>4. Len(log'[gi]) = Len(log[gi]) + 1 BY DEF GetEntries, Empty, TypeOK
+    \* For s # gi: log unchanged, use pre-state.
+    <2>5. \A s \in Server : s # gi =>
+            (\A c \in immediatelyCommitted : (\E ii \in DOMAIN log'[s] : log'[s][ii] > c[2]) =>
+                Len(log'[s]) >= c[1] /\ log'[s][c[1]] = c[2])
+          BY <2>1, <2>2 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
+    \* For s = gi: need to show the property for the extended log.
+    <2>6. \A c \in immediatelyCommitted : (\E ii \in DOMAIN log'[gi] : log'[gi][ii] > c[2]) =>
+            Len(log'[gi]) >= c[1] /\ log'[gi][c[1]] = c[2]
+      <3>. SUFFICES ASSUME NEW c \in immediatelyCommitted,
+                           NEW ii \in DOMAIN log'[gi], log'[gi][ii] > c[2]
+           PROVE Len(log'[gi]) >= c[1] /\ log'[gi][c[1]] = c[2]
+           OBVIOUS
+      \* Case 1: the triggering entry ii is an old entry in log[gi].
+      <3>1. CASE ii \in DOMAIN log[gi]
+            \* Old entry preserved, pre-state H_LaterLogsHaveEarlierCommitted gives the result.
+            BY <3>1, <2>3, <2>4 DEF H_LaterLogsHaveEarlierCommitted, TypeOK, Terms, LogIndices
+      \* Case 2: the triggering entry is the new entry at Len(log[gi]) + 1.
+      <3>2. CASE ii \notin DOMAIN log[gi]
+        \* ii is the new entry position: ii = Len(log[gi]) + 1.
+        <4>1. ii = Len(log[gi]) + 1
+              BY <3>2, <2>4 DEF TypeOK
+        \* The new entry = log[gj][Len(log[gi])+1], which has term > c[2].
+        <4>2. Len(log[gj]) > Len(log[gi]) BY DEF GetEntries, TypeOK
+        <4>3. Len(log[gi]) + 1 \in DOMAIN log[gj] BY <4>2 DEF TypeOK
+        <4>4. log[gj][Len(log[gi]) + 1] > c[2]
+              BY <4>1, <2>3, <2>4, <4>3 DEF GetEntries, Empty, TypeOK
+        \* So gj has an entry with term > c[2]. By H_LaterLogsHaveEarlierCommitted on gj:
+        <4>5. Len(log[gj]) >= c[1] /\ log[gj][c[1]] = c[2]
+              BY <4>3, <4>4 DEF H_LaterLogsHaveEarlierCommitted
+        \* c[1] can't be the new position (newEntry > c[2] # c[2]), so c[1] <= Len(log[gi]).
+        \* c[2] and the new entry are naturals.
+        <4>6. c[2] \in Nat /\ c[1] \in Nat /\ log[gj][Len(log[gi]) + 1] \in Nat
+             BY <4>3 DEF TypeOK
+        \* If c[1] = Len(log[gi])+1 then log[gj][c[1]] = c[2] and log[gj][c[1]] > c[2]. Contradiction.
+        <4>7. c[1] # Len(log[gi]) + 1
+             BY <4>4, <4>5, <4>6
+        \* So c[1] <= Len(log[gj]) and c[1] # Len(log[gi])+1 and Len(log[gj]) > Len(log[gi]).
+        \* We need c[1] <= Len(log[gi]), i.e. c[1] is in the old part of gi's log.
+        \* By H_TermsMonotonic on gj: if c[1] > Len(log[gi])+1 then
+        \* log[gj][Len(log[gi])+1] <= log[gj][c[1]] = c[2], contradicting log[gj][Len(log[gi])+1] > c[2].
+        \* So c[1] <= Len(log[gi])+1. Combined with <4>7: c[1] <= Len(log[gi]).
+        <4>8. c[1] <= Len(log[gi])
+             BY <4>3, <4>4, <4>5, <4>6, <4>7 DEF H_TermsMonotonic, TypeOK, Terms, LogIndices
+        <4>9. c[1] \in DOMAIN log[gi] BY <4>8 DEF TypeOK, Terms, LogIndices
+        <4>10. log'[gi][c[1]] = log[gi][c[1]] BY <4>9, <2>3
+        <4>11. Len(log'[gi]) >= c[1] BY <4>8, <2>4 DEF TypeOK, Terms
+        \* Need log[gi][c[1]] = c[2]. Case split on whether gi already has an entry > c[2].
+        <4>12. CASE \E idx \in DOMAIN log[gi] : log[gi][idx] > c[2]
+               \* Pre-state H_LaterLogsHaveEarlierCommitted on gi gives the result.
+               BY <4>10, <4>11, <4>12 DEF H_LaterLogsHaveEarlierCommitted
+        <4>13. CASE ~\E idx \in DOMAIN log[gi] : log[gi][idx] > c[2]
+          \* All entries in gi have term <= c[2].
+          <5>1. \A idx \in DOMAIN log[gi] : log[gi][idx] <= c[2]
+                BY <4>13 DEF TypeOK, Terms
+          <5>2. log[gi][c[1]] <= c[2] BY <5>1, <4>9
+          \* Prove log[gi][c[1]] = c[2] by contradiction. Assume log[gi][c[1]] < c[2].
+          <5>3. SUFFICES ASSUME log[gi][c[1]] < c[2] PROVE FALSE
+                BY <5>2, <4>6, <4>9, <4>10, <4>11 DEF TypeOK, Terms
+          \* The log consistency check in GetEntries: log[gj][Len(log[gi])] = log[gi][Len(log[gi])]
+          \* (when log[gi] non-empty). Since Len(log[gi]) >= c[1] >= 1, log[gi] is non-empty.
+          <5>4. Len(log[gi]) >= 1
+                BY <4>8 DEF TypeOK, Terms, LogIndices
+          <5>5. log[gj][Len(log[gi])] = log[gi][Len(log[gi])]
+                BY <5>4 DEF GetEntries, Empty, TypeOK
+          \* By H_TermsMonotonic on gj: log[gj][c[1]] <= log[gj][Len(log[gi])] (since c[1] <= Len(log[gi])).
+          \* log[gj][c[1]] = c[2], so c[2] <= log[gj][Len(log[gi])] = log[gi][Len(log[gi])].
+          <5>6. Len(log[gi]) \in DOMAIN log[gj] BY <4>2, <5>4 DEF TypeOK
+          <5>7. c[1] \in DOMAIN log[gj] BY <4>5 DEF TypeOK, Terms, LogIndices
+          <5>8. log[gj][c[1]] <= log[gj][Len(log[gi])]
+                BY <5>6, <5>7, <4>8 DEF H_TermsMonotonic, TypeOK
+          <5>9. c[2] <= log[gi][Len(log[gi])]
+                BY <5>8, <5>5, <4>5
+          \* So log[gi][Len(log[gi])] >= c[2]. But all entries in gi have term <= c[2].
+          \* So log[gi][Len(log[gi])] = c[2]. gi has term c[2] at Len(log[gi]).
+          <5>10. Len(log[gi]) \in DOMAIN log[gi] BY <5>4 DEF TypeOK
+          <5>11. log[gi][Len(log[gi])] <= c[2] BY <5>1, <5>10
+          <5>12. log[gi][Len(log[gi])] = c[2]
+                 BY <5>9, <5>11, <5>10, <4>6 DEF TypeOK, Terms
+          \* Now: log[gi][c[1]] < c[2] = log[gi][Len(log[gi])], and c[1] <= Len(log[gi]).
+          \* Same MinNatInSubset argument: find first occurrence of c[2] in gj at position p,
+          \* by H_UniformLogEntries c[2] can't appear before p in gi. p <= c[1].
+          \* But gi has c[2] at Len(log[gi]) >= c[1] >= p. So first occ of c[2] in gi is at some q >= p.
+          \* Since log[gi][c[1]] < c[2], q # c[1], so q > c[1] (since q >= p and either q < c[1] or q > c[1]).
+          \* Wait, q could be < c[1] too (if p < c[1] and there's an earlier occurrence).
+          \* Actually by H_UniformLogEntries first occ of c[2] in gi must be >= p,
+          \* and by H_UniformLogEntries on gi at that first occ, c[2] can't appear before it in gj.
+          \* But gj has c[2] at p. So first occ of c[2] in gi >= p, and p can't be before first occ of c[2] in gi.
+          \* Wait this means first occ of c[2] in gi = first occ of c[2] in gj = p.
+          \* So log[gi][p] = c[2] with p <= c[1].
+          \* By H_TermsMonotonic on gi: log[gi][p] <= log[gi][c[1]]. So c[2] <= log[gi][c[1]].
+          \* But log[gi][c[1]] < c[2]. Contradiction!
+          <5>. DEFINE Sgj == {k \in DOMAIN log[gj] : log[gj][k] = c[2]}
+          <5>13. Sgj \subseteq Nat BY DEF TypeOK
+          <5>14. Sgj # {} BY <5>7, <4>5
+          <5>15. PICK p \in Sgj : \A m \in Sgj : p <= m BY <5>13, <5>14, MinNatInSubset
+          <5>16. p \in DOMAIN log[gj] /\ log[gj][p] = c[2] BY <5>15
+          <5>17. p <= c[1] BY <5>15, <5>7, <4>5
+          \* All positions before p in gj have term # c[2].
+          <5>18. \A j \in DOMAIN log[gj] : j < p => log[gj][j] # log[gj][p]
+                 BY <5>16, <5>15 DEF TypeOK, Terms
+          \* By H_UniformLogEntries on gj at p: c[2] can't appear before p in gi.
+          <5>19. ~\E k \in DOMAIN log[gi] : log[gi][k] = c[2] /\ k < p
+                 BY <5>16, <5>18 DEF H_UniformLogEntries, TypeOK
+          \* gi has c[2] at Len(log[gi]) (from <5>12). First occ of c[2] in gi is at some q.
+          <5>. DEFINE Sgi == {k \in DOMAIN log[gi] : log[gi][k] = c[2]}
+          <5>20. Sgi \subseteq Nat BY DEF TypeOK
+          <5>21. Sgi # {} BY <5>10, <5>12
+          <5>22. PICK q \in Sgi : \A m \in Sgi : q <= m BY <5>20, <5>21, MinNatInSubset
+          <5>23. q \in DOMAIN log[gi] /\ log[gi][q] = c[2] BY <5>22
+          \* q >= p (from <5>19: c[2] doesn't appear before p in gi).
+          <5>24. q >= p BY <5>19, <5>23 DEF TypeOK, Terms
+          \* By H_UniformLogEntries on gi at q: c[2] can't appear before q in gj.
+          <5>25. \A j \in DOMAIN log[gi] : j < q => log[gi][j] # log[gi][q]
+                 BY <5>22, <5>23 DEF TypeOK, Terms
+          <5>26. ~\E k \in DOMAIN log[gj] : log[gj][k] = c[2] /\ k < q
+                 BY <5>23, <5>25 DEF H_UniformLogEntries, TypeOK
+          \* But gj has c[2] at p. So p >= q. Combined with q >= p: q = p.
+          <5>27. p >= q BY <5>26, <5>16 DEF TypeOK, Terms
+          <5>28. q = p BY <5>24, <5>27 DEF TypeOK, Terms
+          \* So log[gi][p] = c[2] with p <= c[1].
+          \* By H_TermsMonotonic on gi: log[gi][p] <= log[gi][c[1]].
+          <5>29. log[gi][p] = c[2] BY <5>23, <5>28
+          <5>30. p <= c[1] BY <5>17
+          <5>31. log[gi][p] <= log[gi][c[1]]
+                 BY <5>23, <5>28, <4>9, <5>30 DEF H_TermsMonotonic, TypeOK
+          \* c[2] <= log[gi][c[1]], contradicting log[gi][c[1]] < c[2].
+          <5>32. log[gi][c[1]] \in Nat BY <4>9 DEF TypeOK, Terms
+          <5>. QED BY <5>29, <5>31, <5>3, <5>32, <4>6
+        <4>. QED BY <4>12, <4>13
       <3>. QED BY <3>1, <3>2
-    <2>. QED BY <2>8, <2>9
+    <2>. QED BY <2>1, <2>5, <2>6 DEF H_LaterLogsHaveEarlierCommitted
   \* (H_LaterLogsHaveEarlierCommitted,RollbackEntriesAction)
   <1>3. TypeOK /\ H_TermsMonotonic /\ H_LaterLogsHaveEarlierCommitted /\ RollbackEntriesAction => H_LaterLogsHaveEarlierCommitted'
     <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_LaterLogsHaveEarlierCommitted,
