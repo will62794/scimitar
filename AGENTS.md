@@ -17,4 +17,6 @@ IMPORTANT: Please do not use OMITTED to skip over proof obligations and leave th
 
 If a proof obligation is unable to be proven automatically, you can try decomposing it into smaller steps and then trying to get the smaller steps to go through automatically. You can apply this process recursively until the proof obligations are small enough to be proven automatically.
 
-Also, when decomposing a goal into a set of sub-goals, always make sure that to verify that the QED step of all the sub-goals checks properly, to make sure that the decomposition is actually correct, before trying to dive in to make sure all of the sub-goals themselves are correct.
+Also, when decomposing a goal into a set of sub-goals, always make sure that to verify that the QED step of all the sub-goals checks properly, to make sure that the decomposition is actually correct, before trying to dive in to make sure all of the sub-goals themselves are correct. 
+
+Similarly, try not to decompose more than one depth level at a time e.g. try to decompose one level, check to make sure all sub-goals imply the top-level goal, and then recursively decompose more if needed.
