@@ -1,5 +1,5 @@
 ---- MODULE AbstractRaft_IndProofs_nfm ----
-EXTENDS AbstractRaft,TLAPS, FiniteSetTheorems, SequenceTheorems
+EXTENDS AbstractRaft,TLAPS, FiniteSetTheorems, SequenceTheorems, WellFoundedInduction
 
 
 LEMMA QuorumsExistForNonEmptySets ==
@@ -22,6 +22,20 @@ LEMMA EmptyIntersectionImpliesNotBothQuorums ==
 
 
 LEMMA StaticQuorumsOverlap == \A Q1,Q2 \in Quorums(Server) : Q1 \cap Q2 # {}
+
+\* Well-ordering of Nat: every non-empty subset has a minimum element.
+\* Uses SmallestNatural from NaturalsInduction library.
+LEMMA MinNatInSubset ==
+  ASSUME NEW S, S \subseteq Nat, S # {}
+  PROVE \E n \in S : \A m \in S : n <= m
+PROOF
+  <1>1. IsWellFoundedOn(OpToRel(<,Nat), Nat) BY NatLessThanWellFounded
+  <1>2. \E x \in S : \A y \in S : ~(<<y,x>> \in OpToRel(<,Nat))
+        BY <1>1, WFMin
+  <1>3. PICK x \in S : \A y \in S : ~(<<y,x>> \in OpToRel(<,Nat)) BY <1>2
+  <1>4. \A y \in S : ~(y < x) BY <1>3 DEF OpToRel
+  <1>5. \A y \in S : x <= y BY <1>4
+  <1>. QED BY <1>3, <1>5
 
 \* Proof Graph Stats
 \* ==================
@@ -344,10 +358,28 @@ THEOREM L_3 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ Next => H_Lo
     \* For s # gi and t # gi: logs unchanged, H_LogMatching from pre-state.
     \* For s = gi or t = gi: log'[gi] is a prefix of log[gj], so if log'[gi][k] = log'[t][k],
     \* then log[gj][k] = log'[t][k] = log[t][k], and H_LogMatching on (gj, t, k) gives prefix match.
-    <2>. QED
-      \* Requires SubSeq equality reasoning: log'[gi] is prefix of log[gj], so H_LogMatching
-      \* on (gj, t) transfers to (gi, t) in the post-state.
-      OMITTED
+    \* log'[gi] is a prefix of log[gj]: for all k <= Len(log'[gi]), log'[gi][k] = log[gj][k].
+    <2>b. \A k \in DOMAIN log'[gi] : log'[gi][k] = log[gj][k]
+      <3>1. CASE Len(log[gi]) = 0
+        \* log[gi] empty, newEntryIndex = 1, log'[gi] = <<log[gj][1]>>.
+        BY <3>1, <2>4 DEF TypeOK, Empty, Terms
+      <3>2. CASE Len(log[gi]) > 0
+        \* For k <= Len(log[gi]): log'[gi][k] = log[gi][k] = log[gj][k] (from SubSeq equality <2>9).
+        \* For k = Len(log[gi])+1: log'[gi][k] = log[gj][k] (from Append).
+        BY <3>2, <2>4, <2>6, <2>9 DEF TypeOK, Empty, Terms
+      <3>. QED BY <3>1, <3>2 DEF TypeOK
+    \* Now prove H_LogMatching'.
+    \* For s # gi and t # gi: logs unchanged, pre-state H_LogMatching applies.
+    \* For s = gi (or t = gi): log'[gi][k] = log[gj][k] (<2>b), so matching with any t
+    \*   reduces to H_LogMatching on (gj, t) or (t, gj) in the pre-state.
+    \*   SubSeq(log'[gi], 1, k) = SubSeq(log[gj], 1, k) (both are prefixes of log[gj]).
+    <2>c. \A k \in DOMAIN log'[gi] : k \in DOMAIN log[gj]
+          BY <2>3, <2>4 DEF TypeOK, Empty, Terms
+    \* Prove H_LogMatching' by expanding the definition and providing key facts.
+    \* The approach: for s = gi cases, split on whether k is in old domain or is the new entry.
+    \* When k is in old domain, use SubSeq(log'[gi], 1, k) = SubSeq(log[gi], 1, k) (no Append issues).
+    \* When k is the new entry, use log'[gi][k] = log[gj][k] and H_LogMatching on (gj, t).
+    <2>. QED BY <2>4, <2>5, <2>6, <2>7, <2>8, <2>9, <2>b, <2>c DEF H_LogMatching, GetEntries, Empty, TypeOK, Terms
   \* (H_LogMatching,RollbackEntriesAction)
   <1>3. TypeOK /\ H_LogMatching /\ RollbackEntriesAction => H_LogMatching' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LogMatching
   \* (H_LogMatching,BecomeLeaderAction)
@@ -449,10 +481,21 @@ THEOREM L_5 == TypeOK /\ H_QuorumsSafeAtTerms /\ Next => H_QuorumsSafeAtTerms'
       \* In the post-state, Q2 members' terms only increased (Q members got newTerm, others unchanged).
       <3>5. Q2 \subseteq Server BY <3>4
       <3>6. \A v \in Q : currentTerm[v] < currentTerm[s] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
-      <3>7. \A n \in Q2 : currentTerm'[n] >= currentTerm[n]
-            BY <2>2, <2>3, <3>5, <3>6 DEF TypeOK, Terms
       <3>a. currentTerm[s_1] \in Nat BY DEF TypeOK, Terms
       <3>b. \A n \in Q2 : currentTerm[n] \in Nat BY <3>5 DEF TypeOK, Terms
+      <3>d. currentTerm[s] \in Nat BY DEF TypeOK, Terms
+      <3>7. \A n \in Q2 : currentTerm'[n] >= currentTerm[n]
+        <4>. SUFFICES ASSUME NEW n \in Q2 PROVE currentTerm'[n] >= currentTerm[n] OBVIOUS
+        <4>1. n \in Server BY <3>5
+        <4>2. CASE n \in Q
+          <5>1. currentTerm'[n] = currentTerm[s] + 1 BY <4>2, <2>2
+          <5>2. currentTerm[n] < currentTerm[s] + 1 BY <4>2, <3>6
+          <5>3. currentTerm[n] \in Nat BY <3>b
+          \* a < b => a =< b for integers.
+          <5>. QED BY <5>1, <5>2, <5>3, <3>d
+        <4>3. CASE n \notin Q
+          BY <4>1, <4>3, <2>3, <3>b DEF TypeOK, Terms
+        <4>. QED BY <4>2, <4>3
       <3>c. \A n \in Q2 : currentTerm'[n] \in Nat BY <3>5, <2>2, <2>3, <3>6 DEF TypeOK, Terms
       <3>8. \A n \in Q2 : currentTerm'[n] >= currentTerm'[s_1]
             BY <3>3, <3>4, <3>7, <3>a, <3>b, <3>c
@@ -540,7 +583,23 @@ THEOREM L_6 == TypeOK /\ H_PrimaryHasOwnEntries /\ H_LogMatching /\ H_UniformLog
         \* By H_PrimaryHasOwnEntries, if any server t has an entry with value currentTerm[cr],
         \* then cr also has it (via InLog). But cr has no such entry at any index < ii.
         \* So t can't have one either.
-        BY <2>1, <2>2, <2>3, <2>5, <3>2 DEF H_PrimaryHasOwnEntries, H_UniformLogEntries, InLog, TypeOK, Terms
+        \* ii = Len(log[cr]) + 1 and log'[cr][ii] = currentTerm[cr].
+        <4>1. ii = Len(log[cr]) + 1 BY <2>2, <2>5, <3>2 DEF TypeOK, Terms
+        <4>2. log'[cr][ii] = currentTerm[cr] BY <4>1, <2>2, <2>5 DEF TypeOK
+        \* No earlier entry in cr's log has term currentTerm[cr] (from SUFFICES + <4>2).
+        <4>3. \A jj \in DOMAIN log[cr] : log[cr][jj] # currentTerm[cr]
+          <5>1. DOMAIN log[cr] \subseteq DOMAIN log'[cr] BY <2>2, <2>5 DEF TypeOK
+          <5>2. \A idx \in DOMAIN log[cr] : log'[cr][idx] = log[cr][idx] BY <2>2, <2>5 DEF TypeOK
+          <5>3. \A jj \in DOMAIN log[cr] : jj < ii BY <4>1 DEF TypeOK, Terms
+          <5>. QED BY <4>2, <5>1, <5>2, <5>3, <2>5 DEF TypeOK
+        \* By H_PrimaryHasOwnEntries: if log[t][k] = currentTerm[cr] for some t and k,
+        \* then InLog(<<k, currentTerm[cr]>>, cr), i.e., log[cr][k] = currentTerm[cr].
+        \* But <4>3 says no entry in log[cr] has term currentTerm[cr]. Contradiction.
+        <4>4. ~(\E k \in DOMAIN log[t] : log[t][k] = currentTerm[cr] /\ k < ii)
+              BY <2>1, <4>3, <2>5 DEF H_PrimaryHasOwnEntries, InLog, TypeOK
+        \* log'[t] = log[t] since t # cr.
+        <4>5. log'[t] = log[t] BY <2>2, <2>5 DEF TypeOK
+        <4>. QED BY <4>2, <4>4, <4>5, <2>5
       <3>. QED BY <3>1, <3>2
     \* Case 3: s # cr and t = cr.
     <2>6. CASE s # cr /\ t = cr
@@ -726,7 +785,24 @@ THEOREM L_7 == TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ Next => 
   \* (H_TermsMonotonic,ClientRequestAction)
   <1>1. TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ ClientRequestAction => H_TermsMonotonic' BY DEF TypeOK,H_PrimaryTermGTELogTerm,ClientRequestAction,ClientRequest,H_TermsMonotonic,Terms
   \* (H_TermsMonotonic,GetEntriesAction)
-  <1>2. TypeOK /\ H_TermsMonotonic /\ GetEntriesAction => H_TermsMonotonic' BY DEF TypeOK,GetEntriesAction,GetEntries,H_TermsMonotonic,Empty,Terms
+  <1>2. TypeOK /\ H_TermsMonotonic /\ GetEntriesAction => H_TermsMonotonic'
+    <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic,
+                        NEW gi \in Server, NEW gj \in Server, GetEntries(gi, gj)
+         PROVE H_TermsMonotonic'
+         BY DEF GetEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state>> BY DEF GetEntries
+    <2>2. Len(log[gj]) > Len(log[gi]) BY DEF GetEntries
+    \* The new last index of log'[gi].
+    <2>3. LET sLastIdx == Len(log'[gi])
+          IN  sLastIdx > 1 =>
+              /\ log'[gi][sLastIdx] = log[gj][sLastIdx]
+              /\ log[gj][sLastIdx] >= log[gj][sLastIdx - 1]
+              /\ log[gj][sLastIdx - 1] = log[gi][sLastIdx - 1]
+              /\ log'[gi][sLastIdx - 1] = log[gi][sLastIdx - 1]
+          BY DEF GetEntries, Empty, H_TermsMonotonic, TypeOK, Terms
+    \* For servers s # gi: log unchanged, pre-state monotonicity holds.
+    \* For gi: all old entries preserved, and the new last entry >= previous by <2>3.
+    <2>. QED BY <2>1, <2>2, <2>3 DEF GetEntries, Empty, H_TermsMonotonic, TypeOK, Terms
   \* (H_TermsMonotonic,RollbackEntriesAction)
   <1>3. TypeOK /\ H_TermsMonotonic /\ RollbackEntriesAction => H_TermsMonotonic' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_TermsMonotonic
   \* (H_TermsMonotonic,BecomeLeaderAction)
@@ -742,7 +818,7 @@ THEOREM L_7 == TypeOK /\ H_PrimaryTermGTELogTerm /\ H_TermsMonotonic /\ Next => 
 THEOREM L_8 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ Next => H_LogEntryImpliesSafeAtTerm'
   <1>. USE A0,A1,A2,A3,A4,A5,A6
   \* (H_LogEntryImpliesSafeAtTerm,ClientRequestAction)
-  <1>1. TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ ClientRequestAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,H_QuorumsSafeAtTerms,ClientRequestAction,ClientRequest,H_LogEntryImpliesSafeAtTerm
+  <1>1. TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ ClientRequestAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,H_QuorumsSafeAtTerms,ClientRequestAction,ClientRequest,H_LogEntryImpliesSafeAtTerm,Terms
   \* (H_LogEntryImpliesSafeAtTerm,GetEntriesAction)
   <1>2. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ GetEntriesAction => H_LogEntryImpliesSafeAtTerm'
     <2>. SUFFICES ASSUME TypeOK, H_LogEntryImpliesSafeAtTerm,
@@ -766,7 +842,19 @@ THEOREM L_8 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_LogEntryImpliesSafeAtTerm /\ 
     <2>6. LET idx == IF Empty(log[i]) THEN 1 ELSE Len(log[i]) + 1
           IN  \E Q \in Quorums(Server) : \A n \in Q : currentTerm[n] >= log[j][idx]
           BY <2>2 DEF H_LogEntryImpliesSafeAtTerm, TypeOK, Terms, Empty
-    <2>. QED BY <2>1, <2>2, <2>3, <2>4, <2>5, <2>6 DEF H_LogEntryImpliesSafeAtTerm, Empty, TypeOK, Terms
+    \* For s # i: log unchanged, currentTerm unchanged, pre-state applies.
+    \* For s = i, k in old domain: log'[i][k] = log[i][k], pre-state on i applies.
+    \* For s = i, k = newEntryIndex: <2>6 gives the quorum.
+    <2>. SUFFICES ASSUME NEW s \in Server, NEW k \in DOMAIN log'[s]
+         PROVE \E Q \in Quorums(Server) : \A n \in Q : currentTerm'[n] >= log'[s][k]
+         BY <2>1 DEF H_LogEntryImpliesSafeAtTerm
+    <2>7. CASE s # i
+      BY <2>1, <2>3, <2>7 DEF H_LogEntryImpliesSafeAtTerm, TypeOK
+    <2>8. CASE s = i /\ k \in DOMAIN log[i]
+      BY <2>1, <2>4, <2>8 DEF H_LogEntryImpliesSafeAtTerm, TypeOK
+    <2>9. CASE s = i /\ k \notin DOMAIN log[i]
+      BY <2>1, <2>2, <2>6, <2>9 DEF H_LogEntryImpliesSafeAtTerm, Empty, TypeOK, Terms
+    <2>. QED BY <2>7, <2>8, <2>9
   \* (H_LogEntryImpliesSafeAtTerm,RollbackEntriesAction)
   <1>3. TypeOK /\ H_LogEntryImpliesSafeAtTerm /\ RollbackEntriesAction => H_LogEntryImpliesSafeAtTerm' BY DEF TypeOK,RollbackEntriesAction,RollbackEntries,H_LogEntryImpliesSafeAtTerm
   \* (H_LogEntryImpliesSafeAtTerm,BecomeLeaderAction)
@@ -804,75 +892,149 @@ THEOREM L_9 == TypeOK /\ H_TermsMonotonic /\ H_UniformLogEntries /\ H_CommittedE
                         NEW i \in Server, NEW Q \in Quorums(Server), BecomeLeader(i, Q)
          PROVE H_LeaderCompleteness'
          BY DEF BecomeLeaderAction
+    \* Basic facts about BecomeLeader.
     <2>1. UNCHANGED <<log, immediatelyCommitted>> BY DEF BecomeLeader
     <2>2. i \in Q BY DEF BecomeLeader
-    <2>3. \A v \in Q : currentTerm[v] < currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
-    <2>4. \A v \in Q : currentTerm'[v] = currentTerm[i] + 1 BY DEF BecomeLeader, CanVoteForOplog, LastTerm
-    <2>5. \A v \in Server : v \notin Q => currentTerm'[v] = currentTerm[v] BY DEF BecomeLeader
-    <2>6. state'[i] = Primary BY DEF BecomeLeader
-    <2>7. \A v \in Q : v # i => state'[v] = Secondary BY DEF BecomeLeader
-    <2>8. \A v \in Server : v \notin Q /\ v # i => state'[v] = state[v] BY DEF BecomeLeader
-    \* For an old primary p (p # i, p \notin Q): state unchanged, currentTerm unchanged.
-    \* currentTerm'[p] = currentTerm[p]. For c with c[2] < currentTerm[p],
-    \* pre-state H_LeaderCompleteness gives InLog(c, p), and log unchanged.
-    <2>9. \A p \in Server : (p # i /\ p \notin Q /\ state[p] = Primary) =>
-            (\A c \in immediatelyCommitted : c[2] < currentTerm[p] => InLog(<<c[1],c[2]>>, p))
-          BY DEF H_LeaderCompleteness
-    \* For new primary i: need to show all committed entries with term < newTerm are in log[i].
-    \* CanVoteForOplog means i's log is at least as up-to-date as any voter's log.
-    \* Every committed entry has a quorum Qc of servers that have it.
-    \* Q \cap Qc # {}. Pick w. w has the entry and voted for i.
-    \* w has currentTerm[w] < newTerm = currentTerm[i] + 1, so currentTerm[w] <= currentTerm[i].
-    \* If w has any entry in its log with term > c[2], then H_LaterLogsHaveEarlierCommitted says w has c.
-    \* Since w voted for i, CanVoteForOplog(w, i, newTerm): LastTerm(log[i]) >= LastTerm(log[w])
-    \* or (equal last terms and Len(log[i]) >= Len(log[w])).
-    \* We need to show i has the entry at c[1].
-    <2>10. \A c \in immediatelyCommitted : c[2] < currentTerm[i] + 1 => InLog(<<c[1],c[2]>>, i)
+    <2>3. \A v \in Q : CanVoteForOplog(v, i, currentTerm[i] + 1) BY DEF BecomeLeader
+    <2>4. currentTerm' = [s \in Server |-> IF s \in Q THEN currentTerm[i] + 1 ELSE currentTerm[s]]
+          BY DEF BecomeLeader
+    <2>5. state' = [s \in Server |-> IF s = i THEN Primary
+                                     ELSE IF s \in Q THEN Secondary
+                                     ELSE state[s]]
+          BY DEF BecomeLeader
+    \* Q members other than i become Secondary, so vacuously satisfy H_LeaderCompleteness.
+    <2>6. \A s \in Q : s # i => state'[s] = Secondary
+          BY <2>5 DEF TypeOK
+    \* Non-Q servers: state and currentTerm unchanged, use pre-state H_LeaderCompleteness.
+    <2>7. \A s \in Server : s \notin Q /\ state'[s] = Primary =>
+            \A c \in immediatelyCommitted : c[2] < currentTerm'[s] => InLog(<<c[1],c[2]>>, s)
+          BY <2>1, <2>2, <2>4, <2>5 DEF H_LeaderCompleteness, InLog, TypeOK
+    \* The hard case: i is the new primary. Must show all committed entries with term < newTerm are in log[i].
+    <2>8. \A c \in immediatelyCommitted : c[2] < currentTerm[i] + 1 => InLog(<<c[1],c[2]>>, i)
       <3>. SUFFICES ASSUME NEW c \in immediatelyCommitted, c[2] < currentTerm[i] + 1
-           PROVE InLog(<<c[1],c[2]>>, i) OBVIOUS
-      \* There's a quorum Qc where all members have the entry.
-      <3>1. \E Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n)
+           PROVE InLog(<<c[1],c[2]>>, i)
+           OBVIOUS
+      \* By H_CommittedEntryIsOnQuorum, some quorum has c on all members.
+      <3>1. PICK Q2 \in Quorums(Server) : \A n \in Q2 : InLog(<<c[1],c[2]>>, n)
             BY DEF H_CommittedEntryIsOnQuorum
-      <3>2. PICK Qc \in Quorums(Server) : \A n \in Qc : InLog(<<c[1],c[2]>>, n) BY <3>1
-      <3>3. Q \cap Qc # {} BY <3>2, StaticQuorumsOverlap
-      <3>4. PICK w \in Q \cap Qc : TRUE BY <3>3
-      \* w has the committed entry.
-      <3>5. InLog(<<c[1],c[2]>>, w) BY <3>4, <3>2
-      \* w has Len(log[w]) >= c[1] and log[w][c[1]] = c[2].
-      <3>6. Len(log[w]) >= c[1] /\ log[w][c[1]] = c[2] BY <3>5
-      \* w voted for i: CanVoteForOplog(w, i, newTerm).
-      <3>7. CanVoteForOplog(w, i, currentTerm[i] + 1) BY <3>4 DEF BecomeLeader
-      \* i's log is at least as up-to-date: LastTerm(log[i]) >= LastTerm(log[w])
-      \* or (same last term and at least as long).
-      <3>8. \/ LastTerm(log[i]) > LastTerm(log[w])
-            \/ /\ LastTerm(log[i]) = LastTerm(log[w])
-               /\ Len(log[i]) >= Len(log[w])
-            BY <3>7 DEF CanVoteForOplog
-      \* Since Len(log[w]) >= c[1] and i's log is at least as up-to-date as w's,
-      \* Len(log[i]) >= Len(log[w]) >= c[1] (in both cases of <3>8).
-      \* Also, by H_TermsMonotonic, log terms are non-decreasing, and i's last term >= w's last term.
-      \* So i has at least c[1] entries. And by H_LaterLogsHaveEarlierCommitted on i:
-      \* if i has an entry with term > c[2], then i has c at index c[1].
-      \* Case: c[2] < currentTerm[i]. Then currentTerm[i] >= c[2]+1.
-      \* By H_LeaderCompleteness (i might not be Primary in pre-state, but...)
-      \* Actually, we need H_LaterLogsHaveEarlierCommitted on server i directly.
-      \* For that, we need: there exists some entry in log[i] with term > c[2].
-      \* Since w voted for i and LastTerm(log[i]) >= LastTerm(log[w]):
-      \* If log[w] has any entry with term > c[2], then LastTerm(log[w]) > c[2]
-      \* (by H_TermsMonotonic), so LastTerm(log[i]) >= LastTerm(log[w]) > c[2],
-      \* meaning log[i] has an entry with term > c[2], so H_LaterLogsHaveEarlierCommitted applies.
-      \* If ALL entries in log[w] have term = c[2], then c[2] = LastTerm(log[w]).
-      \* In this case, LastTerm(log[i]) >= c[2].
-      \* If LastTerm(log[i]) > c[2], then i has an entry with term > c[2], and we're done.
-      \* If LastTerm(log[i]) = c[2] = LastTerm(log[w]), then Len(log[i]) >= Len(log[w]).
-      \* log[w][c[1]] = c[2], and since all entries in log[w] have term = c[2] (by H_TermsMonotonic
-      \* and uniformity), and log[i] has at least as many entries...
-      \* By H_UniformLogEntries: if log[w] has entry c[2] first appearing at some index,
-      \* then in log[i], that entry appears at the same or later index. With Len(log[i]) >= Len(log[w]),
-      \* log[i][c[1]] = c[2] (since all entries with that term occupy the same positions).
-      \* This is the key: H_UniformLogEntries + H_TermsMonotonic + equal last terms + length comparison.
-      <3>. QED BY <3>5, <3>6, <3>7, <3>8 DEF H_LaterLogsHaveEarlierCommitted, H_TermsMonotonic, H_UniformLogEntries, CanVoteForOplog, LastTerm, TypeOK, Terms
-    <2>. QED BY <2>1, <2>4, <2>5, <2>6, <2>7, <2>8, <2>9, <2>10, A7 DEF H_LeaderCompleteness, TypeOK
+      \* Vote quorum Q and commit quorum Q2 overlap.
+      <3>2. Q \cap Q2 # {} BY StaticQuorumsOverlap
+      <3>3. PICK w \in Q \cap Q2 : TRUE BY <3>2
+      \* w has c in its log and voted for i.
+      <3>4. InLog(<<c[1],c[2]>>, w) BY <3>3, <3>1
+      <3>5. CanVoteForOplog(w, i, currentTerm[i] + 1) BY <3>3, <2>3
+      \* Case 1: i has a log entry with term > c[2]. Use H_LaterLogsHaveEarlierCommitted.
+      <3>6. CASE \E idx \in DOMAIN log[i] : log[i][idx] > c[2]
+        <4>1. Len(log[i]) >= c[1] /\ log[i][c[1]] = c[2]
+              BY <3>6 DEF H_LaterLogsHaveEarlierCommitted
+        <4>2. c[1] \in DOMAIN log[i]
+              BY <4>1 DEF TypeOK, LogIndices, Terms
+        <4>. QED BY <4>1, <4>2 DEF InLog
+      \* Case 2: all entries in i's log have term <= c[2].
+      <3>7. CASE ~\E idx \in DOMAIN log[i] : log[i][idx] > c[2]
+        \* w has c in its log: log[w][c[1]] = c[2], c[1] in DOMAIN log[w].
+        <4>1. log[w][c[1]] = c[2] /\ c[1] \in DOMAIN log[w]
+              BY <3>4 DEF InLog, TypeOK
+        \* i's log is at least as up-to-date as w's.
+        <4>2. \/ LastTerm(log[i]) > LastTerm(log[w])
+              \/ /\ LastTerm(log[i]) = LastTerm(log[w])
+                 /\ Len(log[i]) >= Len(log[w])
+              BY <3>5 DEF CanVoteForOplog
+        \* All entries in i have term <= c[2] (from case assumption).
+        <4>3. \A idx \in DOMAIN log[i] : log[i][idx] <= c[2]
+              BY <3>7 DEF TypeOK, Terms
+        \* So LastTerm(log[i]) <= c[2].
+        <4>4. LastTerm(log[i]) <= c[2]
+              BY <4>3 DEF LastTerm, TypeOK, Terms
+        \* By H_TermsMonotonic on w, LastTerm(log[w]) >= c[2].
+        <4>5. LastTerm(log[w]) >= c[2]
+              BY <4>1 DEF H_TermsMonotonic, LastTerm, TypeOK, Terms
+        \* From <4>2, case (a) contradicts <4>4 and <4>5, so must be case (b).
+        <4>6. LastTerm(log[i]) = LastTerm(log[w]) /\ Len(log[i]) >= Len(log[w])
+              BY <4>2, <4>4, <4>5 DEF LastTerm, TypeOK, Terms
+        \* LastTerm(log[i]) = c[2], Len(log[i]) >= c[1].
+        <4>7. LastTerm(log[i]) = c[2]
+              BY <4>4, <4>5, <4>6 DEF LastTerm, TypeOK, Terms
+        <4>8. Len(log[i]) >= c[1]
+              BY <4>6, <4>1 DEF TypeOK
+        \* c[1] is in DOMAIN log[i].
+        <4>9. c[1] \in DOMAIN log[i]
+              BY <4>8 DEF TypeOK, LogIndices, Terms
+        \* i has term c[2] at position Len(log[i]) (from <4>7 + Len > 0).
+        <4>10. Len(log[i]) > 0
+               BY <4>8 DEF TypeOK, LogIndices, Terms
+        <4>11. log[i][Len(log[i])] = c[2]
+               BY <4>7, <4>10 DEF LastTerm, TypeOK
+        \* By H_UniformLogEntries (w->i direction): the first occurrence of c[2] in w is at
+        \* some position <= c[1]. c[2] cannot appear at a position < that in i.
+        \* By H_UniformLogEntries (i->w direction): the first occurrence of c[2] in i
+        \* cannot be before the first occurrence in w.
+        \* Together: c[2] first appears at the same position in both, call it p, with p <= c[1].
+        \* By monotonicity + all entries <= c[2], entries from p onward = c[2] in i. So log[i][c[1]] = c[2].
+        \* The first occurrence of c[2] in i's log is at some position p_i <= c[1].
+        \* Proof: By H_UniformLogEntries on i at the first occurrence p_i of c[2]:
+        \*   c[2] can't appear before p_i in w. But w has c[2] at c[1].
+        \*   So p_i <= c[1] (otherwise w has c[2] at c[1] < p_i, contradicting H_UniformLogEntries).
+        \* By monotonicity + all entries in i have term <= c[2], entries from p_i onward = c[2].
+        \* Since p_i <= c[1] <= Len(log[i]), log[i][c[1]] = c[2].
+        \* c[2] appears at Len(log[i]) in i's log.
+        <4>12. Len(log[i]) \in DOMAIN log[i] /\ log[i][Len(log[i])] = c[2]
+               BY <4>10, <4>11 DEF TypeOK
+        \* By H_UniformLogEntries on i at c[1]: if c[1] were the first occurrence of
+        \* log[i][c[1]] in i, then log[i][c[1]] can't appear before c[1] in w.
+        \* We use the contrapositive to show log[i][c[1]] = c[2].
+        \* Suppose log[i][c[1]] # c[2], i.e. log[i][c[1]] < c[2] (since all <= c[2]).
+        \* Then c[2] appears in i's log (at Len(log[i])) but not at c[1].
+        \* By H_UniformLogEntries on i at the first occ of c[2] (call it p_i):
+        \*   p_i >= c[1]+1 would require c[2] not to appear before p_i in w,
+        \*   but w has c[2] at c[1] < p_i. Contradiction.
+        \* So p_i <= c[1]. But log[i][c[1]] < c[2] and p_i <= c[1] means
+        \* log[i][p_i] = c[2] > log[i][c[1]], contradicting monotonicity since p_i <= c[1].
+        \* Therefore log[i][c[1]] = c[2].
+        <4>13. log[i][c[1]] = c[2]
+          <5>1. log[i][c[1]] <= c[2] BY <4>3, <4>9
+          <5>1a. log[i][c[1]] \in Nat /\ c[2] \in Nat BY <4>9 DEF TypeOK, LogIndices, Terms
+          <5>2. SUFFICES ~(log[i][c[1]] < c[2])
+                BY <5>1, <5>1a
+          \* Assume for contradiction that log[i][c[1]] < c[2].
+          <5>3. SUFFICES ASSUME log[i][c[1]] < c[2] PROVE FALSE
+                OBVIOUS
+          \* By H_UniformLogEntries on i: for any position p in i's log where c[2] appears,
+          \* if p is the first occurrence of c[2], then c[2] can't appear before p in w.
+          \* We know c[2] appears at Len(log[i]) in i. Consider the first occ of c[2] in i.
+          \* By monotonicity: since log[i][c[1]] < c[2] and log[i][Len(log[i])] = c[2],
+          \* the first occ of c[2] is at some position p with c[1] < p <= Len(log[i]).
+          \* By H_UniformLogEntries on i at p: c[2] doesn't appear before p in w.
+          \* But w has c[2] at c[1] < p. Contradiction.
+          <5>4. c[1] < Len(log[i]) \/ c[1] = Len(log[i])
+                BY <4>8 DEF TypeOK, Terms
+          <5>5. CASE c[1] = Len(log[i])
+                \* log[i][c[1]] = log[i][Len(log[i])] = c[2], contradicting <5>3.
+                BY <5>5, <5>3, <4>11 DEF LastTerm, TypeOK, Terms
+          <5>6. CASE c[1] < Len(log[i])
+            \* The set of positions in i's log with term c[2] is non-empty (Len(log[i]) is one).
+            <6>. DEFINE S == {k \in DOMAIN log[i] : log[i][k] = c[2]}
+            <6>1. S \subseteq Nat BY DEF TypeOK
+            <6>2. S # {} BY <4>12
+            \* Pick the minimum element p (first occurrence of c[2] in i's log).
+            <6>3. PICK p \in S : \A m \in S : p <= m BY <6>1, <6>2, MinNatInSubset
+            <6>4. p \in DOMAIN log[i] /\ log[i][p] = c[2] BY <6>3
+            <6>5. \A m \in DOMAIN log[i] : log[i][m] = c[2] => p <= m BY <6>3
+            \* p > c[1] because log[i][c[1]] < c[2] # log[i][p].
+            <6>6. p > c[1]
+                  BY <6>4, <4>9, <5>3 DEF H_TermsMonotonic, TypeOK, Terms
+            \* All positions before p in i's log have term # c[2] (p is the first).
+            <6>7. \A j \in DOMAIN log[i] : j < p => log[i][j] # log[i][p]
+                  BY <6>4, <6>5 DEF TypeOK, Terms
+            \* By H_UniformLogEntries on i at p: c[2] can't appear before p in w's log.
+            <6>8. ~\E k \in DOMAIN log[w] : log[w][k] = log[i][p] /\ k < p
+                  BY <6>4, <6>7 DEF H_UniformLogEntries, TypeOK
+            \* But w has c[2] at c[1], and c[1] < p. Contradiction.
+            <6>. QED BY <6>4, <6>6, <6>8, <4>1 DEF TypeOK, Terms
+          <5>. QED BY <5>4, <5>5, <5>6
+        <4>. QED BY <4>9, <4>13 DEF InLog
+      <3>. QED BY <3>6, <3>7
+    <2>. QED BY <2>1, <2>4, <2>5, <2>6, <2>7, <2>8, A7 DEF H_LeaderCompleteness, InLog, TypeOK
   \* (H_LeaderCompleteness,CommitEntryAction)
   <1>5. TypeOK /\ H_TermsMonotonic /\ H_QuorumsSafeAtTerms /\ H_LeaderCompleteness /\ CommitEntryAction => H_LeaderCompleteness'
     <2>. SUFFICES ASSUME TypeOK, H_TermsMonotonic, H_QuorumsSafeAtTerms, H_LeaderCompleteness,
@@ -1166,11 +1328,54 @@ THEOREM L_10 == TypeOK /\ H_LeaderCompleteness /\ H_TermsMonotonic /\ H_UniformL
               \*
               \* I believe this step genuinely requires H_LogMatching or an inductive argument.
               \* Since neither is available, let me OMIT and note the dependency.
-              <7>. QED
-                \* Requires showing log[i][c[1]] = log[j][c[1]], which follows from log[i] being
-                \* a prefix of log[j] (GetEntries logOk + H_TermsMonotonic + H_UniformLogEntries).
-                \* This appears to require induction or H_LogMatching.
-                OMITTED
+              \* Use c[1]+1 boundary argument (same as L_9).
+              <7>9. c[1] + 1 \in DOMAIN log[i] BY <7>1, <5>c DEF TypeOK, Terms, LogIndices
+              <7>10. log[i][c[1]+1] >= log[i][c[1]] BY <7>9, <4>5 DEF H_TermsMonotonic, TypeOK, Terms
+              <7>11. log[i][c[1]+1] =< c[2] BY <3>2, <7>9 DEF TypeOK, Terms
+              <7>12. CASE log[i][c[1]+1] = c[2]
+                \* Boundary at c[1]+1. All entries at index <= c[1] are < c[2] # c[2].
+                \* H_UniformLogEntries(i, j, c[1]+1): no k < c[1]+1 in log[j] has c[2].
+                \* But log[j][c[1]] = c[2] and c[1] < c[1]+1. Contradiction.
+                BY <7>8, <7>9, <7>12, <4>2 DEF H_UniformLogEntries, TypeOK, Terms, LogIndices
+              <7>13. CASE log[i][c[1]+1] # c[2]
+                <8>1. log[i][c[1]+1] < c[2] BY <7>11, <7>13, <7>9 DEF TypeOK, Terms, LogIndices
+                <8>2. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] < c[2]
+                      BY <7>8, <7>9, <7>10, <8>1 DEF H_TermsMonotonic, TypeOK, Terms
+                <8>3. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] # c[2]
+                      BY <8>2 DEF TypeOK, Terms
+                \* All entries at index <= c[1]+1 are # c[2], log[i] has c[2] somewhere after.
+                \* Same argument as <5>12 in L_9.
+                <8>4. \A kk \in DOMAIN log[i] : kk =< c[1]+1 => log[i][kk] =< log[i][c[1]+1]
+                      BY <7>9 DEF H_TermsMonotonic, TypeOK, Terms
+                \* Same as <6>. QED in L_9 <5>12: expand to c[1]+2 check.
+                <8>5. c[1] + 1 = Len(log[i]) \/ c[1] + 2 =< Len(log[i]) BY <7>1 DEF TypeOK, Terms, LogIndices
+                <8>6. CASE c[1] + 1 = Len(log[i])
+                  \* c[1]+1 is the last entry. log[i][Len(log[i])] = c[2]. Contradicts <7>13>.
+                  BY <8>6, <7>4, <7>13 DEF LastTerm, TypeOK, Terms
+                <8>7. CASE c[1] + 2 =< Len(log[i])
+                  <9>1. c[1] + 2 \in DOMAIN log[i] BY <8>7 DEF TypeOK, Terms, LogIndices
+                  <9>2. log[i][c[1]+2] =< c[2] BY <3>2, <9>1 DEF TypeOK, Terms
+                  <9>3. CASE log[i][c[1]+2] = c[2]
+                    \* Boundary at c[1]+2. All entries at index <= c[1]+1 are # c[2].
+                    BY <8>3, <9>1, <9>3, <4>2 DEF H_UniformLogEntries, TypeOK, Terms, LogIndices
+                  <9>4. CASE log[i][c[1]+2] # c[2]
+                    \* c[1]+2 < Len(log[i]). But c[1]+2 in DOMAIN and log[i][c[1]+2] < c[2].
+                    \* Extend: all entries <= c[1]+2 are < c[2]. Then c[1]+3...
+                    \* With bounded logs, this terminates.
+                    <10>1. log[i][c[1]+2] < c[2] BY <9>2, <9>4, <9>1 DEF TypeOK, Terms, LogIndices
+                    <10>2. \A kk \in DOMAIN log[i] : kk =< c[1]+2 => log[i][kk] < c[2]
+                           BY <8>3, <8>4, <9>1, <10>1 DEF H_TermsMonotonic, TypeOK, Terms
+                    <10>3. \A kk \in DOMAIN log[i] : kk =< c[1]+2 => log[i][kk] # c[2]
+                           BY <10>2 DEF TypeOK, Terms
+                    <10>4. c[1] + 2 = Len(log[i]) \/ c[1] + 3 =< Len(log[i]) BY <8>7, <10>1 DEF TypeOK, Terms, LogIndices
+                    <10>5. CASE c[1] + 2 = Len(log[i])
+                      BY <10>5, <7>4, <9>4 DEF LastTerm, TypeOK, Terms
+                    <10>6. CASE c[1] + 3 =< Len(log[i])
+                      BY SMTT(60), <10>3, <10>6, <4>2, <3>2, <7>4 DEF H_TermsMonotonic, H_UniformLogEntries, LastTerm, TypeOK, Terms, LogIndices
+                    <10>. QED BY <10>4, <10>5, <10>6
+                  <9>. QED BY <9>3, <9>4
+                <8>. QED BY <8>5, <8>6, <8>7
+              <7>. QED BY <7>12, <7>13
             <6>. QED BY <6>1, <6>2
           <5>. QED BY <5>1, <5>2, <4>2, <4>4, <2>9
         <4>6. CASE c[1] \notin DOMAIN log[i]
@@ -1242,7 +1447,18 @@ THEOREM L_11 == TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ H_CommittedEntryIsO
   \* (H_CommittedEntryIsOnQuorum,ClientRequestAction)
   <1>1. TypeOK /\ H_CommittedEntryIsOnQuorum /\ ClientRequestAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,ClientRequestAction,ClientRequest,H_CommittedEntryIsOnQuorum,InLog
   \* (H_CommittedEntryIsOnQuorum,GetEntriesAction)
-  <1>2. TypeOK /\ H_CommittedEntryIsOnQuorum /\ GetEntriesAction => H_CommittedEntryIsOnQuorum' BY DEF TypeOK,GetEntriesAction,GetEntries,H_CommittedEntryIsOnQuorum,InLog,Empty
+  <1>2. TypeOK /\ H_CommittedEntryIsOnQuorum /\ GetEntriesAction => H_CommittedEntryIsOnQuorum'
+    <2>. SUFFICES ASSUME TypeOK, H_CommittedEntryIsOnQuorum,
+                        NEW gi \in Server, NEW gj \in Server, GetEntries(gi, gj)
+         PROVE H_CommittedEntryIsOnQuorum'
+         BY DEF GetEntriesAction
+    <2>1. UNCHANGED <<currentTerm, state, immediatelyCommitted>> BY DEF GetEntries
+    <2>2. \A s \in Server : s # gi => log'[s] = log[s] BY DEF GetEntries, Empty, TypeOK
+    <2>3. \A k \in DOMAIN log[gi] : log'[gi][k] = log[gi][k] BY DEF GetEntries, Empty, TypeOK
+    <2>4. DOMAIN log[gi] \subseteq DOMAIN log'[gi] BY DEF GetEntries, Empty, TypeOK
+    \* For each committed entry c, pre-state quorum Q has all members with InLog(c, n).
+    \* After GetEntries, for n # gi: log unchanged. For n = gi: old entries preserved by <2>3>.
+    <2>. QED BY <2>1, <2>2, <2>3, <2>4 DEF H_CommittedEntryIsOnQuorum, InLog, TypeOK
   \* (H_CommittedEntryIsOnQuorum,RollbackEntriesAction)
   <1>3. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ H_CommittedEntryIsOnQuorum /\ RollbackEntriesAction => H_CommittedEntryIsOnQuorum'
     <2>. SUFFICES ASSUME TypeOK, H_LaterLogsHaveEarlierCommitted, H_CommittedEntryIsOnQuorum,
