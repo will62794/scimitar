@@ -1287,11 +1287,50 @@ THEOREM L_10 == TypeOK /\ H_LeaderCompleteness /\ H_TermsMonotonic /\ H_UniformL
     <2>4. CASE s # ri
       BY <2>1, <2>3, <2>4 DEF H_LaterLogsHaveEarlierCommitted, TypeOK
     <2>5. CASE s = ri
-      \* log'[ri] = SubSeq(log[ri], 1, Len(log[ri])-1). Entries in log'[ri] are in log[ri].
-      \* H_TermsMonotonic ensures c[1] < Len(log[ri]) (since triggering entry at ii < Len(log[ri])
-      \* has term > c[2], but log[ri][Len(log[ri])] >= log[ri][ii] > c[2] by monotonicity,
-      \* contradicting log[ri][c[1]] = c[2] if c[1] = Len(log[ri])).
-      BY <2>1, <2>2, <2>5 DEF H_LaterLogsHaveEarlierCommitted, H_TermsMonotonic, TypeOK, Terms, LogIndices
+      \* log'[ri] = SubSeq(log[ri], 1, Len(log[ri])-1).
+      <3>1. Len(log[ri]) > 0 BY DEF RollbackEntries, CanRollback, TypeOK
+      <3>2. log'[ri] = SubSeq(log[ri], 1, Len(log[ri])-1) BY <2>2 DEF TypeOK
+      <3>2a. log[ri] \in Seq(Terms) BY DEF TypeOK
+      <3>2aa. Len(log[ri]) - 1 \in Nat BY <3>1 DEF TypeOK, Terms
+      <3>2b. Len(log'[ri]) = Len(log[ri]) - 1
+        <4>1. \A k \in 1..(Len(log[ri])-1) : log[ri][k] \in Terms
+              BY <3>1 DEF TypeOK, Terms
+        <4>2. Len(SubSeq(log[ri], 1, Len(log[ri])-1)) = IF 1 <= Len(log[ri])-1 THEN (Len(log[ri])-1)-1+1 ELSE 0
+              BY <4>1, SubSeqProperties
+        <4>3. Len(log[ri]) \in Nat BY DEF TypeOK
+        \* (Len(log[ri])-1)-1+1 = Len(log[ri])-1 and the IF condition 1<=Len(log[ri])-1 iff Len(log[ri])>=2.
+        \* If Len(log[ri])=1, IF is false, Len=0=1-1. If Len(log[ri])>=2, IF is true, Len=Len-1.
+        <4>4. Len(SubSeq(log[ri], 1, Len(log[ri])-1)) = Len(log[ri]) - 1
+              BY <4>2, <4>3, <3>1
+        <4>. QED BY <4>4, <3>2
+      \* Pick the triggering entry ii in DOMAIN log'[ri] with log'[ri][ii] > c[2].
+      <3>3. PICK ii \in DOMAIN log'[s] : log'[s][ii] > c[2] OBVIOUS
+      \* ii is in the truncated log, so ii <= Len(log[ri]) - 1. Also ii is in DOMAIN log[ri].
+      <3>4. ii \in DOMAIN log[ri] /\ log[ri][ii] > c[2]
+            BY <3>3, <2>2, <2>5, <3>1 DEF TypeOK
+      \* By pre-state H_LaterLogsHaveEarlierCommitted on ri:
+      <3>5. Len(log[ri]) >= c[1] /\ log[ri][c[1]] = c[2]
+            BY <3>4 DEF H_LaterLogsHaveEarlierCommitted
+      \* By H_TermsMonotonic: log[ri][ii] > c[2] = log[ri][c[1]], so ii > c[1].
+      \* ii <= Len(log[ri]) - 1, so c[1] < ii <= Len(log[ri]) - 1, hence c[1] <= Len(log'[ri]).
+      <3>6. ii > c[1]
+            BY <3>4, <3>5 DEF H_TermsMonotonic, TypeOK, Terms
+      <3>7. ii <= Len(log[ri]) - 1
+            BY <3>3, <2>2, <2>5, <3>1 DEF TypeOK
+      <3>7a. ii \in Nat /\ c[1] \in Nat /\ Len(log[ri]) \in Nat
+             BY <3>4, <3>5 DEF TypeOK, Terms, LogIndices
+      <3>8. c[1] <= Len(log'[ri])
+            BY <3>6, <3>7, <3>7a, <3>2b
+      \* c[1] is in the truncated log, so log'[ri][c[1]] = log[ri][c[1]] = c[2].
+      <3>9. \A k \in 1..(Len(log[ri])-1) : SubSeq(log[ri], 1, Len(log[ri])-1)[k] = log[ri][k]
+        <4>1. \A k \in 1..(Len(log[ri])-1) : log[ri][k] \in Terms
+              BY <3>1 DEF TypeOK, Terms
+        <4>. QED BY <4>1, SubSeqProperties
+      <3>9a. c[1] \in 1..(Len(log[ri])-1)
+            BY <3>8, <3>2b DEF TypeOK, Terms, LogIndices
+      <3>9b. log'[ri][c[1]] = log[ri][c[1]]
+            BY <3>2, <3>9, <3>9a
+      <3>. QED BY <3>5, <3>8, <3>9b, <2>5
     <2>. QED BY <2>4, <2>5
   \* (H_LaterLogsHaveEarlierCommitted,BecomeLeaderAction)
   <1>4. TypeOK /\ H_LaterLogsHaveEarlierCommitted /\ BecomeLeaderAction => H_LaterLogsHaveEarlierCommitted' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_LaterLogsHaveEarlierCommitted
@@ -1478,9 +1517,18 @@ THEOREM L_12 == TypeOK /\ H_CommittedEntryIsOnQuorum /\ H_StateMachineSafety /\ 
 
 \* Initiation.
 THEOREM Init => IndGlobal
-    <1> USE A0,A1,A2,A3,A4,A5,A6
+    <1> USE A0,A1,A2,A3,A4,A5,A6, A7
     <1>0. Init => TypeOK BY DEF Init, TypeOK, IndGlobal
-    <1>1. Init => H_OnePrimaryPerTerm BY DEF Init, H_OnePrimaryPerTerm, IndGlobal
+    <1>1. Init => H_OnePrimaryPerTerm 
+      <2> SUFFICES ASSUME Init,
+                          NEW s \in Server, NEW t \in Server,
+                          /\ state[s] = Primary 
+                          /\ state[t] = Primary
+                          /\ currentTerm[s] = currentTerm[t]
+                   PROVE  s = t
+        BY DEF H_OnePrimaryPerTerm
+      <2> QED
+        BY DEF Init, H_OnePrimaryPerTerm, IndGlobal
     <1>2. Init => H_PrimaryHasOwnEntries BY DEF Init, H_PrimaryHasOwnEntries, IndGlobal
     <1>3. Init => H_LogMatching BY DEF Init, H_LogMatching, IndGlobal
     <1>4. Init => H_PrimaryTermGTELogTerm BY DEF Init, H_PrimaryTermGTELogTerm, IndGlobal
