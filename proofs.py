@@ -1503,7 +1503,7 @@ class StructuredProof():
                 # Sample CTIs if we generated more than desired.
                 logging.info(f"Number of CTIs generated for proof node, action '{action}': {len(new_ctis_by_action[action])}. Sampling a max of {indgen.max_proof_node_ctis} CTIs.")
                 if len(new_ctis_by_action[action]) > indgen.max_proof_node_ctis:
-                    new_ctis_by_action[action] = random.sample(new_ctis_by_action[action], indgen.max_proof_node_ctis)
+                    new_ctis_by_action[action] = random.sample(sorted(new_ctis_by_action[action]), indgen.max_proof_node_ctis)
                 all_ctis_by_action[action].update(new_ctis_by_action[action])
                 node.set_ctis(all_ctis_by_action[action], action)
 
