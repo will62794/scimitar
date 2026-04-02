@@ -1,4 +1,4 @@
----- MODULE AbstractRaft_IndDecompProof ----
+---- MODULE AbstractRaft_IndProofs_test ----
 EXTENDS AbstractRaft,TLAPS
 
 \* Proof Graph Stats
