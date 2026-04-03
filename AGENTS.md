@@ -17,8 +17,8 @@ IMPORTANT: Please do not use OMITTED to skip over proof obligations and leave th
 
 If a proof obligation is unable to be proven automatically, you can try decomposing it into smaller steps and then trying to get the smaller steps to go through automatically. You can apply this process recursively until the proof obligations are small enough to be proven automatically.
 
-Also, when decomposing a goal into a set of sub-goals, always make sure that to verify that the QED step of all the sub-goals checks properly, to make sure that the decomposition is actually correct, before trying to dive in to make sure all of the sub-goals themselves are correct. 
+IMPORTANT RULE 1: When decomposing a goal into a set of sub-goals, always make sure that to verify that the QED step of all the sub-goals checks properly, to make sure that the decomposition is actually correct, before trying to dive in to make sure all of the sub-goals themselves are correct. Relatedly, try not to decompose more than one depth level at a time e.g. try to decompose one level, check to make sure all sub-goals imply the top-level goal, and then recursively decompose more if needed.
 
-Similarly, try not to decompose more than one depth level at a time e.g. try to decompose one level, check to make sure all sub-goals imply the top-level goal, and then recursively decompose more if needed.
+IMPORTANT RULE 2: Try not to work on proving multiple sub-goals at the same time. Try to prove one sub-goal at a time, and then move on to the next one.
 
-Note also that you cannot have proof steps at the same level with duplicate labels (e.g. two steps named <2>6a and <2>6a).
+IMPORTANT RULE 3: Note that you cannot have proof steps at the same level with duplicate labels (e.g. two steps named <2>6a and <2>6a).
