@@ -435,8 +435,87 @@ THEOREM L_2 == TypeOK /\ H_RequestVoteResponseTermsMatchSource /\ H_RequestVoteR
                          /\ mj.mvoteGranted)'
                  PROVE  (mi.mdest = mj.mdest)'
       BY DEF H_RequestVoteResponseMsgsInTermUnique, HandleRequestVoteRequestAction
+    \* HandleRequestVoteRequest(m) adds newMsg to requestVoteResponseMsgs.
+    \* mi and mj are each either old (in requestVoteResponseMsgs) or the new message.
+    <2>1. DEFINE i == m.mdest
+    <2>2. DEFINE j == m.msource
+    <2>3. DEFINE logOk == \/ m.mlastLogTerm > LastTerm(log[i])
+                          \/ /\ m.mlastLogTerm = LastTerm(log[i])
+                             /\ m.mlastLogIndex >= Len(log[i])
+    <2>4. DEFINE grant == /\ m.mterm = currentTerm[i]
+                          /\ logOk
+                          /\ votedFor[i] \in {Nil, j}
+    <2>5. DEFINE newMsg == [mtype        |-> RequestVoteResponse,
+                            mterm        |-> currentTerm[i],
+                            mvoteGranted |-> grant,
+                            msource      |-> i,
+                            mdest        |-> j]
+    <2>6. requestVoteResponseMsgs' = requestVoteResponseMsgs \cup {newMsg}
+      BY DEF HandleRequestVoteRequest, LastTerm
+    <2>7. CASE mi \in requestVoteResponseMsgs /\ mj \in requestVoteResponseMsgs
+      \* Both old messages: follows directly from induction hypothesis.
+      BY <2>7 DEF HandleRequestVoteRequest, H_RequestVoteResponseMsgsInTermUnique
+    <2>8. CASE mi \notin requestVoteResponseMsgs /\ mj \notin requestVoteResponseMsgs
+      \* Both are the new message, so mi = mj.
+      BY <2>6, <2>8
+    <2>9. CASE mi \in requestVoteResponseMsgs /\ mj \notin requestVoteResponseMsgs
+      \* mi is old, mj is newMsg.
+      <3>1. mj = newMsg
+        BY <2>6, <2>9
+      <3>2. mj.mdest = j /\ mj.msource = i /\ mj.mterm = currentTerm[i]
+        BY <3>1
+      <3>3. mi.msource = i /\ mi.mterm = currentTerm[i]
+        BY <3>2
+      <3>4. mj.mvoteGranted => grant
+        BY <3>1
+      <3>5. grant => votedFor[i] \in {Nil, j}
+        OBVIOUS
+      <3>6. votedFor[i] \in {Nil, j}
+        BY <3>4, <3>5
+      <3>7. mi.mvoteGranted /\ currentTerm[mi.msource] = mi.mterm
+        BY <3>3
+      <3>8. mi.mtype = RequestVoteResponse
+        BY <2>9 DEF TypeOK, RequestVoteResponseType
+      <3>9. votedFor[mi.msource] = mi.mdest
+        BY <3>7, <3>8, <2>9 DEF H_RequestVoteResponseTermsMatchSource
+      <3>10. votedFor[i] = mi.mdest
+        BY <3>3, <3>9
+      <3>11. mi.mdest \in Server
+        BY <2>9 DEF TypeOK, RequestVoteResponseType
+      <3>12. mi.mdest = j
+        BY <3>6, <3>10, <3>11
+      <3>13. QED
+        BY <3>2, <3>12 DEF HandleRequestVoteRequest
+    <2>10. CASE mj \in requestVoteResponseMsgs /\ mi \notin requestVoteResponseMsgs
+      \* mj is old, mi is newMsg. Symmetric to <2>9.
+      <3>1. mi = newMsg
+        BY <2>6, <2>10
+      <3>2. mi.mdest = j /\ mi.msource = i /\ mi.mterm = currentTerm[i]
+        BY <3>1
+      <3>3. mj.msource = i /\ mj.mterm = currentTerm[i]
+        BY <3>2
+      <3>4. mi.mvoteGranted => grant
+        BY <3>1
+      <3>5. grant => votedFor[i] \in {Nil, j}
+        OBVIOUS
+      <3>6. votedFor[i] \in {Nil, j}
+        BY <3>4, <3>5
+      <3>7. mj.mvoteGranted /\ currentTerm[mj.msource] = mj.mterm
+        BY <3>3
+      <3>8. mj.mtype = RequestVoteResponse
+        BY <2>10 DEF TypeOK, RequestVoteResponseType
+      <3>9. votedFor[mj.msource] = mj.mdest
+        BY <3>7, <3>8, <2>10 DEF H_RequestVoteResponseTermsMatchSource
+      <3>10. votedFor[i] = mj.mdest
+        BY <3>3, <3>9
+      <3>11. mj.mdest \in Server
+        BY <2>10 DEF TypeOK, RequestVoteResponseType
+      <3>12. mj.mdest = j
+        BY <3>6, <3>10, <3>11
+      <3>13. QED
+        BY <3>2, <3>12 DEF HandleRequestVoteRequest
     <2> QED
-      BY DEF TypeOK,H_RequestVoteResponseTermsMatchSource,HandleRequestVoteRequestAction,HandleRequestVoteRequest,H_RequestVoteResponseMsgsInTermUnique,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
+      BY <2>6, <2>7, <2>8, <2>9, <2>10
   \* (H_RequestVoteResponseMsgsInTermUnique,HandleRequestVoteResponseAction)
   <1>8. TypeOK /\ H_RequestVoteResponseMsgsInTermUnique /\ HandleRequestVoteResponseAction => H_RequestVoteResponseMsgsInTermUnique' BY DEF TypeOK,HandleRequestVoteResponseAction,HandleRequestVoteResponse,H_RequestVoteResponseMsgsInTermUnique,LastTerm,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero
   \* (H_RequestVoteResponseMsgsInTermUnique,AcceptAppendEntriesRequestAppendAction)
@@ -878,8 +957,57 @@ THEOREM L_6 == TypeOK /\ H_QuorumsSafeAtTerms /\ H_AppendEntriesRequestInTermImp
                                  /\ currentTerm[t] >= m.mterm
                                  /\ currentTerm[t] = m.mterm => (votedFor[t] = m.msource))'
       BY DEF H_AppendEntriesRequestInTermImpliesSafeAtTerms, UpdateTermAction
-    <2> QED
-      BY DEF TypeOK,UpdateTermAction,UpdateTerm,H_AppendEntriesRequestInTermImpliesSafeAtTerms,RequestVoteRequestType,RequestVoteResponseType,Terms,LogIndicesWithZero,AppendEntriesRequestType,AppendEntriesResponseType
+    \* UpdateTerm only increases currentTerm and sets state to Follower/votedFor to Nil.
+    \* The existing quorum witness still works because currentTerm only goes up,
+    \* and for the updated node, currentTerm strictly increases so the implication is vacuously true.
+    <2>1. m \in appendEntriesRequestMsgs /\ m.mtype = AppendEntriesRequest
+      BY DEF UpdateTerm
+    <2>2. PICK u \in Server : \E Q \in Quorum :
+            /\ u = m.msource
+            /\ currentTerm[u] >= m.mterm
+            /\ (currentTerm[u] = m.mterm) => state[u] = Leader
+            /\ \A t \in Q :
+                /\ currentTerm[t] >= m.mterm
+                /\ currentTerm[t] = m.mterm => votedFor[t] = m.msource
+      BY <2>1 DEF H_AppendEntriesRequestInTermImpliesSafeAtTerms
+    <2>3. PICK Q \in Quorum :
+            /\ u = m.msource
+            /\ currentTerm[u] >= m.mterm
+            /\ (currentTerm[u] = m.mterm) => state[u] = Leader
+            /\ \A t \in Q :
+                /\ currentTerm[t] >= m.mterm
+                /\ currentTerm[t] = m.mterm => votedFor[t] = m.msource
+      BY <2>2
+    <2>4. m_1.mterm > currentTerm[m_1.mdest]
+      BY DEF UpdateTerm
+    <2>5. \A t \in Q :
+            /\ currentTerm'[t] >= m.mterm
+            /\ currentTerm'[t] = m.mterm => votedFor'[t] = m.msource
+      <3> SUFFICES ASSUME NEW t \in Q
+           PROVE /\ currentTerm'[t] >= m.mterm
+                 /\ currentTerm'[t] = m.mterm => votedFor'[t] = m.msource
+        OBVIOUS
+      <3>1. currentTerm[t] >= m.mterm /\ (currentTerm[t] = m.mterm => votedFor[t] = m.msource)
+        BY <2>3
+      <3>2. CASE t = m_1.mdest
+        \* currentTerm'[t] = m_1.mterm > currentTerm[t] >= m.mterm, so currentTerm'[t] > m.mterm
+        <4>1. currentTerm'[t] = m_1.mterm
+          BY <3>2 DEF UpdateTerm, TypeOK
+        <4>2. m_1.mterm > currentTerm[t]
+          BY <3>2, <2>4
+        <4>3. currentTerm'[t] > m.mterm
+          BY <4>1, <4>2, <3>1 DEF TypeOK,RequestVoteRequestType,RequestVoteResponseType,AppendEntriesRequestType,AppendEntriesResponseType
+        <4>4. QED BY <4>1, <4>3 DEF TypeOK
+      <3>3. CASE t # m_1.mdest
+        BY <3>1, <3>3 DEF UpdateTerm, TypeOK
+      <3>4. QED BY <3>2, <3>3
+    <2>6. currentTerm'[u] >= m.mterm /\ ((currentTerm'[u] = m.mterm) => state'[u] = Leader)
+      <3>1. CASE u = m_1.mdest
+        BY <2>3, <2>4, <3>1 DEF UpdateTerm, TypeOK
+      <3>2. CASE u # m_1.mdest
+        BY <2>3, <3>2 DEF UpdateTerm, TypeOK
+      <3>3. QED BY <3>1, <3>2
+    <2>7. QED BY <2>3, <2>5, <2>6 DEF UpdateTerm
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,BecomeLeaderAction)
   <1>3. TypeOK /\ H_AppendEntriesRequestInTermImpliesSafeAtTerms /\ BecomeLeaderAction => H_AppendEntriesRequestInTermImpliesSafeAtTerms' BY DEF TypeOK,BecomeLeaderAction,BecomeLeader,H_AppendEntriesRequestInTermImpliesSafeAtTerms
   \* (H_AppendEntriesRequestInTermImpliesSafeAtTerms,ClientRequestAction)
